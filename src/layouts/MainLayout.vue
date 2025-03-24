@@ -1,21 +1,39 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+  <q-layout view="hHh lpR fFf" class="bg-grey-1">
+    <q-header elevated class="bg-white text-grey-8 q-py-xs" height-hint="58">
       <q-toolbar>
         <q-btn
           flat
           dense
           round
-          icon="menu"
-          aria-label="Menu"
           @click="toggleLeftDrawer"
+          aria-label="Menu"
+          icon="menu"
         />
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+        <q-btn flat no-caps no-wrap class="q-ml-xs" v-if="$q.screen.gt.xs">
+          <q-icon name="local_pharmacy" color="red" size="28px" />
+          <q-toolbar-title shrink class="text-weight-bold">
+            City Health Office - Inventory System
+          </q-toolbar-title>
+        </q-btn>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <q-space />
+
+        <div class="q-gutter-sm row items-center no-wrap">
+          <q-btn round dense flat color="grey-8" icon="notifications">
+            <q-badge color="red" text-color="white" floating>
+              2
+            </q-badge>
+            <q-tooltip>Notifications</q-tooltip>
+          </q-btn>
+          <q-btn round flat>
+            <q-avatar size="26px">
+              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+            </q-avatar>
+            <q-tooltip>Account</q-tooltip>
+          </q-btn>
+        </div>
       </q-toolbar>
     </q-header>
 
@@ -23,20 +41,77 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
+      class="bg-grey-2"
+      :width="240"
     >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+      <q-scroll-area class="fit">
+        <q-list>
 
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
+
+
+        <q-item>
+
+        </q-item>
+        <q-item clickable v-ripple >
+          <q-icon name="dashboard" size="24px" class="q-mr-md" /> <p class="text-sm">Dashboard</p>
+        </q-item>
+        <q-separator />
+        <q-expansion-item label="Client Management" icon="app_registration" class="text-subtitle2">
+          <q-item clickable v-ripple @click="toggleSection('new_clients')">
+            <q-item-section class="q-ml-sm">
+              <q-item-label class="text-caption">
+                <q-icon name="person_add" class="q-ml-md q-mr-md" size="24px" />
+                New Client
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-ripple @click="toggleSection('releasing')">
+            <q-item-section class="q-ml-sm">
+              <q-item-label class="text-caption">
+                <q-icon name="pallet" class="q-ml-md q-mr-md" size="24px" />
+                Releasing
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+
+
+        </q-expansion-item>
+        <q-expansion-item label="Stocks Management"  expand-separator icon="inventory" class="text-subtitle2">
+          <q-item clickable v-ripple @click="toggleSection('listing')" >
+            <q-item-section class="q-ml-sm">
+              <q-item-label class="text-caption">
+                <q-icon name="get_app" class="q-ml-md q-mr-md" size="24px" />Stock IN</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-ripple @click="toggleSection('listing')" >
+            <q-item-section class="q-ml-sm">
+              <q-item-label class="text-caption">
+                <q-icon name="lock_clock" class="q-ml-md q-mr-md" size="24px" />Stock Closing</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-ripple @click="toggleSection('listing')" >
+            <q-item-section class="q-ml-sm">
+              <q-item-label class="text-caption">
+                <q-icon name="timeline" class="q-ml-md q-mr-md" size="24px" />Stock Movement</q-item-label>
+            </q-item-section>
+          </q-item>
+
+        </q-expansion-item>
+
+
+
+        <q-expansion-item label="Reports" expand-separator icon="bar_chart" class="text-subtitle2">
+
+          <q-item clickable v-ripple @click="toggleSection('ItemEntry')">
+            <q-item-section class="q-ml-sm">
+              <q-item-label  class="text-caption">
+                <q-icon name="add" class="q-ml-md q-mr-md" />....
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-expansion-item>
       </q-list>
+      </q-scroll-area>
     </q-drawer>
 
     <q-page-container>
@@ -46,72 +121,25 @@
 </template>
 
 <script>
-import { defineComponent, } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+import { ref } from 'vue'
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
 
-export default defineComponent({
-  name: 'MainLayout',
+export default {
+  name: 'MyLayout',
 
-  components: {
-    EssentialLink
-  },
+  setup () {
+    const leftDrawerOpen = ref(false)
+    const search = ref('')
 
-  data () {
+    function toggleLeftDrawer () {
+      leftDrawerOpen.value = !leftDrawerOpen.value
+    }
+
     return {
-      linksList,
-      leftDrawerOpen: false
-    }
-  },
-
-  methods: {
-    toggleLeftDrawer () {
-      this.leftDrawerOpen = !this.leftDrawerOpen
+      leftDrawerOpen,
+      search,
+      toggleLeftDrawer,
     }
   }
-})
+}
 </script>
