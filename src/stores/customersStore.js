@@ -5,26 +5,7 @@ export const useCustomerStore = defineStore('customers', {
   state: () => ({
     counter: 0,
 
-    customer: {
-      firstname: '',
-      lastname: '',
-      middlename: '',
-      ext: '',
-      birthdate: '',
-      contact_number: '',
-      age: 0,
-      gender: '',
-      is_not_tagum: false,
-      street: '',
-      purok: '',
-      barangay: '',
-      city: '',
-      province: '',
-      category: '',
-      is_pwd: false,
-      is_solo: false,
-      user_id: 0,
-    },
+    customer: {},
     customer_id: 0,
     customers: [],
   }),
@@ -35,7 +16,7 @@ export const useCustomerStore = defineStore('customers', {
       try {
         const response = await api.get('/customers')
         this.customers.push(response.data.customers)
-        console.log(response.data.customers)
+       // console.log(response.data.customers)
       } catch (error) {
         console.log(error)
       }
@@ -55,7 +36,7 @@ export const useCustomerStore = defineStore('customers', {
       try {
         const response = await api.post('/customers', payload)
         this.customers.push(response.data.customers)
-        console.log(response.data.customers)
+        //console.log(response.data.customers)
       } catch (error) {
         console.log(error)
       }

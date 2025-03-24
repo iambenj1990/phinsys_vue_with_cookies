@@ -2,14 +2,7 @@
   <q-layout view="hHh lpR fFf" class="bg-grey-1">
     <q-header elevated class="bg-white text-grey-8 q-py-xs" height-hint="58">
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          @click="toggleLeftDrawer"
-          aria-label="Menu"
-          icon="menu"
-        />
+        <q-btn flat dense round @click="toggleLeftDrawer" aria-label="Menu" icon="menu" />
 
         <q-btn flat no-caps no-wrap class="q-ml-xs" v-if="$q.screen.gt.xs">
           <q-icon name="local_pharmacy" color="red" size="28px" />
@@ -22,14 +15,12 @@
 
         <div class="q-gutter-sm row items-center no-wrap">
           <q-btn round dense flat color="grey-8" icon="notifications">
-            <q-badge color="red" text-color="white" floating>
-              2
-            </q-badge>
+            <q-badge color="red" text-color="white" floating> 2 </q-badge>
             <q-tooltip>Notifications</q-tooltip>
           </q-btn>
           <q-btn round flat>
             <q-avatar size="26px">
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
             </q-avatar>
             <q-tooltip>Account</q-tooltip>
           </q-btn>
@@ -37,80 +28,84 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-      class="bg-grey-2"
-      :width="240"
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="bg-grey-2" :width="240">
       <q-scroll-area class="fit">
         <q-list>
-
-
-
-        <q-item>
-
-        </q-item>
-        <q-item clickable v-ripple >
-          <q-icon name="dashboard" size="24px" class="q-mr-md" /> <p class="text-sm">Dashboard</p>
-        </q-item>
-        <q-separator />
-        <q-expansion-item label="Client Management" icon="app_registration" class="text-subtitle2">
-          <q-item clickable v-ripple @click="toggleSection('new_clients')">
-            <q-item-section class="q-ml-sm">
-              <q-item-label class="text-caption">
-                <q-icon name="person_add" class="q-ml-md q-mr-md" size="24px" />
-                New Client
-              </q-item-label>
-            </q-item-section>
+          <q-item> </q-item>
+          <q-item clickable v-ripple to="/dashboard">
+            <q-icon name="dashboard" size="24px" class="q-mr-md" />
+            <p class="text-sm">Dashboard</p>
           </q-item>
-          <q-item clickable v-ripple @click="toggleSection('releasing')">
-            <q-item-section class="q-ml-sm">
-              <q-item-label class="text-caption">
-                <q-icon name="pallet" class="q-ml-md q-mr-md" size="24px" />
-                Releasing
-              </q-item-label>
-            </q-item-section>
-          </q-item>
+          <q-separator />
+          <q-expansion-item
+            label="Client Management"
+            icon="app_registration"
+            class="text-subtitle2"
+          >
+            <q-item clickable v-ripple  to="/customer">
+              <q-item-section class="q-ml-sm">
+                <q-item-label class="text-caption">
+                  <q-icon name="person_add" class="q-ml-md q-mr-md" size="24px" />
+                  New Client
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-ripple>
+              <q-item-section class="q-ml-sm">
+                <q-item-label class="text-caption">
+                  <q-icon name="pallet" class="q-ml-md q-mr-md" size="24px" />
+                  Releasing
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-expansion-item>
+          <q-expansion-item
+            label="Stocks Management"
+            expand-separator
+            icon="inventory"
+            class="text-subtitle2"
+          >
+            <q-item clickable v-ripple >
+              <q-item-section class="q-ml-sm">
+                <q-item-label class="text-caption">
+                  <q-icon name="get_app" class="q-ml-md q-mr-md" size="24px" />Stock
+                  IN</q-item-label
+                >
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-ripple >
+              <q-item-section class="q-ml-sm">
+                <q-item-label class="text-caption">
+                  <q-icon name="lock_clock" class="q-ml-md q-mr-md" size="24px" />Stock
+                  Closing</q-item-label
+                >
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-ripple >
+              <q-item-section class="q-ml-sm">
+                <q-item-label class="text-caption">
+                  <q-icon name="timeline" class="q-ml-md q-mr-md" size="24px" />Stock
+                  Movement</q-item-label
+                >
+              </q-item-section>
+            </q-item>
+          </q-expansion-item>
 
-
-        </q-expansion-item>
-        <q-expansion-item label="Stocks Management"  expand-separator icon="inventory" class="text-subtitle2">
-          <q-item clickable v-ripple @click="toggleSection('listing')" >
-            <q-item-section class="q-ml-sm">
-              <q-item-label class="text-caption">
-                <q-icon name="get_app" class="q-ml-md q-mr-md" size="24px" />Stock IN</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple @click="toggleSection('listing')" >
-            <q-item-section class="q-ml-sm">
-              <q-item-label class="text-caption">
-                <q-icon name="lock_clock" class="q-ml-md q-mr-md" size="24px" />Stock Closing</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple @click="toggleSection('listing')" >
-            <q-item-section class="q-ml-sm">
-              <q-item-label class="text-caption">
-                <q-icon name="timeline" class="q-ml-md q-mr-md" size="24px" />Stock Movement</q-item-label>
-            </q-item-section>
-          </q-item>
-
-        </q-expansion-item>
-
-
-
-        <q-expansion-item label="Reports" expand-separator icon="bar_chart" class="text-subtitle2">
-
-          <q-item clickable v-ripple @click="toggleSection('ItemEntry')">
-            <q-item-section class="q-ml-sm">
-              <q-item-label  class="text-caption">
-                <q-icon name="add" class="q-ml-md q-mr-md" />....
-              </q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-expansion-item>
-      </q-list>
+          <q-expansion-item
+            label="Reports"
+            expand-separator
+            icon="bar_chart"
+            class="text-subtitle2"
+          >
+            <q-item clickable v-ripple >
+              <q-item-section class="q-ml-sm">
+                <q-item-label class="text-caption">
+                  <q-icon name="add" class="q-ml-md q-mr-md" />....
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-expansion-item>
+        </q-list>
       </q-scroll-area>
     </q-drawer>
 
@@ -124,14 +119,18 @@
 import { ref } from 'vue'
 
 
+
 export default {
   name: 'MyLayout',
+  components:{
 
-  setup () {
+  },
+
+  setup() {
     const leftDrawerOpen = ref(false)
     const search = ref('')
 
-    function toggleLeftDrawer () {
+    function toggleLeftDrawer() {
       leftDrawerOpen.value = !leftDrawerOpen.value
     }
 
@@ -140,6 +139,15 @@ export default {
       search,
       toggleLeftDrawer,
     }
-  }
+  },
+  data(){
+    return{
+
+
+    }
+  },
+  methods: {
+
+  },
 }
 </script>
