@@ -42,11 +42,11 @@
             icon="app_registration"
             class="text-subtitle2"
           >
-            <q-item clickable v-ripple  to="/customer">
+            <q-item clickable v-ripple  to="/customers">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="person_add" class="q-ml-md q-mr-md" size="24px" />
-                  New Client
+                  New Customer
                 </q-item-label>
               </q-item-section>
             </q-item>

@@ -3,22 +3,42 @@
     <q-card class="q-pa-sm" style="max-width: 900px; width: 100%">
       <div class="row q-gutter-md q-pb-sm">
         <div class="col-12">
-          <div align="center" class="text-h6 text-primary">Client Information</div>
+          <div class="text-subtitle2 text-primary">Customer Information</div>
         </div>
       </div>
       <q-separator />
+      <q-form @submit.prevent="" >
       <div class="row q-gutter-md q-pt-lg">
         <div class="col-12 col-md-3 q-pa-sm">
-          <q-input dense v-model="CustomerInfo.lastname" label="Lastname" class="full-width" />
+          <q-input
+            dense
+            v-model="CustomerInfo.lastname"
+            label="Lastname"
+            class="full-width text-caption"
+            lazy-rules
+            :rules="[val => !!val || 'Surname is required']"
+          />
         </div>
         <div class="col-12 col-md-3 q-pa-sm">
-          <q-input dense v-model="CustomerInfo.firstname" label="Firstname" class="full-width" />
+          <q-input
+            dense
+            v-model="CustomerInfo.firstname"
+            label="Firstname"
+            class="full-width text-caption"
+            lazy-rules
+            :rules="[val => !!val || 'Firstname is required']"
+          />
         </div>
         <div class="col-12 col-md-3 q-pa-sm">
-          <q-input dense v-model="CustomerInfo.middlename" label="Middlename" class="full-width" />
+          <q-input
+            dense
+            v-model="CustomerInfo.middlename"
+            label="Middlename"
+            class="full-width text-caption"
+          />
         </div>
         <div class="col-12 col-md-1 q-pa-sm">
-          <q-input dense v-model="CustomerInfo.ext" label="Ext." class="full-width" />
+          <q-input dense v-model="CustomerInfo.ext" label="Ext." class="full-width text-caption" />
         </div>
       </div>
 
@@ -29,29 +49,41 @@
             v-model="CustomerInfo.gender"
             :options="GenSelection"
             label="Gender"
-            class="full-width"
+            class="full-width text-caption"
+            lazy-rules
+            :rules="[val => !!val || 'Gender is required']"
           />
         </div>
-        <div class="col-12 col-md-2 q-pa-sm">
+        <div class="col-12 col-md-2 q-pa-sm text-caption">
           <q-input
             type="date"
             dense
             v-model="CustomerInfo.birthdate"
             label="Birthdate"
-            class="full-width"
+            class="full-width text-caption"
             @change="calculateAge(CustomerInfo.birthdate)"
+            lazy-rules
+            :rules="[val => !!val || 'Username is required']"
           />
         </div>
         <div class="col-12 col-md-1 q-pa-sm">
-          <q-input dense v-model="CustomerInfo.age" label="Age" class="full-width" readonly />
+          <q-input
+            dense
+            v-model="CustomerInfo.age"
+            label="Age"
+            class="full-width text-caption"
+            readonly
+          />
         </div>
         <div class="col-12 col-md-3 q-pa-sm">
           <q-input
             dense
             v-model="CustomerInfo.contact_number"
             label="Contact Number"
-            class="full-width"
+            class="full-width text-caption"
             inputmode="numeric"
+            lazy-rules
+            :rules="[val => !!val || 'contact number is required']"
           />
         </div>
       </div>
@@ -62,7 +94,7 @@
             v-model="isChecked"
             label="Not From This City"
             @change="toggledCheckbox"
-            class=""
+            class="text-caption"
             :style="{ fontSize: '11px' }"
             @update:model-value="clearLocation"
           />
@@ -76,38 +108,88 @@
             v-model="CustomerInfo.barangay"
             :options="TagumBarangay.barangay"
             label="Barangay"
-            class="full-width"
+            class="full-width text-caption"
+            lazy-rules
+            :rules="[val => !!val || 'Barangay is required']"
           />
         </div>
         <div class="col-12 col-md-3 q-pa-sm">
-          <q-input dense v-model="CustomerInfo.purok" label="Purok" class="full-width" />
+          <q-input
+            dense
+            v-model="CustomerInfo.purok"
+            label="Purok"
+            class="full-width text-caption"
+            lazy-rules
+            :rules="[val => !!val || 'Purok is required']"
+          />
         </div>
         <div class="col-12 col-md-4 q-pa-sm">
-          <q-input dense v-model="CustomerInfo.street" label="Street" class="full-width" />
+          <q-input
+            dense
+            v-model="CustomerInfo.street"
+            label="Street"
+            class="full-width text-caption"
+            lazy-rules
+            :rules="[val => !!val || 'street is required']"
+          />
         </div>
         <div class="col-12 col-md-3 q-pa-sm">
-          <q-input dense v-model="CustomerInfo.city" label="City" class="full-width" />
+          <q-input dense v-model="CustomerInfo.city" label="City" class="full-width text-caption" />
         </div>
         <div class="col-12 col-md-3 q-pa-sm">
-          <q-input dense v-model="CustomerInfo.province" label="Province" class="full-width" />
+          <q-input
+            dense
+            v-model="CustomerInfo.province"
+            label="Province"
+            class="full-width text-caption"
+          />
         </div>
       </div>
 
       <div class="row q-gutter-md" v-else-if="isChecked">
         <div class="col-12 col-md-3 q-pa-sm">
-          <q-input dense v-model="CustomerInfo.barangay" label="Barangay" class="full-width" />
+          <q-input
+            dense
+            v-model="CustomerInfo.barangay"
+            label="Barangay"
+            class="full-width text-caption"
+            lazy-rules
+            :rules="[val => !!val || 'barangay is required']"
+          />
         </div>
         <div class="col-12 col-md-2 q-pa-sm">
-          <q-input dense v-model="CustomerInfo.purok" label="Purok" class="full-width" />
+          <q-input
+            dense
+            v-model="CustomerInfo.purok"
+            label="Purok"
+            class="full-width text-caption"
+            lazy-rules
+            :rules="[val => !!val || 'purok is required']"
+          />
         </div>
         <div class="col-12 col-md-4 q-pa-sm">
-          <q-input dense v-model="CustomerInfo.street" label="Street" class="full-width" />
+          <q-input
+            dense
+            v-model="CustomerInfo.street"
+            label="Street"
+            class="full-width text-caption"
+            lazy-rules
+            :rules="[val => !!val || 'street is required']"
+          />
         </div>
         <div class="col-12 col-md-2 q-pa-sm">
-          <q-input dense v-model="CustomerInfo.city" label="City" class="full-width" />
+          <q-input dense v-model="CustomerInfo.city" label="City" class="full-width text-caption"  lazy-rules
+          :rules="[val => !!val || 'City is required']"/>
         </div>
         <div class="col-12 col-md-3 q-pa-sm">
-          <q-input dense v-model="CustomerInfo.province" label="Province" class="full-width" />
+          <q-input
+            dense
+            v-model="CustomerInfo.province"
+            label="Province"
+            class="full-width text-caption"
+            lazy-rules
+            :rules="[val => !!val || 'province is required']"
+          />
         </div>
       </div>
 
@@ -124,7 +206,7 @@
             v-model="children"
             :val="'Children'"
             label="Children"
-            class=""
+            class="text-caption"
             :style="{ fontSize: '11px' }"
             disable
           />
@@ -134,7 +216,7 @@
             v-model="adult"
             :val="'Adult'"
             label="Adult"
-            class=""
+            class="text-caption"
             :style="{ fontSize: '11px' }"
             disable
           />
@@ -144,7 +226,7 @@
             v-model="senior"
             :val="'Senior'"
             label="Senior"
-            class=""
+            class="text-caption"
             :style="{ fontSize: '11px' }"
             disable
           />
@@ -157,7 +239,7 @@
             v-model="pwd"
             :val="'PWD'"
             label="PWD"
-            class=""
+            class="text-caption"
             :style="{ fontSize: '11px' }"
             @change="toggled_pwd"
           />
@@ -167,7 +249,7 @@
             v-model="solo"
             :val="'Solo'"
             label="Solo"
-            class=""
+            class="text-caption"
             :style="{ fontSize: '11px' }"
             @change="toggled_solo"
           />
@@ -175,36 +257,106 @@
       </div>
       <!-- <pre>{{ CustomerInfo.category }}</pre> -->
 
-      <div class="row q-gutter-md q-pt-md">
-        <div class="col-12 flex justify-end q-pa-md-lg">
+
+
+
+
+      <div class="row q-gutter-md q-pt-md" style="display: flex; justify-content: space-between;" >
+
+        <!-- <div class="col-12 flex justify-start q-pa-md-lg"> -->
+          <q-btn
+            type="submit"
+            label="Cancel"
+            class="q-mr-md q-ml-md text-caption"
+            color="red"
+            to="/customers"
+          />
+        <!-- </div> -->
+        <!-- <div class="col-12 flex justify-end q-pa-md-lg" v-if="Customer.isSave"> -->
           <q-btn
             type="submit"
             label="Save"
-            class="q-mr-md q-ml-md"
+            class="q-mr-sm q-ml-md text-caption"
             color="primary"
             @click="Insert_Customer(CustomerInfo)"
+             v-if="Customer.isSave"
           />
-        </div>
+        <!-- </div> -->
+        <!-- <div class="col-12 flex justify-end q-pa-md-lg"  v-else-if="Customer.isEdit" > -->
+          <q-btn
+            type="submit"
+            label="Update"
+            class="q-mr-sm q-ml-md text-caption"
+            color="primary"
+            @click="updateCustomer(Customer.customer_id,this.CustomerInfo)"
+            v-else-if="Customer.isEdit"
+          />
+        <!-- </div> -->
+
       </div>
+
+
+      </q-form>
     </q-card>
+
+    <q-dialog v-model="showError" persistent>
+    <q-card class="q-pa-sm" style="max-width: 900px; width: 100%;">
+
+      <q-card-section>
+      <pre>{{ this.errorMsg[0] }}</pre>
+      </q-card-section>
+      <q-card-actions align="right">
+        <!-- Button to close dialog -->
+        <q-btn flat label="Close" color="primary" @click="showError = false" />
+      </q-card-actions>
+
+    </q-card>
+  </q-dialog>
   </q-page>
 </template>
 <script>
 import { useTagumStore } from '../stores/TagumStore'
 import { useCustomerStore } from '../stores/customersStore'
+
+
 export default {
   setup() {
     const TagumBarangay = useTagumStore()
     const Customer = useCustomerStore()
 
     return {
+
       Customer,
       TagumBarangay,
       GenSelection: ['Male', 'Female', 'LGBTQ'],
+
+      CustomerInfoDefault: {
+        firstname: '',
+        lastname: '',
+        middlename: '',
+        ext: '',
+        birthdate: '',
+        contact_number: '',
+        age: 0,
+        gender: '',
+        is_not_tagum: false,
+        street: '',
+        purok: '',
+        barangay: '',
+        city: 'Tagum City',
+        province: 'Davao del Norte',
+        category: '',
+        is_pwd: false,
+        is_solo: false,
+        user_id: 0,
+      },
     }
   },
   data() {
     return {
+
+      showError:false,
+      errorMsg:[],
       isChecked: false,
       children: false,
       adult: false,
@@ -275,31 +427,78 @@ export default {
 
     async Insert_Customer(payload) {
       try {
-        // console.log(payload)
-        await this.Customer.newCustomer(payload)
-        this.$q.notify({ type: 'positive', message: 'Adding Client successful!' })
+        this.errorMsg = []
+         await this.Customer.newCustomer(payload)
+         this.$q.notify({ type: 'positive', message: 'Customer registration successful!', position: 'center', timeout:1200 });
+          this.CustomerInfo = {...this.CustomerInfoDefault}
       } catch (error) {
-        console.log(error)
-        this.$q.notify({ type: 'negative', message: 'Adding Client failed!' })
+        if (error.response){
+          const {data} = error.response
+          if (data.errors){
+            this.errorMsg.push(data.errors)
+          }else{
+             this.errorMsg.push(data.message)
+          }
+        }else{
+          this.errorMsg.push(error.message)
+        }
+        this.showError=true
+        console.error( this.errorMsg[0])
       }
     },
 
-    async Select_Customer(id){
+    async Select_Customer(id) {
       try {
         await this.Customer.getCustomer(id)
-        this.CustomerInfo = this.Customer.customer
+        this.CustomerInfo = {...this.Customer.customer[0]}
+
       } catch (error) {
+        if (error.response){
+          const {data} = error.response
+          if (data.errors){
+            this.errorMsg.push(data.errors)
+          }else{
+             this.errorMsg.push(data.message)
+          }
+        }else{
+          this.errorMsg.push(error.message)
+        }
+        this.showError=true
+        console.log(error)
+      }
+    },
+
+    async updateCustomer(id,payload){
+      console.table(payload)
+      try {
+        await this.Customer.updateCustomer(id,payload)
+        this.$q.notify({ type: 'positive', message: 'Updating records successful!', position: 'center', timeout:1200 });
+      } catch (error) {
+        if (error.response){
+          const {data} = error.response
+          if (data.errors){
+            this.errorMsg.push(data.errors)
+          }else{
+             this.errorMsg.push(data.message)
+          }
+        }else{
+          this.errorMsg.push(error.message)
+        }
+        this.showError=true
         console.log(error)
       }
     }
   },
 
-  computed: {},
+  mounted(){
+   this.Select_Customer(this.Customer.customer_id)
+
+  },
+
 
   watch: {
     'CustomerInfo.birthdate'(newBirthdate) {
       this.CustomerInfo.age = this.calculateAge(newBirthdate)
-      console.log(this.CustomerInfo.age)
     },
 
     'CustomerInfo.age'(age) {
