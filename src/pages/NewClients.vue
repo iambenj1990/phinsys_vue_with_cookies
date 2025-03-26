@@ -317,15 +317,17 @@
 <script>
 import { useTagumStore } from '../stores/TagumStore'
 import { useCustomerStore } from '../stores/customersStore'
+import {useLoginStore} from '../stores/loginSessionStore'
 
 
 export default {
   setup() {
+    const UserStore = useLoginStore()
     const TagumBarangay = useTagumStore()
     const Customer = useCustomerStore()
 
     return {
-
+      UserStore,
       Customer,
       TagumBarangay,
       GenSelection: ['Male', 'Female', 'LGBTQ'],
@@ -354,7 +356,7 @@ export default {
   },
   data() {
     return {
-
+      user_id:0,
       showError:false,
       errorMsg:[],
       isChecked: false,
@@ -383,7 +385,7 @@ export default {
         category: '',
         is_pwd: false,
         is_solo: false,
-        user_id: 1,
+        user_id: 0,
       },
     }
   },
@@ -426,8 +428,10 @@ export default {
     },
 
     async Insert_Customer(payload) {
+      payload.user_id = this.user_id
       try {
         this.errorMsg = []
+          this.us
          await this.Customer.newCustomer(payload)
          this.$q.notify({ type: 'positive', message: 'Customer registration successful!', position: 'center', timeout:1200 });
           this.CustomerInfo = {...this.CustomerInfoDefault}
@@ -491,6 +495,7 @@ export default {
   },
 
   mounted(){
+  this.user_id = this.UserStore.user_id
    this.Select_Customer(this.Customer.customer_id)
 
   },
