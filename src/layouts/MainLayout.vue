@@ -65,7 +65,7 @@
             icon="inventory"
             class="text-subtitle2"
           >
-            <q-item clickable v-ripple >
+            <q-item clickable v-ripple  to="/items/list">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="get_app" class="q-ml-md q-mr-md" size="24px" />Stock

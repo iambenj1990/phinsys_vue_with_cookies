@@ -11,7 +11,8 @@ const routes = [
       { path: '/customers/orders/new', component:()=> import('pages/ClientOrders.vue')},
       { path: '/customers/orders/transaction', component: () => import('pages/ClientList.vue') }, // particular transaction order of a customer
 
-      { path: '/items', component: () => import('pages/ClientList.vue') }, //get all items
+      { path: '/items/list', component: () => import('pages/ItemsList.vue') }, //get all items
+      { path: '/items/new', component: () => import('pages/NewItems.vue') }, //get all items
       { path: '/items/po', component: () => import('pages/ClientList.vue') }, // get items on a particular PO
       { path: '/items/expired', component: () => import('pages/ClientList.vue') }, // get expired items
       { path: '/items/low-quantity', component: () => import('pages/ClientList.vue') }, // get low quantity items
