@@ -4,10 +4,9 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 
 export const useLoginStore = defineStore('login', {
   state: () => ({
+    
     counter: 0,
     user_id: 0,
-
-
   }),
 
   actions:{}

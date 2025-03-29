@@ -8,7 +8,8 @@ export const useItemStore = defineStore('items', {
     items: [],
     item: {},
     expiring:[],
-    expired:[]
+    expired:[],
+    po_items:[]
   }),
 
   actions: {
@@ -25,6 +26,15 @@ export const useItemStore = defineStore('items', {
       try {
         const response = await api.get('/items/' + id)
         this.item = response.data.item[0]
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    async getItemsByPO(po_num) {
+      try {
+        const response = await api.get('/items/po/' + po_num)
+        this.po_items = response.data.items
       } catch (error) {
         console.log(error)
       }

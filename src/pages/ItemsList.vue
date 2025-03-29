@@ -37,7 +37,7 @@
             </template>
             <template v-slot:top-right>
               <q-btn flat type="button" label="New Stocks" class="q-mr-md q-ml-md" color="primary"
-                @click="show_itemEntry()" icon="add" />
+                 icon="add" to="/items/new" />
             </template>
 
             <template #body="props">

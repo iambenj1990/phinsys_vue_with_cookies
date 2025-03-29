@@ -95,6 +95,8 @@ export default {
 
         this.$q.notify({ type: 'positive', message: 'Login successful!' })
 
+        //localStorage.setItem('user_id', this.loginSession.user_id = 1)
+
         // Redirect or perform other actions on success
         this.$router.push('/main')
       } catch (error) {

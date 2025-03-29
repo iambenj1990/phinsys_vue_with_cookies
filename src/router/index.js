@@ -2,6 +2,7 @@ import { defineRouter } from '#q-app/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
 
+
 /*
  * If not building with SSR mode, you can
  * directly export the Router instantiation;
@@ -24,7 +25,13 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE)
+
+
+
+
   })
+
+
 
   return Router
 })
