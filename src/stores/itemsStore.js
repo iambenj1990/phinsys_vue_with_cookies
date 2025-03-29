@@ -25,7 +25,7 @@ export const useItemStore = defineStore('items', {
     async getItem(id) {
       try {
         const response = await api.get('/items/' + id)
-        this.item = response.data.item[0]
+        this.item = response.data.items[0]
       } catch (error) {
         console.log(error)
       }
@@ -33,7 +33,7 @@ export const useItemStore = defineStore('items', {
 
     async getItemsByPO(po_num) {
       try {
-        const response = await api.get('/items/po/' + po_num)
+        const response = await api.get('/items/po/show/' + po_num)
         this.po_items = response.data.items
       } catch (error) {
         console.log(error)

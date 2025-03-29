@@ -110,8 +110,12 @@
 
             </div>
           </div>
-          <div align="right">
-            <q-btn type="submit" label="Add" class="" color="primary" style="width: 100px;" @click="insertNewItem(this.MedicineInfo)" />
+          <div align="right" v-if="toUpdate">
+            <q-btn type="submit" label="cancel" class="q-mx-sm" color="red" style="width: 100px;" @click="viewReset()" />
+            <q-btn type="submit" label="Update"   color="primary" style="width: 100px;" @click="updateItem(this.selected_id,this.MedicineInfo)"  />
+          </div>
+          <div align="right" v-else-if="!toUpdate">
+            <q-btn type="submit" label="Add"  color="primary" style="width: 100px;" @click="insertNewItem(this.MedicineInfo)" />
           </div>
         </q-card-section>
         <q-separator />
@@ -124,34 +128,34 @@
             >
             <template #body="props">
               <q-tr :v-bind="props">
-                <q-td key="generic_name" style="font-size: 11px" align="center">
+                <q-td key="generic_name" style="font-size: 11px" align="left">
                   {{ props.row.generic_name }}
                 </q-td>
-                <q-td key="brand_name" style="font-size: 11px" align="center">
+                <q-td key="brand_name" style="font-size: 11px" align="left">
                   {{ props.row.brand_name }}
                 </q-td>
-                <q-td key="dosage" style="font-size: 11px" align="center">
+                <q-td key="dosage" style="font-size: 11px" align="left">
                   {{ props.row.dosage }}
                 </q-td>
-                <q-td key="dosage_form" style="font-size: 11px" align="center">
+                <q-td key="dosage_form" style="font-size: 11px" align="left">
                   {{ props.row.dosage_form }}
                 </q-td>
-                <q-td key="quantity" style="font-size: 11px" align="center">
+                <q-td key="quantity" style="font-size: 11px" align="left">
                   {{ props.row.quantity }}
                 </q-td>
-                <q-td key="unit" style="font-size: 11px" align="center">
+                <q-td key="unit" style="font-size: 11px" align="left">
                   {{ props.row.unit }}
                 </q-td>
-                <q-td key="price" style="font-size: 11px" align="center">
+                <q-td key="price" style="font-size: 11px" align="left">
                   {{ props.row.price }}
                 </q-td>
-                <q-td key="expiration_date" style="font-size: 11px" align="center">
+                <q-td key="expiration_date" style="font-size: 11px" align="left">
                   {{ props.row.expiration_date }}
                 </q-td>
 
-                <q-td key="actions" style="font-size: 11px" align="center">
-                  <q-btn flat color="primary" @click="editItem(props.row)" icon="edit" />
-                  <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" />
+                <q-td key="actions" style="font-size: 11px" align="left">
+                  <q-btn flat color="primary" @click="fetchItem(props.row.id)" icon="edit" />
+                  <q-btn flat color="negative" icon="delete" @click="removeItem(props.row.id)" />
                 </q-td>
               </q-tr>
 
@@ -161,11 +165,12 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn color="red" class="q-px-md" label="Back" to="/items/list" style="color:seagreen;width: 100px;" size="md"/>
+          <q-btn color="red" class="q-px-md" label="Back" to="/items/list" style="width: 100px;" size="md"/>
         </q-card-actions>
       </q-card>
     </div>
     <pre>{PO Number : {{ this.New_Po }}}</pre>
+    <pre>{Status : {{this.toUpdate}}}</pre>
   </q-page>
 </template>
 
@@ -305,8 +310,10 @@ export default {
   },
   data() {
     return {
+      toUpdate:false,
       rows: [],
       New_Po:'',
+      selected_id:0,
       MedicineInfo: {
         po_no: '',
         brand_name: '',
@@ -324,6 +331,11 @@ export default {
   },
   methods:{
 
+  viewReset(){
+    this.toUpdate=false
+    this.inputReset()
+  },
+
     inputReset(){
       this.MedicineInfo = {...this.defaultValues}
     },
@@ -334,24 +346,35 @@ export default {
     },
 
     async insertNewItem(payload){
-      console.log(payload)
+
       payload.po_no = this.New_Po
       payload.user_id = 1
-      console.log('complete payload ',payload)
 
       await this.itemStore.postItem(payload)
       this.fetchItemsbyPO(this.New_Po)
      this.inputReset()
+     this.$q.notify({ type: 'positive', message: 'Adding records successful!', position: 'center', timeout:1000 });
     },
 
     async fetchItem(id){
+      console.log(id)
       await this.itemStore.getItem(id)
-      this.MedicineInfo =this.itemStore.item
+      this.MedicineInfo = this.itemStore.item
+      this.toUpdate = true
+      this.selected_id = id
     },
 
     async updateItem(id,payload){
       await this.itemStore.updateItem(id,payload)
       this.fetchItemsbyPO(this.New_Po)
+      this.inputReset()
+      this.$q.notify({ type: 'positive', message: 'Updating records successful!', position: 'center', timeout:1000 });
+    },
+
+    async removeItem(id){
+      await this.itemStore.deleteItem(id)
+      this.fetchItemsbyPO(this.New_Po)
+      this.$q.notify({ type: 'positive', message: 'removing records successful!', position: 'center', timeout:1000 });
     }
 
 
