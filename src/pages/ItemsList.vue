@@ -42,31 +42,31 @@
 
             <template #body="props">
               <q-tr :v-bind="props">
-                <q-td key="po_no" style="font-size: 11px" align="center">
+                <q-td key="po_no" style="font-size: 11px" align="left">
                   {{ props.row.po_no }}
                 </q-td>
-                <q-td key="generic_name" style="font-size: 11px" align="center">
+                <q-td key="generic_name" style="font-size: 11px" align="left">
                   {{ props.row.generic_name }}
                 </q-td>
-                <q-td key="brand_name" style="font-size: 11px" align="center">
+                <q-td key="brand_name" style="font-size: 11px" align="left">
                   {{ props.row.brand_name }}
                 </q-td>
-                <q-td key="dosage" style="font-size: 11px" align="center">
+                <q-td key="dosage" style="font-size: 11px" align="left">
                   {{ props.row.dosage }}
                 </q-td>
-                <q-td key="dosage_form" style="font-size: 11px" align="center">
+                <q-td key="dosage_form" style="font-size: 11px" align="left">
                   {{ props.row.dosage_form }}
                 </q-td>
-                <q-td key="quantity" style="font-size: 11px" align="center">
+                <q-td key="quantity" style="font-size: 11px" align="left">
                   {{ props.row.quantity }}
                 </q-td>
-                <q-td key="unit" style="font-size: 11px" align="center">
+                <q-td key="unit" style="font-size: 11px" align="left">
                   {{ props.row.unit }}
                 </q-td>
                 <!-- <q-td key="remaining_quantity" style="font-size: 11px" align="center">
                   {{ props.row.remaining_quantity ? props.row.remaining_quantity : 0 }}
                 </q-td> -->
-                <q-td key="expiration_date" style="font-size: 11px" align="center">
+                <q-td key="expiration_date" style="font-size: 11px" align="left">
                   {{ props.row.expiration_date }}
                 </q-td>
 
@@ -86,7 +86,14 @@
 </template>
 
 <script>
+import { useItemStore } from 'src/stores/itemsStore';
 export default {
+  computed:{
+
+    itemStore (){
+      return useItemStore();
+    }
+  },
   setup(){
     return{
       cols:[
@@ -169,7 +176,7 @@ export default {
         name: 'actions',
         required: true,
         label: 'Actions',
-        align: 'left',
+        align: 'center',
         field: "actions",
         sortable: true
       },
@@ -198,6 +205,17 @@ export default {
     }
 
   },
+
+  methods:{
+   async fetchAllStocks(){
+    await this.itemStore.getItems()
+      this.rows = this.itemStore.items
+    }
+  },
+
+  mounted(){
+    this.fetchAllStocks()
+  }
 
 
 }

@@ -54,7 +54,7 @@
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="pallet" class="q-ml-md q-mr-md" size="24px" />
-                  Releasing
+                  Dispensing
                 </q-item-label>
               </q-item-section>
             </q-item>
