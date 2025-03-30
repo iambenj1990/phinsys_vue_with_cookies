@@ -9,7 +9,7 @@ const routes = [
       { path: '/customer', component: () => import('pages/NewClients.vue') }, //customers
       { path: '/customers', component: () => import('pages/ClientList.vue') }, //customers  list
 
-      { path: '/customer/orders', component: () => import('pages/ClientOrderHistory.vue') }, // entire orders of a customer from the beginning
+      { path: '/customer/orders', component: () => import('pages/ClientOrderHistory.vue') }, // entire  customer from the beginning
       { path: '/customers/orders/new', component:()=> import('pages/ClientOrders.vue')},
       { path: '/customers/orders/transaction', component: () => import('pages/ClientList.vue') }, // particular transaction order of a customer
 

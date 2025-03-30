@@ -270,6 +270,7 @@
             class="q-mr-md q-ml-md text-caption"
             color="red"
             to="/customers"
+            @click="clearInputs()"
           />
         <!-- </div> -->
         <!-- <div class="col-12 flex justify-end q-pa-md-lg" v-if="Customer.isSave"> -->
@@ -390,6 +391,12 @@ export default {
     }
   },
   methods: {
+    clearInputs(){
+      this.Customer.customer_id = 0
+     // this.CustomerInfo =JSON.parse(JSON.stringify(this.CustomerInfoDefault))
+      this.CustomerInfo = JSON.parse(JSON.stringify(this.CustomerInfoDefault))
+
+    },
     calculateAge(birthdate) {
       if (!birthdate) return 0
 
@@ -405,6 +412,7 @@ export default {
       }
       return age
     },
+
     clearLocation() {
       if (this.isChecked) {
         this.CustomerInfo.city = ''
@@ -495,8 +503,10 @@ export default {
   },
 
   mounted(){
-  this.user_id = this.UserStore.user_id
-   this.Select_Customer(this.Customer.customer_id)
+    this.user_id = this.UserStore.user_id
+    this.Select_Customer(this.Customer.customer_id)
+
+
 
   },
 

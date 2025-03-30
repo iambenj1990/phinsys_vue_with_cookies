@@ -26,7 +26,7 @@
               <q-btn
                 color="primary"
                 label="New Transaction"
-                to="/customer"
+                to="/customers/orders/new"
                 icon="add"
                 flat
               />
