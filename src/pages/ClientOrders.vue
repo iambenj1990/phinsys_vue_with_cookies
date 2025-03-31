@@ -109,11 +109,13 @@
             </q-card>
           </div>
         </q-card-section>
-        <pre>{{ this.transaction_id }}</pre>
+
         <q-card-section>
+
           <div class="q-pa-sm flex">
             <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
               <div class="text-h6 text-blue text-weight-bolder">Order Requests</div>
+              <div class="text-caption text-weight-regular" style="color:grey;">Transacation ID: {{ this.transaction_id }}</div>
               <q-separator />
               <q-table
                 bordered
@@ -417,6 +419,7 @@ export default {
   },
   data() {
     return {
+      selectedClient_id:0,
       transaction_id:0,
       filter:'',
       cartPrompt:false,
@@ -449,6 +452,7 @@ export default {
 
       transactionDetails:{
         transaction_id:'',
+        item_id:0,
         customer_id:0,
         quantity:0,
         user_id:0,
@@ -462,6 +466,14 @@ export default {
   },
   methods: {
 
+    async add_Order(payload){
+      
+      payload.transaction_id = this.transaction_id
+      payload.customer_id = this.selectedClient_id
+
+      await this.transactionStore.newTransaction(payload)
+    },
+
     async getNewTransactionID(id){
       await this.transactionStore.newTransactionID(id)
       this.transaction_id = this.transactionStore.newCustomerTransactionID
@@ -474,6 +486,7 @@ export default {
       this.availableMedsRow = this.itemStore.items
     },
     async get_client(id) {
+      this.selectedClient_id = id
       await this.customerStore.getCustomer(id)
       this.costumer = this.customerStore.customer[0]
       // console.table(this.customer)
