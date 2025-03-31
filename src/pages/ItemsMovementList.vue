@@ -23,6 +23,7 @@
             'dosage_form',
             'unit',
             'quantity',
+            'Closing_quantity',
             'expiration_date',
           ]" :filter="filter" flat bordered class="q-mr-md"
             style=" min-height: 500px; max-height: 500px; height: 100%;">
@@ -60,12 +61,17 @@
                 <q-td key="quantity" style="font-size: 11px" align="left">
                   {{ props.row.quantity }}
                 </q-td>
-                <q-td key="unit" style="font-size: 11px" align="left">
+                  <q-td key="unit" style="font-size: 11px" align="left">
                   {{ props.row.unit }}
                 </q-td>
-                <!-- <q-td key="remaining_quantity" style="font-size: 11px" align="center">
-                  {{ props.row.remaining_quantity ? props.row.remaining_quantity : 0 }}
-                </q-td> -->
+                <q-td key="Closing_quantity" style="font-size: 11px" align="left">
+                  <q-badge  style="width: 100px;" :color="getStockColor(props.row.Closing_quantity,props.row.quantity)" text-color="black" class="flex flex-center q-pa-xs">
+
+                    {{props.row.Closing_quantity}} | {{  getStockPercentage(props.row.Closing_quantity,props.row.quantity) + '%'}}
+                   </q-badge>
+
+                </q-td>
+
                 <q-td key="expiration_date" style="font-size: 11px" align="left">
                   {{ props.row.expiration_date }}
                 </q-td>
@@ -146,7 +152,7 @@ export default {
         field: "quantity",
         sortable: true
       },
-    
+
       {
         name: 'unit',
         required: true,
@@ -155,16 +161,16 @@ export default {
         field: "unit",
         sortable: true
       },
-      // {
-      //   name: 'remaining_quantity',
-      //   required: true,
-      //   label: 'Remaining Quantity',
-      //   align: 'left',
-      //   field: "remaining_quantity",
-      //   format: val => val ? val : 0, // If empty, set to 0
-      //   sortable: true
-      // }
-      // ,
+      {
+        name: 'remaining_quantity',
+        required: true,
+        label: 'Remaining Quantity',
+        align: 'left',
+        field: "remaining_quantity",
+        format: val => val ? val : 0, // If empty, set to 0
+        sortable: true
+      }
+      ,
       {
         name: 'expiration_date',
         required: true,
@@ -187,6 +193,7 @@ export default {
   data(){
 
     return{
+      color:'',
       rows:[],
       filter:'',
       loading:false,
@@ -209,13 +216,31 @@ export default {
 
   methods:{
    async fetchAllStocks(){
-    await this.itemStore.getItems()
+    await this.itemStore.getJoinedTable_DailyInventor_Items()
       this.rows = this.itemStore.items
-    }
+    },
+
+    getStockPercentage(remaining, total) {
+      if (total === 0) return 0; // Prevent division by zero
+      return Math.round((remaining / total) * 100);
+    },
+    getStockColor(remaining, total) {
+      const percentage = this.getStockPercentage(remaining, total);
+
+      if (percentage === 0) return  "red"; // Out of stock (0%)
+      if (percentage <= 10) return  "orange"; // Critical (≤10%)
+      if (percentage <= 20) return  "yellow"; // Low (≤20%)
+      if (percentage <= 50) return  "blue"; // Medium (≤50%)
+      return   "green"; // Safe (>50%)
+    },
+
   },
 
   mounted(){
     this.fetchAllStocks()
+  },
+  watch(){
+
   }
 
 

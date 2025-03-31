@@ -85,7 +85,18 @@ export const useItemStore = defineStore('items', {
       } catch (error) {
         console.log(error)
       }
+    },
+
+    async getJoinedTable_DailyInventor_Items(){
+
+      try {
+        const response = await  api.get('/items/stock/list')
+        this.items = response.data
+      } catch (error) {
+        console.log(error)
+      }
     }
+
 
 
   },

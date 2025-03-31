@@ -69,7 +69,7 @@
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="get_app" class="q-ml-md q-mr-md" size="24px" />Stock
-                  IN</q-item-label
+                  Registration</q-item-label
                 >
               </q-item-section>
             </q-item>
@@ -81,7 +81,7 @@
                 >
               </q-item-section>
             </q-item>
-            <q-item clickable v-ripple >
+            <q-item clickable v-ripple to="/items/movement" >
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="timeline" class="q-ml-md q-mr-md" size="24px" />Stock
