@@ -100,6 +100,20 @@
             <q-item clickable v-ripple >
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
+                  <q-icon name="production_quantity_limits" class="q-ml-md q-mr-md" size="24px" />Out of Stock
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-ripple >
+              <q-item-section class="q-ml-sm">
+                <q-item-label class="text-caption">
+                  <q-icon name="report_problem" class="q-ml-md q-mr-md" size="24px" />Expired
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-ripple >
+              <q-item-section class="q-ml-sm">
+                <q-item-label class="text-caption">
                   <q-icon name="add" class="q-ml-md q-mr-md" />....
                 </q-item-label>
               </q-item-section>
@@ -108,7 +122,6 @@
         </q-list>
       </q-scroll-area>
     </q-drawer>
-
     <q-page-container>
       <router-view />
     </q-page-container>

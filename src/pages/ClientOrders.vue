@@ -8,6 +8,7 @@
             label="Search by Name or Lastname"
             outlined
             @input="filterList"
+
           />
 
           <q-list>
@@ -148,10 +149,9 @@
                     <q-td key="actions" style="font-size: 11px" align="center">
                       <q-btn
                         flat
-                        color="primary"
-                        @click="showClient(props.row.id)"
-                        icon="description"
-                        to="/customer"
+                        color="red"
+                        @click="remove_order(props.row.table_id_transactions)"
+                        icon="remove_shopping_cart"
                       />
                       <!-- <q-btn
                     flat
@@ -243,7 +243,7 @@
       <q-card style="max-width: 300px; width: 70%">
         <q-card-section>
           <pre style="color: darkslategray; font-weight: 900">Enter Quantity:</pre>
-          <q-input v-model.trim="transactionDetails.quantity" label="Quantity" type="text" mask="#####" />
+          <q-input v-model.trim="transactionDetails.quantity" label="Quantity" type="text" mask="#####" autofocus/>
         </q-card-section>
         <q-separator />
         <q-card-actions align="right">
@@ -458,6 +458,12 @@ export default {
     this.get_clients()
   },
   methods: {
+
+     async remove_order(id){
+      await this.transactionStore.remove_order(id)
+      this.getOrders(this.transaction_id)
+      this.$q.notify({ type: 'positive', message: 'order removed successful!' })
+    },
     showData(payload){
 
       this.transactionDetails.transaction_id = this.transaction_id
@@ -481,12 +487,11 @@ export default {
       console.table(payload)
       this.showQuantity = false
 
-      // payload.transaction_id = this.transaction_id
-      // payload.customer_id = this.selectedClient_id
-
        await this.transactionStore.newTransaction(payload)
 
        this.getOrders(payload.transaction_id)
+       this.transactionDetails.quantity=''
+       this.$q.notify({ type: 'positive', message: 'order added successful!' })
     },
 
     async getNewTransactionID(id){

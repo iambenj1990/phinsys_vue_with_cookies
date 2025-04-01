@@ -21,22 +21,29 @@ export const useTransactionStore = defineStore('transactions', {
 
     async newTransaction(payload) {
       try {
-         await api.post('/orders/new', payload)
+        await api.post('/orders/new', payload)
       } catch (error) {
         console.log(error)
       }
     },
 
-    async getTransactionOrders(transaction_id){
+    async getTransactionOrders(transaction_id) {
       try {
-
-        const response = await api.get('orders/transaction/' + transaction_id)
+        const response = await api.get('/orders/transaction/' + transaction_id)
         this.customerTransactions = response.data.transactions
-
+        console.log(this.customerTransactions)
       } catch (error) {
-console.log(error)
+        console.log(error)
       }
-    }
+    },
+
+    async remove_order(id) {
+      try {
+         await api.delete('/orders/order/'+ id)
+      } catch (error) {
+        console.log(error)
+      }
+    },
   },
 })
 
