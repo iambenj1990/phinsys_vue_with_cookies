@@ -65,8 +65,10 @@
                     color="primary"
                     @click="showClient(props.row.id)"
                     icon="description"
-                    to="/customer"
-                  />
+                    to="/customers/profile"
+                  >
+                    <q-tooltip> Profile and History </q-tooltip>
+                  </q-btn>
                   <!-- <q-btn
                     flat
                     color="negative"
@@ -98,7 +100,6 @@
 <script>
 import { useCustomerStore } from '../stores/customersStore'
 export default {
-
   setup() {
     return {
       columns: [
@@ -192,11 +193,10 @@ export default {
 
   data() {
     return {
-      Selected_ID:0,
+      Selected_ID: 0,
       DeleteClient: false,
       search: '',
       rows: [],
-
       CustomerInfo: {
         firstname: '',
         lastname: '',
@@ -219,9 +219,7 @@ export default {
       },
     }
   },
-  methods:{
-
-
+  methods: {
     showDeletepage(id) {
       this.Customers.customer_id = id
       this.DeleteClient = !this.DeleteClient
@@ -231,41 +229,43 @@ export default {
       this.Customers.isEdit = true
       this.Customers.isSave = false
       this.Customers.customer_id = id
+      console.log(id)
     },
-
 
     async get_clients() {
       try {
-        await this.Customers.getCustomers()
-        this.rows = this.Customers.customers //fetch all clients from array
+        await this.Customers.getCustomerOftheDay()
+        this.rows = this.Customers.customersOftheDay //fetch all clients from array
         //console.log(this.rows)
       } catch (error) {
         console.log(error)
       }
-
     },
 
     async remove_client() {
       try {
         // await this.ClientStore.removeClient(this.Selected_ID)
-        await this.Customers.removeCustomer( this.Customers.customer_id)
-        this.$q.notify({ type: 'positive', message: 'Deleting record successful!', position: 'center', timeout:1200 });
-        this.get_clients();
+        await this.Customers.removeCustomer(this.Customers.customer_id)
+        this.$q.notify({
+          type: 'positive',
+          message: 'Deleting record successful!',
+          position: 'center',
+          timeout: 1200,
+        })
+        this.get_clients()
         this.DeleteClient = false
       } catch (error) {
-
         console.error(error)
       }
-    }
+    },
   },
-  computed:{
-    Customers(){
-      return useCustomerStore();
-    }
-
+  computed: {
+    Customers() {
+      return useCustomerStore()
+    },
   },
-  mounted(){
-    this.get_clients();
-  }
+  mounted() {
+    this.get_clients()
+  },
 }
 </script>

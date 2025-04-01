@@ -9,6 +9,7 @@ export const useCustomerStore = defineStore('customers', {
     customer: {},
     customer_id: 0,
     customers: [],
+    customersOftheDay:[],
 
     isEdit: false,
     isSave:true,
@@ -33,7 +34,7 @@ export const useCustomerStore = defineStore('customers', {
     async getCustomer(id) {
       try {
         const response = await api.get('/customers/' + id)
-        this.customer = response.data.customers;
+        this.customer = response.data.customer[0];
         // console.log(this.customer[0])
       } catch (error) {
        console.error( error);
@@ -69,6 +70,15 @@ export const useCustomerStore = defineStore('customers', {
         console.log(error)
       }
     },
+
+    async getCustomerOftheDay(){
+      try {
+        const response = await api.get('/orders/transaction/latest')
+        this.customersOftheDay= response.data.data
+      } catch (error) {
+        console.log(error)
+      }
+    }
   },
 })
 

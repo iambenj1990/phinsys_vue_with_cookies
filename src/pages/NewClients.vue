@@ -316,6 +316,7 @@
   </q-page>
 </template>
 <script>
+
 import { useTagumStore } from '../stores/TagumStore'
 import { useCustomerStore } from '../stores/customersStore'
 import {useLoginStore} from '../stores/loginSessionStore'
@@ -462,7 +463,7 @@ export default {
     async Select_Customer(id) {
       try {
         await this.Customer.getCustomer(id)
-        this.CustomerInfo = {...this.Customer.customer[0]}
+        this.CustomerInfo = {...this.Customer.customer}
 
       } catch (error) {
         if (error.response){
@@ -503,11 +504,14 @@ export default {
   },
 
   mounted(){
+    this.CustomerInfo = JSON.parse(JSON.stringify(this.CustomerInfoDefault))
     this.user_id = this.UserStore.user_id
     this.Select_Customer(this.Customer.customer_id)
-
-
-
+  },
+  unmounted(){
+    this.Customer.isEdit=false
+    this.Customer.isSave=true
+    this.CustomerInfo = JSON.parse(JSON.stringify(this.CustomerInfoDefault))
   },
 
 

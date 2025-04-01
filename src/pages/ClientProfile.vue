@@ -2,42 +2,9 @@
   <q-page>
     <div class="q-pa-md flex justify-center">
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
-        <div>
-          <q-input
-            v-model="searchTerm"
-            label="Search by Name or Lastname"
-            outlined
-            @input="filterList"
-
-          />
-
-          <q-list>
-            <!-- <q-item v-for="item in filteredList" :key="item.id" clickable @click="show_id(item.id)"> -->
-            <q-item
-              v-for="item in filteredList"
-              :key="item.id"
-              clickable
-              @click="get_client(item.id)"
-            >
-              <q-item-section>
-                <q-item-label>
-                  {{ item.firstname }} {{ item.lastname }} {{ item.ext }}
-                </q-item-label>
-                <q-item-label caption
-                  >Date of Birth: {{ item.birthdate }} | Gender: {{ item.gender }} | Category:
-                  {{ item.category }}</q-item-label
-                >
-                <q-item-label caption
-                  >Location: {{ item.city }} | Province: {{ item.province }}</q-item-label
-                >
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </div>
-
         <q-card-section>
           <div class="q-pa-sm flex">
-            <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
+            <q-card class="q-pa-sm" style="max-width: 1000px; width: 100%">
               <div class="text-h6 text-blue text-weight-bolder">Customer Name</div>
               <q-separator></q-separator>
               <div class="row q-gutter-sm">
@@ -114,9 +81,9 @@
         <q-card-section>
 
           <div class="q-pa-sm flex">
-            <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
-              <div class="text-h6 text-blue text-weight-bolder">Order Requests</div>
-              <div class="text-caption text-weight-regular" style="color:grey;">Transacation ID: {{ this.transaction_id }}</div>
+            <q-card class="q-pa-sm" style="max-width: 1000px; width: 100%">
+              <div class="text-h6 text-blue text-weight-bolder">Order Dispense History</div>
+              <!-- <div class="text-caption text-weight-regular" style="color:grey;">Transacation ID: {{ this.transaction_id }}</div> -->
               <q-separator />
               <q-table
                 bordered
@@ -126,8 +93,9 @@
                 row-key="id"
                 no-data-label="No data available"
               >
-                <template v-slot:top-right>
-                  <q-btn color="primary" label="Add Order" icon="add" flat @click="getAvailableMedList()"/>
+                <template v-slot:top-left>
+                  <!-- <q-btn color="primary" label="Add Order" icon="add" flat @click="getAvailableMedList()"/> -->
+                   <q-select :options="transactionIDList" label="Transaction ID" v-model="selectedTransactionID" @click="getOrders(selectedTransactionID)" style="width: 200px;"></q-select>
                 </template>
                 <template #body="props">
                   <q-tr :v-bind="props">
@@ -146,20 +114,20 @@
                     <q-td key="unit" style="font-size: 11px" align="left">
                       {{ props.row.unit }}
                     </q-td>
-                    <q-td key="actions" style="font-size: 11px" align="center">
+                    <!-- <q-td key="actions" style="font-size: 11px" align="center">
                       <q-btn
                         flat
                         color="red"
                         @click="remove_order(props.row.table_id_transactions)"
                         icon="remove_shopping_cart"
                       />
-                      <!-- <q-btn
+                      <q-btn
                     flat
                     color="negative"
                     @click="showDeletepage(props.row.id)"
                     icon="delete"
-                  /> -->
-                    </q-td>
+                  />
+                    </q-td> -->
                   </q-tr>
                 </template>
               </q-table>
@@ -169,8 +137,8 @@
       </q-card>
     </div>
 
-     <!-- SHOW AVAILABLE MEDICINES -->
-  <q-dialog v-model="cartPrompt" persistent style="max-width: 1280px; width: 100%;">
+     <!-- //SHOW AVAILABLE MEDICINES -->
+  <!-- <q-dialog v-model="cartPrompt" persistent style="max-width: 1280px; width: 100%;">
     <q-card style="max-width: 1280px; width: 100%;">
       <div class="row q-gutter-md q-mb-md q-pa-md flex flex-center">
         <q-table :rows="availableMedsRow" :columns="cartCols" row-key="id" :visible-columns="[
@@ -193,9 +161,6 @@
 
           <template #body="props">
             <q-tr :v-bind="props">
-              <!-- <q-td key="po_no" style="font-size: 11px" align="center">
-                {{ props.row.po_no }}
-              </q-td> -->
               <q-td key="generic_name" style="font-size: 11px" align="left">
                 {{ props.row.generic_name }}
               </q-td>
@@ -208,9 +173,7 @@
               <q-td key="dosage_form" style="font-size: 11px" align="left">
                 {{ props.row.dosage_form }}
               </q-td>
-              <!-- <q-td key="quantity" style="font-size: 11px" align="center">
-                {{ props.row.quantity }}
-              </q-td> -->
+
               <q-td key="Closing_quantity" style="font-size: 11px" align="left">
                 {{ props.row.Closing_quantity ? props.row.Closing_quantity : 0 }}
               </q-td>
@@ -225,7 +188,7 @@
               <q-td key="actions" style="font-size: 11px" align="center">
                 <q-btn flat rounded color="primary" style="background-color: orange;" @click="showData(props.row)"
                   icon="add_shopping_cart" />
-                <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
+
               </q-td>
             </q-tr>
 
@@ -236,10 +199,10 @@
         <q-btn flat label="Close" color="primary" @click="cartPrompt = false" />
       </q-card-actions>
     </q-card>
-  </q-dialog>
+  </q-dialog> -->
 
     <!-- SHOW QUANTITY -->
-    <q-dialog v-model="showQuantity" persistent style="max-width: 500px; width: 50%">
+    <!-- <q-dialog v-model="showQuantity" persistent style="max-width: 500px; width: 50%">
       <q-card style="max-width: 300px; width: 70%">
         <q-card-section>
           <pre style="color: darkslategray; font-weight: 900">Enter Quantity:</pre>
@@ -251,7 +214,7 @@
           <q-btn flat label="Add" color="primary" @click="add_Order(this.transactionDetails)" />
         </q-card-actions>
       </q-card>
-    </q-dialog>
+    </q-dialog> -->
   </q-page>
 </template>
 
@@ -311,115 +274,16 @@ export default {
           headerStyle: 'font-size: 1.2 em',
         },
 
-        {
-          name: 'Actions',
-          label: 'Actions',
-          field: 'actions',
-          align: 'center',
-          headerClasses: 'bg-grey-7 text-white',
-          headerStyle: 'font-size: 1.2 em',
-        },
       ],
 
-      cartCols:[
-      // {
-      //   name: 'po_no',
-      //   required: true,
-      //   label: 'PO No',
-      //   align: 'left',
-      //   field: "po_no",
-      //   sortable: true
-      // },
 
-      {
-        name: 'generic_name',
-        required: true,
-        label: 'Generic Name',
-        align: 'left',
-        field: "generic_name",
-        sortable: true
-      },
-      {
-        name: 'brand_name',
-        required: true,
-        label: 'Brand Name',
-        align: 'left',
-        field: "brand_name",
-        sortable: true
-      },
-      {
-        name: 'dosage',
-        required: true,
-        label: 'Dosage',
-        align: 'left',
-        field: "dosage",
-        sortable: true
-      },
-      {
-        name: 'dosage_form',
-        required: true,
-        label: 'Type',
-        align: 'left',
-        field: "dosage_form",
-        sortable: true
-      },
-      // {
-      //   name: 'quantity',
-      //   required: true,
-      //   label: 'remaining_quantity',
-      //   align: 'left',
-      //   field: "quantity",
-      //   sortable: true
-      // },
-      { name: 'Closing_quantity',
-        required: true,
-        label: 'Quantity',
-        align: 'left',
-        field: "remaining_quantity",
-        format: val => val ? val : 0, // If empty, set to 0
-        sortable: true
-      },
-
-      {
-        name: 'unit',
-        required: true,
-        label: 'Unit',
-        align: 'left',
-        field: "unit",
-        sortable: true
-      },
-
-      {
-        name: 'expiration_date',
-        required: true,
-        label: 'Expiration Date',
-        align: 'left',
-        field: "expiration_date",
-        sortable: true
-      },
-      {
-        name: 'actions',
-        required: true,
-        label: 'Actions',
-        align: 'center',
-        field: "actions",
-        sortable: true
-      },
-      ],
     }
   },
   data() {
     return {
-      selectedClient_id:0,
-      transaction_id:0,
-      filter:'',
-      cartPrompt:false,
-      showQuantity:false,
-      availableMedsRow:[],
+      selectedTransactionID:'',
+      transactionIDList:[],
       rows: [],
-      searchTerm: '',
-      filteredList: [],
-      customerList: [],
       costumer: {
         firstname: '',
         lastname: '',
@@ -454,76 +318,30 @@ export default {
     }
   },
   mounted() {
-    // this.filteredList = this.peopleList
-    this.get_clients()
 
+    this.get_client(this.customerStore.customer_id)
+    this.getTransactionIds(this.customerStore.customer_id)
   },
   methods: {
 
-     async remove_order(id){
-      await this.transactionStore.remove_order(id)
-      this.getOrders(this.transaction_id)
-      this.$q.notify({ type: 'positive', message: 'order removed successful!' })
-    },
-    showData(payload){
 
-      this.transactionDetails.transaction_id = this.transaction_id
-      this.transactionDetails.customer_id = this.selectedClient_id
-      this.transactionDetails.transaction_date = new Date().toISOString().slice(0, 10)
-      this.transactionDetails.item_id = payload.item_id
-      this.transactionDetails.user_id = 1
-      console.log(payload)
-      console.log(this.transactionDetails)
-      this.showQuantity = true
-
+    async getTransactionIds(id){
+      await this.transactionStore.getTransactionID(id)
+      // console.log( this.transactionStore.customerTransactionsIdList)
+      this.transactionIDList = this.transactionStore.customerTransactionsIdList
     },
 
     async getOrders(transaction_id){
       await this.transactionStore.getTransactionOrders(transaction_id)
       this.rows = this.transactionStore.customerTransactions
     },
-    async add_Order(payload){
-      payload.quantity = Number(payload.quantity)
 
-      console.table(payload)
-      this.showQuantity = false
 
-       await this.transactionStore.newTransaction(payload)
-
-       this.getOrders(payload.transaction_id)
-       this.transactionDetails.quantity=''
-       this.$q.notify({ type: 'positive', message: 'order added successful!' })
-    },
-
-    async getNewTransactionID(id){
-      await this.transactionStore.newTransactionID(id)
-      this.transaction_id = this.transactionStore.newCustomerTransactionID
-    },
-
-    async getAvailableMedList(){
-      this.cartPrompt=true
-
-      await this.itemStore.getJoinedTable_DailyInventor_Items()
-      this.availableMedsRow = this.itemStore.items
-    },
     async get_client(id) {
-      this.selectedClient_id = id
       await this.customerStore.getCustomer(id)
       this.costumer = this.customerStore.customer
-      console.table(this.customer)
-      this.searchTerm = ''
-      this.getNewTransactionID(id)
+    },
 
-    },
-    async get_clients() {
-      try {
-        await this.customerStore.getCustomers()
-        this.customerList = this.customerStore.customers //fetch all clients from array
-        console.log(this.customerList)
-      } catch (error) {
-        console.log(error)
-      }
-    },
     show_id(id) {
       this.$q.notify({
         type: 'positive',
@@ -535,31 +353,15 @@ export default {
       this.searchTerm = ''
     },
 
-    filterList() {
-      if (!this.searchTerm) {
-        this.filteredList = this.customerList
-      } else {
-        this.filteredList = this.customerList.filter((person) => {
-          const fullName =
-            `${person.firstname} ${person.middlename} ${person.lastname} ${person.ext}`.toLowerCase()
-          return fullName.includes(this.searchTerm.toLowerCase())
-        })
-      }
-    },
+
   },
 
   watch: {
-    searchTerm(newValue) {
-      if (newValue) {
-        this.filteredList = this.customerList.filter((person) => {
-          const fullName =
-            `${person.firstname} ${person.middlename} ${person.lastname} ${person.ext}`.toLowerCase()
-          return fullName.includes(newValue.toLowerCase())
-        })
-      } else {
-        this.filteredList = []
-      }
-    },
+    'selectedTransactionID' (newvalue){
+    this.getOrders(newvalue)
+
+    }
+
   },
   computed: {
     customerStore() {

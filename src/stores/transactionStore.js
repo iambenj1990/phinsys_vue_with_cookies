@@ -7,6 +7,7 @@ export const useTransactionStore = defineStore('transactions', {
     customerTransaction: {},
     customerTransactionID: 0,
     newCustomerTransactionID: 0,
+    customerTransactionsIdList:[],
   }),
 
   actions: {
@@ -14,6 +15,16 @@ export const useTransactionStore = defineStore('transactions', {
       try {
         const response = await api.get('/orders/transaction/new/' + newCustomerTransaction)
         this.newCustomerTransactionID = response.data
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    async getTransactionID(customer_id) {
+      try {
+        const response = await api.get('/orders/transaction/unique/' + customer_id)
+        // console.log( response.data)
+        this.customerTransactionsIdList = response.data
       } catch (error) {
         console.log(error)
       }
@@ -31,7 +42,7 @@ export const useTransactionStore = defineStore('transactions', {
       try {
         const response = await api.get('/orders/transaction/' + transaction_id)
         this.customerTransactions = response.data.transactions
-        console.log(this.customerTransactions)
+        // console.log(this.customerTransactions)
       } catch (error) {
         console.log(error)
       }
