@@ -67,7 +67,7 @@
                 <q-td key="Closing_quantity" style="font-size: 11px" align="left">
                   <q-badge  style="width: 100px;" :color="getStockColor(props.row.Closing_quantity,props.row.quantity)" text-color="black" class="flex flex-center q-pa-xs">
 
-                    {{props.row.Closing_quantity}} | {{  getStockPercentage(props.row.Closing_quantity,props.row.quantity) + '%'}}
+                    {{props.row.Closing_quantity}}
                    </q-badge>
 
                 </q-td>

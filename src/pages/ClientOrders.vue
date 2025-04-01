@@ -130,31 +130,21 @@
                 </template>
                 <template #body="props">
                   <q-tr :v-bind="props">
-                    <q-td key="lastname" style="font-size: 11px" align="left">
-                      {{ props.row.lastname }}
+                    <q-td key="brand_name" style="font-size: 11px" align="left">
+                      {{ props.row.brand_name }}
                     </q-td>
-                    <q-td key="firstname" style="font-size: 11px" align="left">
-                      {{ props.row.firstname }}
+                    <q-td key="generic_name" style="font-size: 11px" align="left">
+                      {{ props.row.generic_name }}
                     </q-td>
-                    <q-td key="middle_name" style="font-size: 11px" align="left">
-                      {{ props.row.middlename }}
+                    <q-td key="dosage" style="font-size: 11px" align="left">
+                      {{ props.row.dosage }}
                     </q-td>
-                    <q-td key="ext" style="font-size: 11px" align="left">
-                      {{ props.row.ext }}
+                    <q-td key="quantity" style="font-size: 11px" align="left">
+                      {{ props.row.quantity }}
                     </q-td>
-                    <q-td key="birthdate" style="font-size: 11px" align="left">
-                      {{ props.row.birthdate }}
+                    <q-td key="unit" style="font-size: 11px" align="left">
+                      {{ props.row.unit }}
                     </q-td>
-                    <q-td key="age" style="font-size: 11px" align="left">
-                      {{ props.row.age }}
-                    </q-td>
-                    <q-td key="contact_number" style="font-size: 11px" align="left">
-                      {{ props.row.contact_number }}
-                    </q-td>
-                    <q-td key="barangay" style="font-size: 11px" align="left">
-                      {{ props.row.barangay }}
-                    </q-td>
-
                     <q-td key="actions" style="font-size: 11px" align="center">
                       <q-btn
                         flat
@@ -253,12 +243,12 @@
       <q-card style="max-width: 300px; width: 70%">
         <q-card-section>
           <pre style="color: darkslategray; font-weight: 900">Enter Quantity:</pre>
-          <q-input v-model.trim="orderInfo.quantity" label="Quantity" type="text" mask="#####" />
+          <q-input v-model.trim="transactionDetails.quantity" label="Quantity" type="text" mask="#####" />
         </q-card-section>
         <q-separator />
         <q-card-actions align="right">
           <q-btn flat label="Cancel" color="grey" @click="showQuantity = false" />
-          <q-btn flat label="Add" color="primary" @click="Add_Orders(this.orderInfo)" />
+          <q-btn flat label="Add" color="primary" @click="add_Order(this.transactionDetails)" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -266,6 +256,7 @@
 </template>
 
 <script>
+
 import { useCustomerStore } from 'src/stores/customersStore'
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
@@ -274,36 +265,36 @@ export default {
     return {
       cols: [
         {
-          name: 'lastname',
+          name: 'brand_name',
           label: 'Brandname',
-          field: 'lastname',
+          field: 'brand_name',
           sortable: true,
           align: 'left',
           headerClasses: 'bg-grey-7 text-white',
           headerStyle: 'font-size: 1.2 em',
         },
         {
-          name: 'firstname',
+          name: 'generic_name',
           label: 'Generic Name',
-          field: 'firstname',
+          field: 'generic_name',
           sortable: true,
           align: 'left',
           headerClasses: 'bg-grey-7 text-white',
           headerStyle: 'font-size: 1.2 em',
         },
         {
-          name: 'middlename',
+          name: 'dosage',
           label: 'Dosage',
-          field: 'middlename',
+          field: 'dosage',
           sortable: true,
           align: 'left',
           headerClasses: 'bg-grey-7 text-white',
           headerStyle: 'font-size: 1.2 em',
         },
         {
-          name: 'ext',
+          name: 'quantity',
           label: 'Quantity',
-          field: 'ext',
+          field: 'quantity',
           sortable: true,
           align: 'left',
           headerClasses: 'bg-grey-7 text-white',
@@ -311,9 +302,9 @@ export default {
         },
 
         {
-          name: 'birthdate',
+          name: 'unit',
           label: 'Unit',
-          field: 'birthdate',
+          field: 'unit',
           sortable: true,
           align: 'left',
           headerClasses: 'bg-grey-7 text-white',
@@ -452,12 +443,14 @@ export default {
 
       transactionDetails:{
         transaction_id:'',
-        item_id:0,
         customer_id:0,
+        transaction_date:0,
+        item_id:0,
         quantity:0,
         user_id:0,
-        transaction_date:0
       }
+
+
     }
   },
   mounted() {
@@ -465,13 +458,35 @@ export default {
     this.get_clients()
   },
   methods: {
+    showData(payload){
 
+      this.transactionDetails.transaction_id = this.transaction_id
+      this.transactionDetails.customer_id = this.selectedClient_id
+      this.transactionDetails.transaction_date = new Date().toISOString().slice(0, 10)
+      this.transactionDetails.item_id = payload.item_id
+      this.transactionDetails.user_id = 1
+      console.log(payload)
+      console.log(this.transactionDetails)
+      this.showQuantity = true
+
+    },
+
+    async getOrders(transaction_id){
+      await this.transactionStore.getTransactionOrders(transaction_id)
+      this.rows = this.transactionStore.customerTransactions
+    },
     async add_Order(payload){
-      
-      payload.transaction_id = this.transaction_id
-      payload.customer_id = this.selectedClient_id
+      payload.quantity = Number(payload.quantity)
 
-      await this.transactionStore.newTransaction(payload)
+      console.table(payload)
+      this.showQuantity = false
+
+      // payload.transaction_id = this.transaction_id
+      // payload.customer_id = this.selectedClient_id
+
+       await this.transactionStore.newTransaction(payload)
+
+       this.getOrders(payload.transaction_id)
     },
 
     async getNewTransactionID(id){

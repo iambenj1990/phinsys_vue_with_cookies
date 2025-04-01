@@ -26,6 +26,17 @@ export const useTransactionStore = defineStore('transactions', {
         console.log(error)
       }
     },
+
+    async getTransactionOrders(transaction_id){
+      try {
+
+        const response = await api.get('orders/transaction/' + transaction_id)
+        this.customerTransactions = response.data.transactions
+
+      } catch (error) {
+console.log(error)
+      }
+    }
   },
 })
 
