@@ -23,8 +23,6 @@
               class="q-mr-md"
               style="min-height: 500px; max-height: 1000px; height: 100%"
             >
-              <!-- <q-table flat bordered :rows="itemsHolder" :columns="columns" row-key="id"
-                        style="max-width: 900px;width: 100%; " :filter="filter" class="q-mr-md"> -->
               <template v-slot:top-left>
                 <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
                   <template v-slot:append>
@@ -36,11 +34,18 @@
                 <q-btn
                   flat
                   type="button"
-                  label="New Stocks"
-                  class="q-mr-md q-ml-md"
-                  color="primary"
-                  icon="add"
-                  to="/items/new"
+                  label="Close Stocks"
+                  class=""
+                  color="grey"
+                  @click="closeStock()"
+                />
+                <q-btn
+                  flat
+                  type="button"
+                  label="Open Stocks"
+                  class="q-mx-sm"
+                  color="green"
+                  @click="openStock()"
                 />
               </template>
 
@@ -62,7 +67,9 @@
                     {{ props.row.dosage_form }}
                   </q-td>
                   <q-td key="Openning_quantity" style="font-size: 11px" align="left">
-                    {{ props.row.Openning_quantity }}
+                    {{
+                      !props.row.Openning_quantity ? 'Stock Closed' : props.row.Openning_quantity
+                    }}
                   </q-td>
                   <q-td key="unit" style="font-size: 11px" align="left">
                     {{ props.row.unit }}
@@ -79,7 +86,9 @@
                       text-color="black"
                       class="flex flex-center q-pa-xs"
                     >
-                      {{ props.row.Closing_quantity }}
+                      {{
+                        !props.row.Closing_quantity ? 'Stock Closed' : props.row.Closing_quantity
+                      }}
                     </q-badge>
                   </q-td>
 
@@ -93,7 +102,7 @@
                   </q-td>
 
                   <q-td key="actions" style="font-size: 11px" align="center">
-                    <q-btn flat color="primary" @click="editItem(props.row)" icon="edit_document">
+                    <q-btn flat color="primary" @click="AdjustItem(props.row)" icon="edit_document">
                       <q-tooltip> Adjustment </q-tooltip>
                     </q-btn>
                     <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
@@ -105,16 +114,53 @@
         </div>
       </q-card>
     </div>
+    <q-dialog v-model="showAdjustment" persistent style="max-width: 500px; width: 50%">
+      <q-card style="max-width: 800px; width: 100%">
+        <q-card-section class="text-caption">
+          <div>
+            <pre>Adjust Quantity</pre>
+          </div>
+          <div class="row flex">
+            <div class="col-12 col-md-2 q-mx-sm text-caption">
+              <q-input readonly dense label="Brand Name" :model="inventoryAdjustment.clos"></q-input>
+            </div>
+            <div class="col-12 col-md-2 q-mx-sm text-caption">
+              <q-input readonly dense label="Generic Name"></q-input>
+            </div>
+            <div class="col-12 col-md-2 q-mx-sm text-caption">
+              <q-input readonly dense label="Dosage"></q-input>
+            </div>
+            <div class="col-12 col-md-2 q-mx-sm text-caption">
+              <q-input readonly dense label="Type"></q-input>
+            </div>
+            <div class="col-12 col-md-2 q-mx-sm text-caption q-mb-md">
+              <q-input readonly dense label="Quantity"></q-input>
+            </div>
+          </div>
+          <q-separator></q-separator>
+          <q-input label="Adjusted Quantity" type="text" mask="#####" autofocus />
+        </q-card-section>
+        <q-separator />
+        <q-card-actions align="right">
+          <q-btn flat label="Cancel" color="grey" @click="showAdjustment = false" />
+          <q-btn flat label="Add" color="primary"  />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script>
 import { useItemStore } from 'src/stores/itemsStore'
+import { useTransactionStore } from 'src/stores/transactionStore'
 export default {
   computed: {
     itemStore() {
       return useItemStore()
     },
+    transactionStore(){
+      return useTransactionStore()
+    }
   },
   setup() {
     return {
@@ -219,6 +265,7 @@ export default {
   },
   data() {
     return {
+      showAdjustment:false,
       color: '',
       rows: [],
       filter: '',
@@ -236,13 +283,48 @@ export default {
         expiration_date: '',
         user_id: 0,
       },
+
+      inventoryAdjustment:{
+        stock_id:0,
+        Closing_quantity:0,
+        Openning_quantity:0,
+        quantity_out:0,
+        transaction_date:'',
+        user_id:1,
+        remarks:'',
+        status:'',
+      }
     }
   },
 
   methods: {
+
+    async getDailyForAdjustment(id){
+      await this.transactionStore.getDailyInventory(id)
+      this.inventoryAdjustment = this.transactionStore.SelecteddailyInventory
+    },
+
+    AdjustItem(id){
+      this.showAdjustment = true
+      this.getDailyForAdjustment(id)
+      console.log(id)
+    },
+    editItem(id){
+      console.log(id)
+    },
     async fetchAllStocks() {
       await this.itemStore.getJoinedTable_DailyInventor_Items()
       this.rows = this.itemStore.items
+    },
+
+    async openStock(){
+      await this.itemStore.openingStocks()
+       this.fetchAllStocks()
+    },
+
+    async closeStock(){
+      await this.itemStore.closingStocks()
+      this.fetchAllStocks()
     },
 
     getStockPercentage(remaining, total) {

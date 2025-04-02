@@ -51,7 +51,7 @@
                 :rules="[(val) => !!val || 'Dosage is required']"
               />
             </div>
-            <div class="col-12 col-md-1 q-pa-sm">
+            <div class="col-12 col-md-2 q-pa-sm">
               <q-select
                 dense
                 v-model="MedicineInfo.dosage_form"
@@ -62,7 +62,7 @@
                 :rules="[(val) => !!val || 'Dosage form is required']"
               />
             </div>
-            <div class="col-12 col-md-1 q-pa-sm">
+            <div class="col-12 col-md-2 q-pa-sm">
               <q-input
                 dense
                 v-model="MedicineInfo.quantity"
@@ -74,7 +74,7 @@
                 :rules="[(val) => !!val || 'Quantity is required']"
               />
             </div>
-            <div class="col-12 col-md-1 q-pa-sm">
+            <div class="col-12 col-md-2 q-pa-sm">
               <q-select
                 dense
                 v-model="MedicineInfo.unit"
@@ -85,7 +85,7 @@
                 :rules="[(val) => !!val || 'Unit quantity is required']"
               />
             </div>
-            <div class="col-12 col-md-1 q-pa-sm">
+            <div class="col-12 col-md-2 q-pa-sm">
               <q-input
                 dense
                 v-model="MedicineInfo.expiration_date"
@@ -100,6 +100,7 @@
               <q-input
                 dense
                 v-model="MedicineInfo.price"
+                prefix="₱"
                 label="Price"
                 class="full-width"
                 type="number"

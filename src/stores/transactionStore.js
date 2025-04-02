@@ -8,6 +8,8 @@ export const useTransactionStore = defineStore('transactions', {
     customerTransactionID: 0,
     newCustomerTransactionID: 0,
     customerTransactionsIdList:[],
+
+    SelecteddailyInventory:{}
   }),
 
   actions: {
@@ -55,7 +57,14 @@ export const useTransactionStore = defineStore('transactions', {
         console.log(error)
       }
     },
+
+    async getDailyInventory(id){
+      const response = await api.get('/daily/'+id)
+      this.SelecteddailyInventory = response.data.transaction
+    }
   },
+
+
 })
 
 if (import.meta.hot) {

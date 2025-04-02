@@ -95,7 +95,23 @@ export const useItemStore = defineStore('items', {
       } catch (error) {
         console.log(error)
       }
+    },
+
+    async closingStocks(){
+      try {
+
+        await api.post('/daily/inventory/close-latest')
+    } catch (error) {
+      console.log(error)
     }
+    },
+    async openingStocks(){
+     try {
+       await api.post('/daily/inventory/open-latest')
+     } catch (error) {
+      console.log(error)
+     }
+    },
 
 
 

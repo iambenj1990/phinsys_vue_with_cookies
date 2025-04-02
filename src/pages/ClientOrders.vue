@@ -467,6 +467,11 @@ export default {
     },
     showData(payload){
 
+      if(!payload.Openning_quantity && !payload.Closing_quantity){
+        this.$q.notify({ type: 'negative', message: 'Cannot add item Stocks still closed!' })
+        return
+       }
+
       this.transactionDetails.transaction_id = this.transaction_id
       this.transactionDetails.customer_id = this.selectedClient_id
       this.transactionDetails.transaction_date = new Date().toISOString().slice(0, 10)
@@ -482,17 +487,18 @@ export default {
       await this.transactionStore.getTransactionOrders(transaction_id)
       this.rows = this.transactionStore.customerTransactions
     },
-    async add_Order(payload){
-      payload.quantity = Number(payload.quantity)
 
-      console.table(payload)
+    async add_Order(payload){
+
+      payload.quantity = Number(payload.quantity)
       this.showQuantity = false
 
        await this.transactionStore.newTransaction(payload)
+       this.getAvailableMedList()
 
        this.getOrders(payload.transaction_id)
        this.transactionDetails.quantity=''
-       this.$q.notify({ type: 'positive', message: 'order added successful!' })
+      //  this.$q.notify({ type: 'positive', message: 'order added successful!' })
     },
 
     async getNewTransactionID(id){
@@ -501,16 +507,18 @@ export default {
     },
 
     async getAvailableMedList(){
-      this.cartPrompt=true
 
+      this.cartPrompt=true
       await this.itemStore.getJoinedTable_DailyInventor_Items()
+
+
       this.availableMedsRow = this.itemStore.items
     },
     async get_client(id) {
       this.selectedClient_id = id
+      console.log(id)
       await this.customerStore.getCustomer(id)
       this.costumer = this.customerStore.customer
-      console.table(this.customer)
       this.searchTerm = ''
       this.getNewTransactionID(id)
 
