@@ -1,13 +1,13 @@
 <template>
-  <q-page class="flex flex-center q-ma-sm">
-    <q-card class="q-pa-sm" style="max-width: 900px; width: 100%">
+  <q-page class="q-pa-sm q-ma-sm">
+    <q-card class="q-pa-sm" style="width: 100%; display: inline-block;">
       <div class="row q-gutter-md q-pb-sm">
         <div class="col-12">
           <div class="text-subtitle2 text-primary">Customer Information</div>
         </div>
       </div>
       <q-separator />
-      <q-form @submit.prevent="" >
+
       <div class="row q-gutter-md q-pt-lg">
         <div class="col-12 col-md-3 q-pa-sm">
           <q-input
@@ -281,6 +281,7 @@
             color="primary"
             @click="Insert_Customer(CustomerInfo)"
              v-if="Customer.isSave"
+             style="width: 100px;"
           />
         <!-- </div> -->
         <!-- <div class="col-12 flex justify-end q-pa-md-lg"  v-else-if="Customer.isEdit" > -->
@@ -296,8 +297,6 @@
 
       </div>
 
-
-      </q-form>
     </q-card>
 
     <q-dialog v-model="showError" persistent>
@@ -396,6 +395,7 @@ export default {
       this.Customer.customer_id = 0
      // this.CustomerInfo =JSON.parse(JSON.stringify(this.CustomerInfoDefault))
       this.CustomerInfo = JSON.parse(JSON.stringify(this.CustomerInfoDefault))
+      this.Customer.closeNewCustomer=false
 
     },
     calculateAge(birthdate) {
@@ -444,6 +444,7 @@ export default {
          await this.Customer.newCustomer(payload)
          this.$q.notify({ type: 'positive', message: 'Customer registration successful!', position: 'center', timeout:1200 });
           this.CustomerInfo = {...this.CustomerInfoDefault}
+          this.Customer.closeNewCustomer=false
       } catch (error) {
         if (error.response){
           const {data} = error.response

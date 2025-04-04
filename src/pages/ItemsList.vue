@@ -36,7 +36,7 @@
               </q-input>
             </template>
             <template v-slot:top-right>
-              <q-btn flat type="button" label="New Stocks" class="q-mr-md q-ml-md" color="primary"
+              <q-btn flat type="button" label="Add Purchases" class="q-mr-md q-ml-md" color="primary"
                  icon="add" to="/items/new" />
             </template>
 
@@ -146,7 +146,7 @@ export default {
         field: "quantity",
         sortable: true
       },
-    
+
       {
         name: 'unit',
         required: true,

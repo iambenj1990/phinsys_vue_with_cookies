@@ -37,39 +37,41 @@
             <p class="text-sm">Dashboard</p>
           </q-item>
           <q-separator />
-          <q-expansion-item
+          <q-expansion-item v-model="expanded"
             label="Client Management"
             icon="app_registration"
             class="text-subtitle2"
           >
-            <q-item clickable v-ripple  to="/customers">
-              <q-item-section class="q-ml-sm">
-                <q-item-label class="text-caption">
-                  <q-icon name="person_add" class="q-ml-md q-mr-md" size="24px" />
-                  New Customer
-                </q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item clickable v-ripple to="/customer/orders">
+          <q-item clickable v-ripple to="/customer/orders">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="pallet" class="q-ml-md q-mr-md" size="24px" />
-                  Dispensing
+                  Releasing
                 </q-item-label>
               </q-item-section>
             </q-item>
+            <q-item clickable v-ripple  to="/customers">
+              <q-item-section class="q-ml-sm">
+                <q-item-label class="text-caption">
+                  <q-icon name="person" class="q-ml-md q-mr-md" size="24px" />
+                  Customer History
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+
           </q-expansion-item>
           <q-expansion-item
             label="Stocks Management"
             expand-separator
             icon="inventory"
             class="text-subtitle2"
+            v-model="expanded"
           >
             <q-item clickable v-ripple  to="/items/list">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="get_app" class="q-ml-md q-mr-md" size="24px" />Stock
-                  Registration</q-item-label
+                  Purchases</q-item-label
                 >
               </q-item-section>
             </q-item>
@@ -85,7 +87,7 @@
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="timeline" class="q-ml-md q-mr-md" size="24px" />Stock
-                  Movement</q-item-label
+                  Movements</q-item-label
                 >
               </q-item-section>
             </q-item>
@@ -96,6 +98,7 @@
             expand-separator
             icon="bar_chart"
             class="text-subtitle2"
+            v-model="expanded"
           >
             <q-item clickable v-ripple >
               <q-item-section class="q-ml-sm">
@@ -141,6 +144,7 @@ export default {
 
   setup() {
     const leftDrawerOpen = ref(false)
+
     const search = ref('')
 
     function toggleLeftDrawer() {
@@ -148,6 +152,7 @@ export default {
     }
 
     return {
+
       leftDrawerOpen,
       search,
       toggleLeftDrawer,
@@ -155,7 +160,7 @@ export default {
   },
   data(){
     return{
-
+      expanded: true
 
     }
   },

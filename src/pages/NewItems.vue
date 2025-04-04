@@ -84,6 +84,16 @@
                 lazy-rules
                 :rules="[(val) => !!val || 'Unit quantity is required']"
               />
+              <div v-if ="MedicineInfo.unit == 'BOX'">
+                <q-input
+                dense
+
+                label="Quantity/Box"
+                class="full-width"
+                lazy-rules
+                :rules="[(val) => !!val || 'Quantity is required']"
+              />
+              </div>
             </div>
             <div class="col-12 col-md-2 q-pa-sm">
               <q-input
@@ -101,7 +111,7 @@
                 dense
                 v-model="MedicineInfo.price"
                 prefix="₱"
-                label="Price"
+                label="Total Price"
                 class="full-width"
                 type="number"
                 inputmode="numeric"

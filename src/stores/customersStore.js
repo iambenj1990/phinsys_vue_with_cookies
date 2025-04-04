@@ -13,6 +13,7 @@ export const useCustomerStore = defineStore('customers', {
 
     isEdit: false,
     isSave:true,
+    closeNewCustomer:false
 
   }),
 

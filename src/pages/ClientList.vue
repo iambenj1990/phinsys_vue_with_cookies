@@ -14,14 +14,18 @@
           <q-table
             flat
             bordered
-            title="Customer list"
+
             :filter="search"
             :rows="rows"
             :columns="columns"
             row-key="id"
             binary-state-sort
             no-data-label="No data available"
+            title="Client Logs/ History"
+            title-class="text-bold text-subtitle1 text-primary"
+            square
           >
+
             <template v-slot:top-right>
               <q-btn
                 color="primary"
