@@ -62,13 +62,12 @@
                 :rules="[(val) => !!val || 'Dosage form is required']"
               />
             </div>
-            <div class="col-12 col-md-2 q-pa-sm">
+            <div class="col-12 col-md-1 q-pa-sm">
               <q-input
                 dense
                 v-model="MedicineInfo.quantity"
                 label="Quantity"
                 type="number"
-                class="full-width"
                 inputmode="numeric"
                 lazy-rules
                 :rules="[(val) => !!val || 'Quantity is required']"
@@ -81,18 +80,29 @@
                 :options="sUnit"
                 label="Unit"
                 class="full-width"
+                style="width: 120px"
                 lazy-rules
                 :rules="[(val) => !!val || 'Unit quantity is required']"
               />
-              <div v-if ="MedicineInfo.unit == 'BOX'">
-                <q-input
-                dense
-
-                label="Quantity/Box"
-                class="full-width"
-                lazy-rules
-                :rules="[(val) => !!val || 'Quantity is required']"
-              />
+              <div v-if="MedicineInfo.unit == 'BOX'">
+                <div class="row">
+                  <q-input
+                    dense
+                    label="Box Quantity"
+                    style="width: 120px"
+                    class="full-width"
+                    lazy-rules
+                    :rules="[(val) => !!val || 'Box Quantity is required']"
+                  />
+                  <q-input
+                    dense
+                    style="width: 100px"
+                    label="Quantity per Box"
+                    class="q-mx-md full-width"
+                    lazy-rules
+                    :rules="[(val) => !!val || 'Quantity per Box is required']"
+                  />
+                </div>
               </div>
             </div>
             <div class="col-12 col-md-2 q-pa-sm">

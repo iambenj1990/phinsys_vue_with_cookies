@@ -48,6 +48,8 @@ export const useCustomerStore = defineStore('customers', {
        try {
          const response = await api.post('/customers', payload)
          this.customers.push(response.data.customers)
+         this.customer_id = response.data.customers.id
+
        } catch (error) {
         console.error( error);
        }

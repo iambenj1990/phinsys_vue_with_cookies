@@ -639,6 +639,10 @@ export default {
   },
 
   watch: {
+    'customerStore.customer_id'(value){
+      this.get_client(value)
+    },
+
     searchTerm(newValue) {
       if (newValue) {
         this.filteredList = this.customerList.filter((person) => {

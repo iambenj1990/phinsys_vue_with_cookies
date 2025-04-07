@@ -437,7 +437,7 @@ export default {
     },
 
     async Insert_Customer(payload) {
-      payload.user_id = this.user_id
+      payload.user_id = 1
       try {
         this.errorMsg = []
           this.us
