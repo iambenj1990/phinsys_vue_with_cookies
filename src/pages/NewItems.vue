@@ -62,17 +62,7 @@
                 :rules="[(val) => !!val || 'Dosage form is required']"
               />
             </div>
-            <div class="col-12 col-md-1 q-pa-sm">
-              <q-input
-                dense
-                v-model="MedicineInfo.quantity"
-                label="Quantity"
-                type="number"
-                inputmode="numeric"
-                lazy-rules
-                :rules="[(val) => !!val || 'Quantity is required']"
-              />
-            </div>
+
             <div class="col-12 col-md-2 q-pa-sm">
               <q-select
                 dense
@@ -83,6 +73,7 @@
                 style="width: 120px"
                 lazy-rules
                 :rules="[(val) => !!val || 'Unit quantity is required']"
+                @update:model-value="handleUnitChange"
               />
               <div v-if="MedicineInfo.unit == 'BOX'">
                 <div class="row">
@@ -93,6 +84,8 @@
                     class="full-width"
                     lazy-rules
                     :rules="[(val) => !!val || 'Box Quantity is required']"
+                    v-model="MedicineInfo.box_quantity"
+                  @update:model-value="computeTotalQuantity"
                   />
                   <q-input
                     dense
@@ -101,9 +94,22 @@
                     class="q-mx-md full-width"
                     lazy-rules
                     :rules="[(val) => !!val || 'Quantity per Box is required']"
+                    v-model="MedicineInfo.quantity_per_box"
+                    @update:model-value="computeTotalQuantity"
                   />
                 </div>
               </div>
+            </div>
+            <div class="col-12 col-md-1 q-pa-sm">
+              <q-input
+                dense
+                v-model="MedicineInfo.quantity"
+                label="Quantity"
+                type="number"
+                inputmode="numeric"
+                lazy-rules
+                :rules="[(val) => !!val || 'Quantity is required']"
+              />
             </div>
             <div class="col-12 col-md-2 q-pa-sm">
               <q-input
@@ -213,6 +219,8 @@
     <pre>{PO Number : {{ this.New_Po }}}</pre>
     <pre>{Status : {{ this.toUpdate }}}</pre>
     <pre>{Price: {{ MedicineInfo.price }}}</pre>
+    <pre>{Price: {{ MedicineInfo.box_quantity }}}</pre>
+    <pre>{Price: {{ MedicineInfo.quantity_per_box }}}</pre>
   </q-page>
 </template>
 
@@ -251,6 +259,8 @@ export default {
         category: 'N/A',
         unit: '',
         quantity: '',
+        box_quantity: 0,
+        quantity_per_box: 0,
         price: 0,
         expiration_date: '',
         user_id: 1,
@@ -359,13 +369,31 @@ export default {
         category: 'N/A',
         unit: '',
         quantity: '',
+        box_quantity: 0,
+        quantity_per_box: 0,
         price: 0,
         expiration_date: '',
         user_id: 1,
       },
     }
   },
+
   methods: {
+
+    handleUnitChange(){
+      //Reset values when unit change
+      if (this.MedicineInfo.unit !=='BOX'){
+        this.MedicineInfo.quantity_per_box = 0
+        this.MedicineInfo.box_quantity = 0
+        this.MedicineInfo.quantity = 0
+      }
+    },
+    computeTotalQuantity(){
+      if (this.MedicineInfo.unit=='BOX'){
+        this.MedicineInfo.quantity = this.MedicineInfo.box_quantity * this.MedicineInfo.quantity_per_box
+      }
+    },
+
     viewReset() {
       this.toUpdate = false
       this.inputReset()
