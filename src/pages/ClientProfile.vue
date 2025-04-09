@@ -3,7 +3,7 @@
     <div class="q-pa-md flex justify-center">
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
         <q-card-section>
-          <div class="q-pa-sm flex">
+          <div class="q-pa-sm flex justify-center">
             <q-card class="q-pa-sm" style="max-width: 1000px; width: 100%">
               <div class="text-h6 text-blue text-weight-bolder">Customer Name</div>
               <q-separator></q-separator>
@@ -80,7 +80,7 @@
 
         <q-card-section>
 
-          <div class="q-pa-sm flex">
+          <div class="q-pa-sm flex justify-center">
             <q-card class="q-pa-sm" style="max-width: 1000px; width: 100%">
               <div class="text-h6 text-blue text-weight-bolder">Order Dispense History</div>
               <!-- <div class="text-caption text-weight-regular" style="color:grey;">Transacation ID: {{ this.transaction_id }}</div> -->
@@ -114,20 +114,6 @@
                     <q-td key="unit" style="font-size: 11px" align="left">
                       {{ props.row.unit }}
                     </q-td>
-                    <!-- <q-td key="actions" style="font-size: 11px" align="center">
-                      <q-btn
-                        flat
-                        color="red"
-                        @click="remove_order(props.row.table_id_transactions)"
-                        icon="remove_shopping_cart"
-                      />
-                      <q-btn
-                    flat
-                    color="negative"
-                    @click="showDeletepage(props.row.id)"
-                    icon="delete"
-                  />
-                    </q-td> -->
                   </q-tr>
                 </template>
               </q-table>
@@ -136,85 +122,6 @@
         </q-card-section>
       </q-card>
     </div>
-
-     <!-- //SHOW AVAILABLE MEDICINES -->
-  <!-- <q-dialog v-model="cartPrompt" persistent style="max-width: 1280px; width: 100%;">
-    <q-card style="max-width: 1280px; width: 100%;">
-      <div class="row q-gutter-md q-mb-md q-pa-md flex flex-center">
-        <q-table :rows="availableMedsRow" :columns="cartCols" row-key="id" :visible-columns="[
-          'generic_name',
-          'brand_name',
-          'dosage',
-          'dosage_form',
-          'unit',
-          'quantity',
-          'expiration_date',
-        ]" :filter="filter" flat bordered
-          style="max-width: 1180px; width: 100%; min-height: 300px; max-height: 500px; height: 100%;">
-          <template v-slot:top>
-            <q-input borderless dense debounce="300" v-model="filter" placeholder="Search" class="full-width">
-              <template v-slot:append>
-                <q-icon name="search" />
-              </template>
-            </q-input>
-          </template>
-
-          <template #body="props">
-            <q-tr :v-bind="props">
-              <q-td key="generic_name" style="font-size: 11px" align="left">
-                {{ props.row.generic_name }}
-              </q-td>
-              <q-td key="brand_name" style="font-size: 11px" align="left">
-                {{ props.row.brand_name }}
-              </q-td>
-              <q-td key="dosage" style="font-size: 11px" align="left">
-                {{ props.row.dosage }}
-              </q-td>
-              <q-td key="dosage_form" style="font-size: 11px" align="left">
-                {{ props.row.dosage_form }}
-              </q-td>
-
-              <q-td key="Closing_quantity" style="font-size: 11px" align="left">
-                {{ props.row.Closing_quantity ? props.row.Closing_quantity : 0 }}
-              </q-td>
-              <q-td key="unit" style="font-size: 11px" align="left">
-                {{ props.row.unit }}
-              </q-td>
-
-              <q-td key="expiration_date" style="font-size: 11px" align="left">
-                {{ props.row.expiration_date }}
-              </q-td>
-
-              <q-td key="actions" style="font-size: 11px" align="center">
-                <q-btn flat rounded color="primary" style="background-color: orange;" @click="showData(props.row)"
-                  icon="add_shopping_cart" />
-
-              </q-td>
-            </q-tr>
-
-          </template>
-        </q-table>
-      </div>
-      <q-card-actions align="right">
-        <q-btn flat label="Close" color="primary" @click="cartPrompt = false" />
-      </q-card-actions>
-    </q-card>
-  </q-dialog> -->
-
-    <!-- SHOW QUANTITY -->
-    <!-- <q-dialog v-model="showQuantity" persistent style="max-width: 500px; width: 50%">
-      <q-card style="max-width: 300px; width: 70%">
-        <q-card-section>
-          <pre style="color: darkslategray; font-weight: 900">Enter Quantity:</pre>
-          <q-input v-model.trim="transactionDetails.quantity" label="Quantity" type="text" mask="#####" autofocus/>
-        </q-card-section>
-        <q-separator />
-        <q-card-actions align="right">
-          <q-btn flat label="Cancel" color="grey" @click="showQuantity = false" />
-          <q-btn flat label="Add" color="primary" @click="add_Order(this.transactionDetails)" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog> -->
   </q-page>
 </template>
 
@@ -318,7 +225,7 @@ export default {
     }
   },
   mounted() {
-
+    console.log(this.customerStore.customer_id)
     this.get_client(this.customerStore.customer_id)
     this.getTransactionIds(this.customerStore.customer_id)
   },

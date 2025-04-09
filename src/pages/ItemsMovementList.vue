@@ -22,9 +22,18 @@
               bordered
               class="q-mr-md"
               style="min-height: 500px; max-height: 1000px; height: 100%"
+              v-model:pagination="pagination"
             >
               <template v-slot:top-left>
-                <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
+                <q-input
+                  borderless
+                  dense
+                  debounce="300"
+                  v-model="filter"
+                  placeholder="Search"
+                  class="full-width"
+                  style="width: 300px"
+                >
                   <template v-slot:append>
                     <q-icon name="search" />
                   </template>
@@ -37,6 +46,7 @@
                   label="Close Stocks"
                   class=""
                   color="grey"
+                  :disable="close"
                   @click="closeStock()"
                 />
                 <q-btn
@@ -45,6 +55,7 @@
                   label="Open Stocks"
                   class="q-mx-sm"
                   color="green"
+                  :disable="open"
                   @click="openStock()"
                 />
               </template>
@@ -122,28 +133,34 @@
           </div>
           <div class="row flex">
             <div class="col-12 col-md-2 q-mx-sm text-caption">
-              <q-input readonly dense label="Brand Name" :model="inventoryAdjustment.clos"></q-input>
+              <q-input
+                readonly
+                dense
+                label="Brand Name"
+                v-model="holder.brand_name"
+              ></q-input>
             </div>
             <div class="col-12 col-md-2 q-mx-sm text-caption">
-              <q-input readonly dense label="Generic Name"></q-input>
+              <q-input readonly dense label="Generic Name"  v-model="holder.generic_name"></q-input>
             </div>
             <div class="col-12 col-md-2 q-mx-sm text-caption">
-              <q-input readonly dense label="Dosage"></q-input>
+              <q-input readonly dense label="Dosage"  v-model="holder.dosage"></q-input>
             </div>
             <div class="col-12 col-md-2 q-mx-sm text-caption">
-              <q-input readonly dense label="Type"></q-input>
+              <q-input readonly dense label="Type"  v-model="holder.dosage_form"></q-input>
             </div>
             <div class="col-12 col-md-2 q-mx-sm text-caption q-mb-md">
-              <q-input readonly dense label="Quantity"></q-input>
+              <q-input readonly dense label="Quantity"  v-model="holder.Closing_quantity"></q-input>
             </div>
+
           </div>
           <q-separator></q-separator>
-          <q-input label="Adjusted Quantity" type="text" mask="#####" autofocus />
+          <q-input label="Adjusted Quantity" type="text" mask="#####" autofocus  v-model="Adjusted_quantity" />
         </q-card-section>
         <q-separator />
         <q-card-actions align="right">
           <q-btn flat label="Cancel" color="grey" @click="showAdjustment = false" />
-          <q-btn flat label="Add" color="primary"  />
+          <q-btn flat label="Add" color="primary" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -153,17 +170,28 @@
 <script>
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
+import { useIndicatorStore } from 'src/stores/indicatorsStore'
 export default {
+
   computed: {
+
     itemStore() {
       return useItemStore()
     },
-    transactionStore(){
+    transactionStore() {
       return useTransactionStore()
-    }
+    },
   },
   setup() {
+    const indicatorStore = useIndicatorStore()
     return {
+      indicatorStore,
+      pagination: {
+        page: 1,
+        rowsPerPage: 15,
+        sortBy: null,
+        descending: false,
+      },
       cols: [
         {
           name: 'po_no',
@@ -171,7 +199,6 @@ export default {
           label: 'PO No',
           align: 'left',
           field: 'po_no',
-          sortable: true,
         },
 
         {
@@ -188,7 +215,6 @@ export default {
           label: 'Brand Name',
           align: 'left',
           field: 'brand_name',
-          sortable: true,
         },
         {
           name: 'dosage',
@@ -196,7 +222,6 @@ export default {
           label: 'Dosage',
           align: 'left',
           field: 'dosage',
-          sortable: true,
         },
         {
           name: 'dosage_form',
@@ -212,7 +237,6 @@ export default {
           label: 'Quantity',
           align: 'left',
           field: 'Openning_quantity',
-          sortable: true,
         },
 
         {
@@ -234,11 +258,11 @@ export default {
         },
 
         {
-          name: 'remaining_quantity',
+          name: 'Closing_quantity',
           required: true,
           label: 'Remaining Quantity',
           align: 'left',
-          field: 'remaining_quantity',
+          field: 'Closing_quantity',
           format: (val) => (val ? val : 0), // If empty, set to 0
           sortable: true,
         },
@@ -250,7 +274,6 @@ export default {
           align: 'left',
           field: 'last_inventory_date',
           format: (val) => (val ? val : 0), // If empty, set to 0
-          sortable: true,
         },
         {
           name: 'actions',
@@ -258,14 +281,16 @@ export default {
           label: 'Actions',
           align: 'center',
           field: 'actions',
-          sortable: true,
         },
       ],
     }
   },
   data() {
     return {
-      showAdjustment:false,
+      Adjusted_quantity:0,
+      open:false,
+      close: false,
+      showAdjustment: false,
       color: '',
       rows: [],
       filter: '',
@@ -284,46 +309,77 @@ export default {
         user_id: 0,
       },
 
-      inventoryAdjustment:{
-        stock_id:0,
-        Closing_quantity:0,
-        Openning_quantity:0,
-        quantity_out:0,
-        transaction_date:'',
-        user_id:1,
-        remarks:'',
-        status:'',
-      }
+      inventoryAdjustment: {
+        stock_id: 0,
+        Closing_quantity: 0,
+        Openning_quantity: 0,
+        quantity_out: 0,
+        transaction_date: '',
+        user_id: 1,
+        remarks: '',
+        status: '',
+      },
+      holder:{}
     }
   },
 
   methods: {
 
-    async getDailyForAdjustment(id){
+
+    async getDailyForAdjustment(id) {
       await this.transactionStore.getDailyInventory(id)
       this.inventoryAdjustment = this.transactionStore.SelecteddailyInventory
+
     },
 
-    AdjustItem(id){
+    AdjustItem(data) {
+      this.holder = data
       this.showAdjustment = true
-      this.getDailyForAdjustment(id)
-      console.log(id)
+     // this.getDailyForAdjustment(id)
+
+
+      console.log('Data => ',data)
+      console.log('Holder => ', this.holder)
     },
-    editItem(id){
+    editItem(id) {
       console.log(id)
     },
     async fetchAllStocks() {
       await this.itemStore.getJoinedTable_DailyInventor_Items()
       this.rows = this.itemStore.items
     },
+    async Check_OPEN(){
+      await this.indicatorStore.getStatus()
+        if (this.indicatorStore.isOpen){
+          this.open = true
 
-    async openStock(){
-      await this.itemStore.openingStocks()
-       this.fetchAllStocks()
+        }
     },
 
-    async closeStock(){
+    async Check_CLOSE(){
+      await this.indicatorStore.getStatus()
+        if (this.indicatorStore.isClose){
+          this.close = true
+
+        }
+    },
+
+    async openStock() {
+      try {
+
+        await this.itemStore.openingStocks()
+        await this.indicatorStore.open_status()
+        this.Check_OPEN()
+        this.fetchAllStocks()
+      } catch (error) {
+        throw error.response?.data?.message || error.message || 'An unexpected error occurred'
+      }
+    },
+
+    async closeStock() {
       await this.itemStore.closingStocks()
+      await this.indicatorStore.close_status()
+      this.Check_CLOSE()
       this.fetchAllStocks()
     },
 
@@ -344,6 +400,9 @@ export default {
 
   mounted() {
     this.fetchAllStocks()
+    this.Check_OPEN()
+    this.Check_CLOSE()
+
   },
   watch() {},
 }

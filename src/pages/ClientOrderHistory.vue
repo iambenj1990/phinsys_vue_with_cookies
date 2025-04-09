@@ -63,7 +63,7 @@
                   <q-btn
                     flat
                     color="primary"
-                    @click="showClient(props.row.id)"
+                    @click="showClient(props.row.customer_id)"
                     icon="description"
                     to="/customers/profile"
                   >
@@ -229,7 +229,7 @@ export default {
       this.Customers.isEdit = true
       this.Customers.isSave = false
       this.Customers.customer_id = id
-      console.log(id)
+       console.log(id)
     },
 
     async get_clients() {
