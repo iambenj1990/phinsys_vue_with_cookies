@@ -69,8 +69,17 @@
                     color="primary"
                     @click="showClient(props.row.id)"
                     icon="description"
+                    to="/customers/profile"
+                  />
+
+                  <q-btn
+                    flat
+                    color="amber"
+                    @click="showClient(props.row.id)"
+                    icon="edit"
                     to="/customer"
                   />
+
                   <q-btn
                     flat
                     color="negative"

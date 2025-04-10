@@ -10,6 +10,7 @@ export const useCustomerStore = defineStore('customers', {
     customer_id: 0,
     customers: [],
     customersOftheDay:[],
+    transactions_id:'',
 
     isEdit: false,
     isSave:true,

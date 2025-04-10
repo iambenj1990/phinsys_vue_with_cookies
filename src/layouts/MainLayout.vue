@@ -114,7 +114,7 @@
                 </q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable v-ripple >
+            <q-item clickable v-ripple to="/inventory" >
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="list_alt" class="q-ml-md q-mr-md" size="24px"/>Stocks

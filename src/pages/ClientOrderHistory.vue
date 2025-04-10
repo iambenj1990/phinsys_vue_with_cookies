@@ -63,9 +63,9 @@
                   <q-btn
                     flat
                     color="primary"
-                    @click="showClient(props.row.customer_id)"
+                    @click="showClient(props.row)"
                     icon="description"
-                    to="/customers/profile"
+                    to="/customers/profile/current"
                   >
                     <q-tooltip> Profile and History </q-tooltip>
                   </q-btn>
@@ -228,7 +228,10 @@ export default {
     showClient(id) {
       this.Customers.isEdit = true
       this.Customers.isSave = false
-      this.Customers.customer_id = id
+      this.Customers.customer_id = id.customer_id
+      this.Customers.transactions_id =id.transaction_id
+
+
        console.log(id)
     },
 

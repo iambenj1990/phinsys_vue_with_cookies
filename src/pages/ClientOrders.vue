@@ -266,6 +266,7 @@
               </q-td> -->
                 <q-td key="Closing_quantity" style="font-size: 11px" align="left">
                   {{ props.row.Closing_quantity ? props.row.Closing_quantity : 0 }}
+                  
                 </q-td>
                 <q-td key="unit" style="font-size: 11px" align="left">
                   {{ props.row.unit }}
@@ -559,6 +560,7 @@ export default {
     },
 
     async add_Order(payload) {
+
       payload.quantity = Number(payload.quantity)
       this.showQuantity = false
 

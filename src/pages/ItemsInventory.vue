@@ -39,7 +39,7 @@
                   </template>
                 </q-input>
               </template>
-              <template v-slot:top-right>
+              <!-- <template v-slot:top-right>
                 <q-btn
                   flat
                   type="button"
@@ -58,7 +58,7 @@
                   :disable="open"
                   @click="openStock()"
                 />
-              </template>
+              </template> -->
 
               <template #body="props">
                 <q-tr :v-bind="props">
@@ -77,17 +77,14 @@
                   <q-td key="dosage_form" style="font-size: 11px" align="left">
                     {{ props.row.dosage_form }}
                   </q-td>
-                  <q-td key="Openning_quantity" style="font-size: 11px" align="left">
+                  <!-- <q-td key="Openning_quantity" style="font-size: 11px" align="left">
                     {{
                       !props.row.Openning_quantity ? 'Stock Closed' : props.row.Openning_quantity
                     }}
-                  </q-td>
+                  </q-td> -->
+
                   <q-td key="unit" style="font-size: 11px" align="left">
                     {{ props.row.unit }}
-                  </q-td>
-
-                  <q-td key="expiration_date" style="font-size: 11px" align="left">
-                    {{ props.row.expiration_date }}
                   </q-td>
 
                   <q-td key="Closing_quantity" style="font-size: 11px" align="left">
@@ -98,9 +95,13 @@
                       class="flex flex-center q-pa-xs"
                     >
                       {{
-                        !props.row.Closing_quantity ? 'Stock Unavailable' : props.row.Closing_quantity
+                        !props.row.Closing_quantity ? 'Stock Closed' : props.row.Closing_quantity
                       }}
                     </q-badge>
+                  </q-td>
+
+                  <q-td key="expiration_date" style="font-size: 11px" align="left">
+                    {{ props.row.expiration_date }}
                   </q-td>
 
                   <q-td
@@ -112,12 +113,11 @@
                     {{ props.row.last_inventory_date }}
                   </q-td>
 
-                  <q-td key="actions" style="font-size: 11px" align="center">
+                  <!-- <q-td key="actions" style="font-size: 11px" align="center">
                     <q-btn flat color="primary" @click="AdjustItem(props.row)" icon="edit_document">
                       <q-tooltip> Adjustment </q-tooltip>
                     </q-btn>
-                    <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
-                  </q-td>
+                  </q-td> -->
                 </q-tr>
               </template>
             </q-table>
@@ -133,29 +133,29 @@
           </div>
           <div class="row flex">
             <div class="col-12 col-md-2 q-mx-sm text-caption">
-              <q-input
-                readonly
-                dense
-                label="Brand Name"
-                v-model="holder.brand_name"
-              ></q-input>
+              <q-input readonly dense label="Brand Name" v-model="holder.brand_name"></q-input>
             </div>
             <div class="col-12 col-md-2 q-mx-sm text-caption">
-              <q-input readonly dense label="Generic Name"  v-model="holder.generic_name"></q-input>
+              <q-input readonly dense label="Generic Name" v-model="holder.generic_name"></q-input>
             </div>
             <div class="col-12 col-md-2 q-mx-sm text-caption">
-              <q-input readonly dense label="Dosage"  v-model="holder.dosage"></q-input>
+              <q-input readonly dense label="Dosage" v-model="holder.dosage"></q-input>
             </div>
             <div class="col-12 col-md-2 q-mx-sm text-caption">
-              <q-input readonly dense label="Type"  v-model="holder.dosage_form"></q-input>
+              <q-input readonly dense label="Type" v-model="holder.dosage_form"></q-input>
             </div>
             <div class="col-12 col-md-2 q-mx-sm text-caption q-mb-md">
-              <q-input readonly dense label="Quantity"  v-model="holder.Closing_quantity"></q-input>
+              <q-input readonly dense label="Quantity" v-model="holder.Closing_quantity"></q-input>
             </div>
-
           </div>
           <q-separator></q-separator>
-          <q-input label="Adjusted Quantity" type="text" mask="#####" autofocus  v-model="Adjusted_quantity" />
+          <q-input
+            label="Adjusted Quantity"
+            type="text"
+            mask="#####"
+            autofocus
+            v-model="Adjusted_quantity"
+          />
         </q-card-section>
         <q-separator />
         <q-card-actions align="right">
@@ -172,9 +172,7 @@ import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { useIndicatorStore } from 'src/stores/indicatorsStore'
 export default {
-
   computed: {
-
     itemStore() {
       return useItemStore()
     },
@@ -231,13 +229,13 @@ export default {
           field: 'dosage_form',
           sortable: true,
         },
-        {
-          name: 'Openning_quantity',
-          required: true,
-          label: 'Quantity',
-          align: 'left',
-          field: 'Openning_quantity',
-        },
+        // {
+        //   name: 'Openning_quantity',
+        //   required: true,
+        //   label: 'Quantity',
+        //   align: 'left',
+        //   field: 'Openning_quantity',
+        // },
 
         {
           name: 'unit',
@@ -245,6 +243,15 @@ export default {
           label: 'Unit',
           align: 'left',
           field: 'unit',
+          sortable: true,
+        },
+        {
+          name: 'Closing_quantity',
+          required: true,
+          label: 'Remaining Quantity',
+          align: 'left',
+          field: 'Closing_quantity',
+          format: (val) => (val ? val : 0), // If empty, set to 0
           sortable: true,
         },
 
@@ -258,16 +265,6 @@ export default {
         },
 
         {
-          name: 'Closing_quantity',
-          required: true,
-          label: 'Remaining Quantity',
-          align: 'left',
-          field: 'Closing_quantity',
-          format: (val) => (val ? val : 0), // If empty, set to 0
-          sortable: true,
-        },
-
-        {
           name: 'last_inventory_date',
           required: true,
           label: 'As of',
@@ -275,20 +272,20 @@ export default {
           field: 'last_inventory_date',
           format: (val) => (val ? val : 0), // If empty, set to 0
         },
-        {
-          name: 'actions',
-          required: true,
-          label: 'Actions',
-          align: 'center',
-          field: 'actions',
-        },
+        // {
+        //   name: 'actions',
+        //   required: true,
+        //   label: 'Actions',
+        //   align: 'center',
+        //   field: 'actions',
+        // },
       ],
     }
   },
   data() {
     return {
-      Adjusted_quantity:0,
-      open:false,
+      Adjusted_quantity: 0,
+      open: false,
       close: false,
       showAdjustment: false,
       color: '',
@@ -319,26 +316,22 @@ export default {
         remarks: '',
         status: '',
       },
-      holder:{}
+      holder: {},
     }
   },
 
   methods: {
-
-
     async getDailyForAdjustment(id) {
       await this.transactionStore.getDailyInventory(id)
       this.inventoryAdjustment = this.transactionStore.SelecteddailyInventory
-
     },
 
     AdjustItem(data) {
       this.holder = data
       this.showAdjustment = true
-     // this.getDailyForAdjustment(id)
+      // this.getDailyForAdjustment(id)
 
-
-      console.log('Data => ',data)
+      console.log('Data => ', data)
       console.log('Holder => ', this.holder)
     },
     editItem(id) {
@@ -348,25 +341,22 @@ export default {
       await this.itemStore.getJoinedTable_DailyInventor_Items()
       this.rows = this.itemStore.items
     },
-    async Check_OPEN(){
+    async Check_OPEN() {
       await this.indicatorStore.getStatus()
-        if (this.indicatorStore.isOpen){
-          this.open = true
-
-        }
+      if (this.indicatorStore.isOpen) {
+        this.open = true
+      }
     },
 
-    async Check_CLOSE(){
+    async Check_CLOSE() {
       await this.indicatorStore.getStatus()
-        if (this.indicatorStore.isClose){
-          this.close = true
-
-        }
+      if (this.indicatorStore.isClose) {
+        this.close = true
+      }
     },
 
     async openStock() {
       try {
-
         await this.itemStore.openingStocks()
         await this.indicatorStore.open_status()
         this.Check_OPEN()
@@ -387,11 +377,8 @@ export default {
       if (total === 0) return 0 // Prevent division by zero
       return Math.round((remaining / total) * 100)
     },
-
     getStockColor(remaining, total) {
-      console.log('remaining =>', remaining ,' total=> ', total)
       const percentage = this.getStockPercentage(remaining, total)
-
 
       if (percentage === 0) return 'red' // Out of stock (0%)
       if (percentage <= 10) return 'orange' // Critical (≤10%)
@@ -405,7 +392,6 @@ export default {
     this.fetchAllStocks()
     this.Check_OPEN()
     this.Check_CLOSE()
-
   },
   watch() {},
 }
