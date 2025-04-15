@@ -99,17 +99,18 @@ export const useItemStore = defineStore('items', {
 
     async closingStocks(){
       try {
-
         await api.post('/daily/inventory/close-latest')
     } catch (error) {
-      console.log(error)
+      console.log(error.response?.data?.message || error.message || 'An unexpected error occurred')
+
     }
     },
+
     async openingStocks(){
      try {
        await api.post('/daily/inventory/open-latest')
      } catch (error) {
-      console.log(error)
+      console.log(error.response?.data?.message || error.message || 'An unexpected error occurred')
      }
     },
 

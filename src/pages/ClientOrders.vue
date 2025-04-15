@@ -25,7 +25,7 @@
           </q-input>
 
           <q-list class="q-pa-sm flex">
-            <!-- <q-item v-for="item in filteredList" :key="item.id" clickable @click="show_id(item.id)"> -->
+
             <q-item
               v-for="item in filteredList"
               :key="item.id"
@@ -110,7 +110,7 @@
                     class="full-width text-caption"
                     @change="calculateAge(costumer.birthdate)"
                     lazy-rules
-                    :rules="[(val) => !!val || 'Username is required']"
+                    :rules="[(val) => !!val || 'Birthdate is required']"
                   />
                 </div>
                 <div class="col-12 col-md-1 q-pa-sm">
@@ -154,6 +154,7 @@
               >
                 <template v-slot:top-right>
                   <q-btn
+                    :disable="this.transaction_id===0"
                     color="primary"
                     label="Add Order"
                     icon="add"
@@ -228,6 +229,8 @@
               max-height: 500px;
               height: 100%;
             "
+
+
           >
             <template v-slot:top>
               <q-input
@@ -245,7 +248,7 @@
             </template>
 
             <template #body="props">
-              <q-tr :v-bind="props">
+              <q-tr :v-bind="props" >
                 <!-- <q-td key="po_no" style="font-size: 11px" align="center">
                 {{ props.row.po_no }}
               </q-td> -->
@@ -266,18 +269,27 @@
               </q-td> -->
                 <q-td key="Closing_quantity" style="font-size: 11px" align="left">
                   {{ props.row.Closing_quantity ? props.row.Closing_quantity : 0 }}
-                  
+
                 </q-td>
                 <q-td key="unit" style="font-size: 11px" align="left">
-                  {{ props.row.unit }}
+                  <!-- {{ props.row.unit }} -->
+                    pcs
                 </q-td>
 
                 <q-td key="expiration_date" style="font-size: 11px" align="left">
                   {{ props.row.expiration_date }}
                 </q-td>
 
+                <q-td key="status" style="font-size: 11px" align="left">
+                  <q-badge  :style="{ backgroundColor: props.row.Closing_quantity === 0 ? '#F44336' : '#9CCC65' }">
+                    {{  props.row.Closing_quantity ?'In Stock': 'Out of Stock'  }}
+                  </q-badge>
+
+                </q-td>
+
                 <q-td key="actions" style="font-size: 11px" align="center">
                   <q-btn
+                    :disable="props.row.Closing_quantity === 0"
                     flat
                     rounded
                     color="primary"
@@ -291,6 +303,7 @@
             </template>
           </q-table>
         </div>
+
         <q-card-actions align="right">
           <q-btn flat label="Close" color="primary" @click="cartPrompt = false" />
         </q-card-actions>
@@ -473,6 +486,16 @@ export default {
           field: 'expiration_date',
           sortable: true,
         },
+
+
+        {
+          name: 'status',
+          required: true,
+          label: 'Status',
+          align: 'left',
+          field: 'status',
+          sortable: true,
+        },
         {
           name: 'actions',
           required: true,
@@ -533,6 +556,9 @@ export default {
     this.get_clients()
   },
   methods: {
+
+
+
     async remove_order(id) {
       await this.transactionStore.remove_order(id)
       this.getOrders(this.transaction_id)
@@ -710,5 +736,8 @@ export default {
 
 .q-item.active:hover {
   background-color: #aaa; /* Example active hover color */
+}
+.bg-gray {
+  background-color: lightgray;
 }
 </style>

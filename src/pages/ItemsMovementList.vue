@@ -46,7 +46,7 @@
                   label="Close Stocks"
                   class=""
                   color="grey"
-                  :disable="close"
+
                   @click="closeStock()"
                 />
                 <q-btn
@@ -55,7 +55,7 @@
                   label="Open Stocks"
                   class="q-mx-sm"
                   color="green"
-                  :disable="open"
+
                   @click="openStock()"
                 />
               </template>
@@ -368,11 +368,11 @@ export default {
       try {
 
         await this.itemStore.openingStocks()
-        await this.indicatorStore.open_status()
-        this.Check_OPEN()
-        this.fetchAllStocks()
+        // await this.indicatorStore.open_status()
+        // this.Check_OPEN()
+        await this.fetchAllStocks()
       } catch (error) {
-        throw error.response?.data?.message || error.message || 'An unexpected error occurred'
+       this.$q.notify({ type: 'negative', message:  error.response?.data?.message || error.message || 'An unexpected error occurred',position: 'center' })
       }
     },
 
