@@ -42,20 +42,17 @@
               <template v-slot:top-right>
                 <q-btn
                   flat
-                  type="button"
-                  label="Close Stocks"
-                  class=""
-                  color="grey"
 
+                  label="Close Stocks"
+                  color="grey"
                   @click="closeStock()"
                 />
                 <q-btn
                   flat
-                  type="button"
+
                   label="Open Stocks"
                   class="q-mx-sm"
                   color="green"
-
                   @click="openStock()"
                 />
               </template>
@@ -93,12 +90,16 @@
                   <q-td key="Closing_quantity" style="font-size: 11px" align="left">
                     <q-badge
                       style="width: 100px"
-                      :color="getStockColor(props.row.Closing_quantity, props.row.Openning_quantity)"
+                      :color="
+                        getStockColor(props.row.Closing_quantity, props.row.Openning_quantity)
+                      "
                       text-color="black"
                       class="flex flex-center q-pa-xs"
                     >
                       {{
-                        !props.row.Closing_quantity ? 'Stock Unavailable' : props.row.Closing_quantity
+                        !props.row.Closing_quantity
+                          ? 'Stock Unavailable'
+                          : props.row.Closing_quantity
                       }}
                     </q-badge>
                   </q-td>
@@ -133,29 +134,29 @@
           </div>
           <div class="row flex">
             <div class="col-12 col-md-2 q-mx-sm text-caption">
-              <q-input
-                readonly
-                dense
-                label="Brand Name"
-                v-model="holder.brand_name"
-              ></q-input>
+              <q-input readonly dense label="Brand Name" v-model="holder.brand_name"></q-input>
             </div>
             <div class="col-12 col-md-2 q-mx-sm text-caption">
-              <q-input readonly dense label="Generic Name"  v-model="holder.generic_name"></q-input>
+              <q-input readonly dense label="Generic Name" v-model="holder.generic_name"></q-input>
             </div>
             <div class="col-12 col-md-2 q-mx-sm text-caption">
-              <q-input readonly dense label="Dosage"  v-model="holder.dosage"></q-input>
+              <q-input readonly dense label="Dosage" v-model="holder.dosage"></q-input>
             </div>
             <div class="col-12 col-md-2 q-mx-sm text-caption">
-              <q-input readonly dense label="Type"  v-model="holder.dosage_form"></q-input>
+              <q-input readonly dense label="Type" v-model="holder.dosage_form"></q-input>
             </div>
             <div class="col-12 col-md-2 q-mx-sm text-caption q-mb-md">
-              <q-input readonly dense label="Quantity"  v-model="holder.Closing_quantity"></q-input>
+              <q-input readonly dense label="Quantity" v-model="holder.Closing_quantity"></q-input>
             </div>
-
           </div>
           <q-separator></q-separator>
-          <q-input label="Adjusted Quantity" type="text" mask="#####" autofocus  v-model="Adjusted_quantity" />
+          <q-input
+            label="Adjusted Quantity"
+            type="text"
+            mask="#####"
+            autofocus
+            v-model="Adjusted_quantity"
+          />
         </q-card-section>
         <q-separator />
         <q-card-actions align="right">
@@ -172,9 +173,7 @@ import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { useIndicatorStore } from 'src/stores/indicatorsStore'
 export default {
-
   computed: {
-
     itemStore() {
       return useItemStore()
     },
@@ -287,8 +286,8 @@ export default {
   },
   data() {
     return {
-      Adjusted_quantity:0,
-      open:false,
+      Adjusted_quantity: 0,
+      open: false,
       close: false,
       showAdjustment: false,
       color: '',
@@ -319,26 +318,22 @@ export default {
         remarks: '',
         status: '',
       },
-      holder:{}
+      holder: {},
     }
   },
 
   methods: {
-
-
     async getDailyForAdjustment(id) {
       await this.transactionStore.getDailyInventory(id)
       this.inventoryAdjustment = this.transactionStore.SelecteddailyInventory
-
     },
 
     AdjustItem(data) {
       this.holder = data
       this.showAdjustment = true
-     // this.getDailyForAdjustment(id)
+      // this.getDailyForAdjustment(id)
 
-
-      console.log('Data => ',data)
+      console.log('Data => ', data)
       console.log('Holder => ', this.holder)
     },
     editItem(id) {
@@ -348,39 +343,25 @@ export default {
       await this.itemStore.getJoinedTable_DailyInventor_Items()
       this.rows = this.itemStore.items
     },
-    async Check_OPEN(){
-      await this.indicatorStore.getStatus()
-        if (this.indicatorStore.isOpen){
-          this.open = true
-
-        }
-    },
-
-    async Check_CLOSE(){
-      await this.indicatorStore.getStatus()
-        if (this.indicatorStore.isClose){
-          this.close = true
-
-        }
-    },
 
     async openStock() {
       try {
-
         await this.itemStore.openingStocks()
-        // await this.indicatorStore.open_status()
-        // this.Check_OPEN()
         await this.fetchAllStocks()
       } catch (error) {
-       this.$q.notify({ type: 'negative', message:  error.response?.data?.message || error.message || 'An unexpected error occurred',position: 'center' })
+        console.log(error)
+
       }
     },
 
     async closeStock() {
+      try {
       await this.itemStore.closingStocks()
-      await this.indicatorStore.close_status()
-      this.Check_CLOSE()
-      this.fetchAllStocks()
+      await this.fetchAllStocks()
+      } catch (error) {
+        console.log(error)
+      }
+
     },
 
     getStockPercentage(remaining, total) {
@@ -389,9 +370,8 @@ export default {
     },
 
     getStockColor(remaining, total) {
-      console.log('remaining =>', remaining ,' total=> ', total)
+      console.log('remaining =>', remaining, ' total=> ', total)
       const percentage = this.getStockPercentage(remaining, total)
-
 
       if (percentage === 0) return 'red' // Out of stock (0%)
       if (percentage <= 10) return 'orange' // Critical (≤10%)
@@ -403,8 +383,6 @@ export default {
 
   mounted() {
     this.fetchAllStocks()
-    this.Check_OPEN()
-    this.Check_CLOSE()
 
   },
   watch() {},

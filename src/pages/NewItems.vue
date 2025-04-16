@@ -8,6 +8,7 @@
         <q-separator></q-separator>
         <q-card-section>
           <div>
+            <q-checkbox v-model="useTemp" size="xs" label="Use Temporary ID" @update:model-value="get_temp_id" style="color: grey;"/>
             <div class="col-12 col-md-2 q-pa-sm">
               <q-input
                 dense
@@ -16,7 +17,9 @@
                 class="full-width"
                 lazy-rules
                 :rules="[(val) => !!val || 'Purchase Order Number is required']"
-              />
+              >
+                <template v-slot:label> </template>
+              </q-input>
             </div>
           </div>
           <q-separator></q-separator>
@@ -85,7 +88,7 @@
                     lazy-rules
                     :rules="[(val) => !!val || 'Box Quantity is required']"
                     v-model="MedicineInfo.box_quantity"
-                  @update:model-value="computeTotalQuantity"
+                    @update:model-value="computeTotalQuantity"
                   />
                   <q-input
                     dense
@@ -236,6 +239,14 @@ export default {
         console.log(newvalue)
       }
     },
+    // useTemp(newValue) {
+    //   console.log(newValue)
+    //   if (newValue === true) {
+    //     this.itemStore.getTempID()
+    //     console.log( this.New_Po)
+    //     this.New_Po = this.itemStore.temp_id
+    //   }
+    // },
   },
 
   created() {},
@@ -356,6 +367,7 @@ export default {
   },
   data() {
     return {
+      useTemp: false,
       toUpdate: false,
       rows: [],
       New_Po: '',
@@ -380,17 +392,19 @@ export default {
 
   methods: {
 
-    handleUnitChange(){
+
+    handleUnitChange() {
       //Reset values when unit change
-      if (this.MedicineInfo.unit !=='BOX'){
+      if (this.MedicineInfo.unit !== 'BOX') {
         this.MedicineInfo.quantity_per_box = 0
         this.MedicineInfo.box_quantity = 0
         this.MedicineInfo.quantity = 0
       }
     },
-    computeTotalQuantity(){
-      if (this.MedicineInfo.unit=='BOX'){
-        this.MedicineInfo.quantity = this.MedicineInfo.box_quantity * this.MedicineInfo.quantity_per_box
+    computeTotalQuantity() {
+      if (this.MedicineInfo.unit == 'BOX') {
+        this.MedicineInfo.quantity =
+          this.MedicineInfo.box_quantity * this.MedicineInfo.quantity_per_box
       }
     },
 
@@ -453,6 +467,19 @@ export default {
         timeout: 1000,
       })
     },
+
+    async get_temp_id(){
+      try {
+        if(this.useTemp == true){
+          await this.itemStore.getTempID()
+          this.New_Po = this.itemStore.temp_id
+        }else{
+          this.New_Po=''
+        }
+      } catch (error) {
+console.log (error)
+      }
+    }
   },
 }
 </script>

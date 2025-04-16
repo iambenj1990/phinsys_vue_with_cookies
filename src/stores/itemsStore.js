@@ -1,5 +1,6 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { api } from 'src/boot/axios'
+import { Notify } from 'quasar'
 
 export const useItemStore = defineStore('items', {
   state: () => ({
@@ -7,12 +8,23 @@ export const useItemStore = defineStore('items', {
     item_id: 0,
     items: [],
     item: {},
-    expiring:[],
-    expired:[],
-    po_items:[]
+    expiring: [],
+    expired: [],
+    po_items: [],
+
+    temp_id:''
   }),
 
   actions: {
+    async getTempID(){
+      try {
+        const response = await api.get ('/items/generate/tempno')
+        this.temp_id = response.data
+        console.log(this.temp_id)
+      } catch (error) {
+        console.error(error)
+      }
+    },
     async getItems() {
       try {
         const response = await api.get('/items')
@@ -77,7 +89,7 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async getExpiringItems(){
+    async getExpiringItems() {
       try {
         const response = await api.get('/items/expiring')
         this.expiring = response.data.items
@@ -87,35 +99,72 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async getJoinedTable_DailyInventor_Items(){
-
+    async getJoinedTable_DailyInventor_Items() {
       try {
-        const response = await  api.get('/items/stock/list')
+        const response = await api.get('/items/stock/list')
         this.items = response.data
       } catch (error) {
         console.log(error)
       }
     },
 
-    async closingStocks(){
+    async closingStocks() {
       try {
         await api.post('/daily/inventory/close-latest')
-    } catch (error) {
-      console.log(error.response?.data?.message || error.message || 'An unexpected error occurred')
-
-    }
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          // Show notification for HTTP 409 error
+          Notify.create({
+            type: 'negative',
+            message: error.response.data.message || 'A conflict occurred.',
+            position: 'center',
+            timeout: 5000,
+          })
+        } else {
+          // Show generic error notification
+          Notify.create({
+            type: 'negative',
+            message:
+              error.response?.data?.message || error.message || 'An unexpected error occurred',
+            position: 'center',
+            timeout: 5000,
+          })
+        }
+        throw error // Optional: Re-throw the error for further handling
+      }
     },
 
-    async openingStocks(){
-     try {
-       await api.post('/daily/inventory/open-latest')
-     } catch (error) {
-      console.log(error.response?.data?.message || error.message || 'An unexpected error occurred')
-     }
+    async openingStocks() {
+      try {
+        await api.post('/daily/inventory/open-latest')
+        Notify.create({
+          type: 'positive',
+          message: 'Regenerated new stock list for today',
+          position: 'center',
+          timeout: 5000,
+        })
+      } catch (error) {
+        if (error.response && error.response.status === 409) {
+          // Show notification for HTTP 409 error
+          Notify.create({
+            type: 'negative',
+            message: error.response.data.message || 'A conflict occurred.',
+            position: 'center',
+            timeout: 5000,
+          })
+        } else {
+          // Show generic error notification
+          Notify.create({
+            type: 'negative',
+            message:
+              error.response?.data?.message || error.message || 'An unexpected error occurred',
+            position: 'center',
+            timeout: 5000,
+          })
+        }
+        throw error // Optional: Re-throw the error for further handling
+      }
     },
-
-
-
   },
 })
 if (import.meta.hot) {
