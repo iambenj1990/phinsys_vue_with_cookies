@@ -11,6 +11,7 @@ export const useItemStore = defineStore('items', {
     expiring: [],
     expired: [],
     po_items: [],
+    zero_stocks:[],
 
     temp_id:''
   }),
@@ -91,7 +92,7 @@ export const useItemStore = defineStore('items', {
 
     async getExpiringItems() {
       try {
-        const response = await api.get('/items/expiring')
+        const response = await api.get('/items/expire/list')
         this.expiring = response.data.items
         console.log(response.data.success, ' --- ', response.data.message)
       } catch (error) {
@@ -165,6 +166,42 @@ export const useItemStore = defineStore('items', {
         throw error // Optional: Re-throw the error for further handling
       }
     },
+
+    async outOfStocks() {
+      try {
+        const response = await api.get('/daily/inventory/lowquantity')
+        this.zero_stocks =response.data.stocks
+
+
+        // Notify.create({
+        //   type: 'positive',
+        //   message: 'Regenerated new stock list for today',
+        //   position: 'center',
+        //   timeout: 5000,
+        // })
+      } catch (error) {
+        // if (error.response && error.response.status === 409) {
+          // Show notification for HTTP 409 error
+          Notify.create({
+            type: 'negative',
+            message: error.response.data.message || 'An error occurred.',
+            position: 'center',
+            timeout: 5000,
+          })
+      //   } else {
+      //     // Show generic error notification
+      //     Notify.create({
+      //       type: 'negative',
+      //       message:
+      //         error.response?.data?.message || error.message || 'An unexpected error occurred',
+      //       position: 'center',
+      //       timeout: 5000,
+      //     })
+      //   }
+      //   throw error // Optional: Re-throw the error for further handling
+       }
+    },
+
   },
 })
 if (import.meta.hot) {

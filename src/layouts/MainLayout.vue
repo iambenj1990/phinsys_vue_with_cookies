@@ -100,14 +100,14 @@
             class="text-subtitle2"
             v-model="expanded"
           >
-            <q-item clickable v-ripple >
+            <q-item clickable v-ripple to="/items/low-quantity" >
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="production_quantity_limits" class="q-ml-md q-mr-md" size="24px" />Out of Stock
                 </q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable v-ripple >
+            <q-item clickable v-ripple  to="/items/expired">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="report_problem" class="q-ml-md q-mr-md" size="24px" />Expired
