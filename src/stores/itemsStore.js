@@ -24,6 +24,13 @@ export const useItemStore = defineStore('items', {
         console.log(this.temp_id)
       } catch (error) {
         console.error(error)
+        Notify.create({
+          type: 'negative',
+          message:
+            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
     async getItems() {
@@ -32,6 +39,13 @@ export const useItemStore = defineStore('items', {
         this.items = response.data.items
       } catch (error) {
         console.error(error)
+        Notify.create({
+          type: 'negative',
+          message:
+            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -41,6 +55,13 @@ export const useItemStore = defineStore('items', {
         this.item = response.data.items[0]
       } catch (error) {
         console.log(error)
+        Notify.create({
+          type: 'negative',
+          message:
+            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -50,16 +71,37 @@ export const useItemStore = defineStore('items', {
         this.po_items = response.data.items
       } catch (error) {
         console.log(error)
+        Notify.create({
+          type: 'negative',
+          message:
+            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
     async postItem(payload) {
       try {
         const response = await api.post('/items/new', payload)
-        console.log(response.data.success)
-        console.table(response.data.item)
+         console.log(response.data.success)
+         console.table(response.data.item)
+        Notify.create({
+          type: 'positive',
+          message:
+           'Item saved',
+          position: 'center',
+          timeout: 5000,
+        })
       } catch (error) {
         console.log(error)
+        Notify.create({
+          type: 'negative',
+          message:
+            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -69,6 +111,13 @@ export const useItemStore = defineStore('items', {
         this.item = response.data.item[0]
       } catch (error) {
         console.log(error)
+        Notify.create({
+          type: 'negative',
+          message:
+            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -78,6 +127,13 @@ export const useItemStore = defineStore('items', {
         console.log(response.data.success, ' --- ', response.data.message)
       } catch (error) {
         console.log(error)
+        Notify.create({
+          type: 'negative',
+          message:
+            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -85,8 +141,22 @@ export const useItemStore = defineStore('items', {
       try {
         const response = await api.delete('/items/po/' + po_no)
         console.log(response.data.success, ' --- ', response.data.message)
+        Notify.create({
+          type: 'positive',
+          message:
+            'Items Deleted Successfully',
+          position: 'center',
+          timeout: 5000,
+        })
       } catch (error) {
         console.log(error)
+        Notify.create({
+          type: 'negative',
+          message:
+            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -94,9 +164,16 @@ export const useItemStore = defineStore('items', {
       try {
         const response = await api.get('/items/expire/list')
         this.expiring = response.data.items
-        console.log(response.data.success, ' --- ', response.data.message)
+        //console.log(response.data.success, ' --- ', response.data.message)
       } catch (error) {
         console.log(error)
+        Notify.create({
+          type: 'negative',
+          message:
+            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -106,6 +183,13 @@ export const useItemStore = defineStore('items', {
         this.items = response.data
       } catch (error) {
         console.log(error)
+        Notify.create({
+          type: 'negative',
+          message:
+            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 

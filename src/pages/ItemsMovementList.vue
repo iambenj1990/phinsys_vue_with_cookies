@@ -76,7 +76,7 @@
                   </q-td>
                   <q-td key="Openning_quantity" style="font-size: 11px" align="left">
                     {{
-                      !props.row.Openning_quantity ? 'Stock Closed' : props.row.Openning_quantity
+                      !props.row.Openning_quantity ? '0' : props.row.Openning_quantity
                     }}
                   </q-td>
                   <q-td key="unit" style="font-size: 11px" align="left">
@@ -98,10 +98,22 @@
                     >
                       {{
                         !props.row.Closing_quantity
-                          ? 'Stock Unavailable'
+                          ? '0'
                           : props.row.Closing_quantity
                       }}
                     </q-badge>
+                  </q-td>
+
+                  <q-td
+                    key="Status"
+                    style="font-size: 11px"
+                    class="text-weight-bolder"
+                    align="left"
+                  >
+                  <q-badge :color="getStockStatusColor(props.row)">
+                      {{getStockStatus(props.row)}}
+                  </q-badge>
+
                   </q-td>
 
                   <q-td
@@ -114,7 +126,7 @@
                   </q-td>
 
                   <q-td key="actions" style="font-size: 11px" align="center">
-                    <q-btn flat color="primary" @click="AdjustItem(props.row)" icon="edit_document">
+                    <q-btn flat color="primary" @click="AdjustItem(props.row)" icon="edit_document" :disable= "!props.row.Closing_quantity? true:(new Date(props.row.expiration_date) <= new Date() ? true : false)">
                       <q-tooltip> Adjustment </q-tooltip>
                     </q-btn>
                     <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
@@ -267,6 +279,15 @@ export default {
         },
 
         {
+          name: 'status',
+          required: true,
+          label: 'Status',
+          align: 'left',
+          field: 'Status',
+          format: (val) => (val ? val : 0), // If empty, set to 0
+        },
+
+        {
           name: 'last_inventory_date',
           required: true,
           label: 'As of',
@@ -370,7 +391,7 @@ export default {
     },
 
     getStockColor(remaining, total) {
-      console.log('remaining =>', remaining, ' total=> ', total)
+      // console.log('remaining =>', remaining, ' total=> ', total)
       const percentage = this.getStockPercentage(remaining, total)
 
       if (percentage === 0) return 'red' // Out of stock (0%)
@@ -379,8 +400,42 @@ export default {
       if (percentage <= 50) return 'blue' // Medium (≤50%)
       return 'green' // Safe (>50%)
     },
+
+    getStockStatus(row) {
+    if (!row.Closing_quantity) {
+      return 'Out of Stock';
+    }
+    const expirationDate = new Date(row.expiration_date);
+    const today = new Date();
+    // Optional: reset time to 00:00:00 for date-only comparison
+    expirationDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    return expirationDate <= today ? 'Expired' : 'Active';
   },
 
+  getStockStatusColor(row) {
+    if (!row.Closing_quantity) {
+      return 'red';
+    }
+    const expirationDate = new Date(row.expiration_date);
+    const today = new Date();
+    // Optional: reset time to 00:00:00 for date-only comparison
+    expirationDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    if ( expirationDate <= today){
+      return 'red'
+    }
+    //return expirationDate <= today ? 'Expired' : 'Active';
+  },
+
+  async updateDailyInventory(id,payload){
+    await this.itemStore.updateItem(id,payload)
+
+  }
+
+  },
   mounted() {
     this.fetchAllStocks()
 
