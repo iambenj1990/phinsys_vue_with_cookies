@@ -126,7 +126,7 @@
                   </q-td>
 
                   <q-td key="actions" style="font-size: 11px" align="center">
-                    <q-btn flat color="primary" @click="AdjustItem(props.row)" icon="edit_document" :disable= "!props.row.Closing_quantity? true:(new Date(props.row.expiration_date) <= new Date() ? true : false)">
+                    <q-btn flat color="primary" @click="GetAdjustItem(props.row)" icon="edit_document" :disable= "!props.row.Closing_quantity? true:(new Date(props.row.expiration_date) <= new Date() ? true : false)">
                       <q-tooltip> Adjustment </q-tooltip>
                     </q-btn>
                     <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
@@ -349,13 +349,26 @@ export default {
       this.inventoryAdjustment = this.transactionStore.SelecteddailyInventory
     },
 
-    AdjustItem(data) {
+    GetAdjustItem(data) {
       this.holder = data
       this.showAdjustment = true
       // this.getDailyForAdjustment(id)
 
       console.log('Data => ', data)
       console.log('Holder => ', this.holder)
+
+      this.inventoryAdjustment.stock_id= data.item_id
+      this.inventoryAdjustment.Closing_quantity= data.Closing_quantity
+      this.inventoryAdjustment.Openning_quantity =  data.Closing_quantity
+      this.inventoryAdjustment.quantity_out=  data.Closing_quantity
+      this.inventoryAdjustment.transaction_date= data.last_inventory_date
+      this.inventoryAdjustment.user_id= 1
+      this.inventoryAdjustment.remarks= 'ADJUSTED STOCK FROM Daily Inventory ID:' + data.inventory_id
+      this.inventoryAdjustment.status= 'OPEN'
+
+
+
+
     },
     editItem(id) {
       console.log(id)
@@ -432,6 +445,10 @@ export default {
 
   async updateDailyInventory(id,payload){
     await this.itemStore.updateItem(id,payload)
+
+  },
+  
+  async newDailyInventory(){
 
   }
 
