@@ -40,16 +40,9 @@
                 </q-input>
               </template>
               <template v-slot:top-right>
+                <q-btn flat label="Close Stocks" color="grey" @click="closeStock()" />
                 <q-btn
                   flat
-
-                  label="Close Stocks"
-                  color="grey"
-                  @click="closeStock()"
-                />
-                <q-btn
-                  flat
-
                   label="Open Stocks"
                   class="q-mx-sm"
                   color="green"
@@ -75,9 +68,7 @@
                     {{ props.row.dosage_form }}
                   </q-td>
                   <q-td key="Openning_quantity" style="font-size: 11px" align="left">
-                    {{
-                      !props.row.Openning_quantity ? '0' : props.row.Openning_quantity
-                    }}
+                    {{ !props.row.Openning_quantity ? '0' : props.row.Openning_quantity }}
                   </q-td>
                   <q-td key="unit" style="font-size: 11px" align="left">
                     {{ props.row.unit }}
@@ -96,11 +87,7 @@
                       text-color="black"
                       class="flex flex-center q-pa-xs"
                     >
-                      {{
-                        !props.row.Closing_quantity
-                          ? '0'
-                          : props.row.Closing_quantity
-                      }}
+                      {{ !props.row.Closing_quantity ? '0' : props.row.Closing_quantity }}
                     </q-badge>
                   </q-td>
 
@@ -110,10 +97,9 @@
                     class="text-weight-bolder"
                     align="left"
                   >
-                  <q-badge :color="getStockStatusColor(props.row)">
-                      {{getStockStatus(props.row)}}
-                  </q-badge>
-
+                    <q-badge :color="getStockStatusColor(props.row)">
+                      {{ getStockStatus(props.row) }}
+                    </q-badge>
                   </q-td>
 
                   <q-td
@@ -126,7 +112,19 @@
                   </q-td>
 
                   <q-td key="actions" style="font-size: 11px" align="center">
-                    <q-btn flat color="primary" @click="GetAdjustItem(props.row)" icon="edit_document" :disable= "!props.row.Closing_quantity? true:(new Date(props.row.expiration_date) <= new Date() ? true : false)">
+                    <q-btn
+                      flat
+                      color="primary"
+                      @click="GetAdjustItem(props.row)"
+                      icon="edit_document"
+                      :disable="
+                        !props.row.Closing_quantity
+                          ? true
+                          : new Date(props.row.expiration_date) <= new Date()
+                            ? true
+                            : false
+                      "
+                    >
                       <q-tooltip> Adjustment </q-tooltip>
                     </q-btn>
                     <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
@@ -173,7 +171,7 @@
         <q-separator />
         <q-card-actions align="right">
           <q-btn flat label="Cancel" color="grey" @click="showAdjustment = false" />
-          <q-btn flat label="Add" color="primary" />
+          <q-btn flat label="Add" color="primary"  @click ="adjustInventory"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -184,6 +182,8 @@
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { useIndicatorStore } from 'src/stores/indicatorsStore'
+
+
 export default {
   computed: {
     itemStore() {
@@ -340,35 +340,23 @@ export default {
         status: '',
       },
       holder: {},
+      adjusted: {},
     }
   },
 
   methods: {
     async getDailyForAdjustment(id) {
       await this.transactionStore.getDailyInventory(id)
-      this.inventoryAdjustment = this.transactionStore.SelecteddailyInventory
+      this.inventoryAdjustment = this.transactionStore.SelecteddailyInventory[0]
+      this.adjusted = this.transactionStore.SelecteddailyInventory[0]
+
+    //  console.log('Adjustment data => ', this.inventoryAdjustment)
     },
 
-    GetAdjustItem(data) {
+    async GetAdjustItem(data) {
       this.holder = data
       this.showAdjustment = true
-      // this.getDailyForAdjustment(id)
-
-      console.log('Data => ', data)
-      console.log('Holder => ', this.holder)
-
-      this.inventoryAdjustment.stock_id= data.item_id
-      this.inventoryAdjustment.Closing_quantity= data.Closing_quantity
-      this.inventoryAdjustment.Openning_quantity =  data.Closing_quantity
-      this.inventoryAdjustment.quantity_out=  data.Closing_quantity
-      this.inventoryAdjustment.transaction_date= data.last_inventory_date
-      this.inventoryAdjustment.user_id= 1
-      this.inventoryAdjustment.remarks= 'ADJUSTED STOCK FROM Daily Inventory ID:' + data.inventory_id
-      this.inventoryAdjustment.status= 'OPEN'
-
-
-
-
+      await this.getDailyForAdjustment(data.inventory_id)
     },
     editItem(id) {
       console.log(id)
@@ -384,18 +372,16 @@ export default {
         await this.fetchAllStocks()
       } catch (error) {
         console.log(error)
-
       }
     },
 
     async closeStock() {
       try {
-      await this.itemStore.closingStocks()
-      await this.fetchAllStocks()
+        await this.itemStore.closingStocks()
+        await this.fetchAllStocks()
       } catch (error) {
         console.log(error)
       }
-
     },
 
     getStockPercentage(remaining, total) {
@@ -415,47 +401,74 @@ export default {
     },
 
     getStockStatus(row) {
-    if (!row.Closing_quantity) {
-      return 'Out of Stock';
-    }
-    const expirationDate = new Date(row.expiration_date);
-    const today = new Date();
-    // Optional: reset time to 00:00:00 for date-only comparison
-    expirationDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
+      if (!row.Closing_quantity) {
+        return 'Out of Stock'
+      }
+      const expirationDate = new Date(row.expiration_date)
+      const today = new Date()
+      // Optional: reset time to 00:00:00 for date-only comparison
+      expirationDate.setHours(0, 0, 0, 0)
+      today.setHours(0, 0, 0, 0)
 
-    return expirationDate <= today ? 'Expired' : 'Active';
-  },
+      return expirationDate <= today ? 'Expired' : 'Active'
+    },
 
-  getStockStatusColor(row) {
-    if (!row.Closing_quantity) {
-      return 'red';
-    }
-    const expirationDate = new Date(row.expiration_date);
-    const today = new Date();
-    // Optional: reset time to 00:00:00 for date-only comparison
-    expirationDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
+    getStockStatusColor(row) {
+      if (!row.Closing_quantity) {
+        return 'red'
+      }
+      const expirationDate = new Date(row.expiration_date)
+      const today = new Date()
+      // Optional: reset time to 00:00:00 for date-only comparison
+      expirationDate.setHours(0, 0, 0, 0)
+      today.setHours(0, 0, 0, 0)
 
-    if ( expirationDate <= today){
-      return 'red'
-    }
-    //return expirationDate <= today ? 'Expired' : 'Active';
-  },
+      if (expirationDate <= today) {
+        return 'red'
+      }
+      //return expirationDate <= today ? 'Expired' : 'Active';
+    },
 
-  async updateDailyInventory(id,payload){
-    await this.itemStore.updateItem(id,payload)
+    async updateDailyInventory(id, payload) {
+      try {
+        await this.transactionStore.updateDailyInvetory(id, payload)
+      } catch (error) {
+        console.log(error)
+      }
+    },
 
-  },
-  
-  async newDailyInventory(){
+    async newDailyInventory(payload) {
+      try {
+        await this.transactionStore.newDailyInventory(payload)
+      } catch (error) {
+        console.log(error)
+      }
+    },
 
-  }
+    async adjustInventory() {
+      try {
+        this.inventoryAdjustment.status ='ADJUSTED'
+        this.inventoryAdjustment.remarks = 'Openning Quantity Adjusted'
+       // console.log('inventoryAdjustment => ',this.inventoryAdjustment)
+        await this.updateDailyInventory(this.inventoryAdjustment.id, this.inventoryAdjustment)
 
+        this.adjusted.id = 0
+        this.adjusted.Openning_quantity = this.Adjusted_quantity
+        this.adjusted.Closing_quantity = this.adjusted.Openning_quantity - this.adjusted.quantity_out
+        this.adjusted.status ='OPEN'
+        this.adjusted.remarks ='Openning Quantity adjusted'
+       // console.log('ADJUSTED = > ',this.adjusted)
+        await this.newDailyInventory(this.adjusted)
+        await this.fetchAllStocks()
+
+
+      } catch (error) {
+        console.log(error)
+      }
+    },
   },
   mounted() {
     this.fetchAllStocks()
-
   },
   watch() {},
 }

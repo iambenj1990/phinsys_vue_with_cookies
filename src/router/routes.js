@@ -25,6 +25,10 @@ const routes = [
       { path: '/inventory/open', component: () => import('pages/ClientList.vue') }, // particular transaction order of a customer
       { path: '/inventory/close', component: () => import('pages/ClientList.vue') }, // particular transaction order of a customer
 
+      { path: '/users/new', component: () => import('pages/RegisterUsers.vue') }, // particular transaction order of a customer
+
+
+
     ]
   },
   {

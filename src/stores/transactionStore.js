@@ -1,5 +1,6 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { api } from 'src/boot/axios'
+import { Notify } from 'quasar'
 
 export const useTransactionStore = defineStore('transactions', {
   state: () => ({
@@ -7,9 +8,9 @@ export const useTransactionStore = defineStore('transactions', {
     customerTransaction: {},
     customerTransactionID: 0,
     newCustomerTransactionID: 0,
-    customerTransactionsIdList:[],
+    customerTransactionsIdList: [],
 
-    SelecteddailyInventory:{}
+    SelecteddailyInventory: {},
   }),
 
   actions: {
@@ -18,7 +19,12 @@ export const useTransactionStore = defineStore('transactions', {
         const response = await api.get('/orders/transaction/new/' + newCustomerTransaction)
         this.newCustomerTransactionID = response.data
       } catch (error) {
-        console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -28,7 +34,12 @@ export const useTransactionStore = defineStore('transactions', {
         // console.log( response.data)
         this.customerTransactionsIdList = response.data
       } catch (error) {
-        console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -36,7 +47,12 @@ export const useTransactionStore = defineStore('transactions', {
       try {
         await api.post('/orders/new', payload)
       } catch (error) {
-        console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -46,25 +62,70 @@ export const useTransactionStore = defineStore('transactions', {
         this.customerTransactions = response.data.transactions
         // console.log(this.customerTransactions)
       } catch (error) {
-        console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
     async remove_order(id) {
       try {
-         await api.delete('/orders/order/'+ id)
+        await api.delete('/orders/order/' + id)
       } catch (error) {
-        console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
-    async getDailyInventory(id){
-      const response = await api.get('/daily/'+id)
-      this.SelecteddailyInventory = response.data.transaction
-    }
+    async getDailyInventory(id) {
+      try {
+        const response = await api.get('/daily/' + id)
+        this.SelecteddailyInventory = response.data.transaction
+      } catch (error) {
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
+    async updateDailyInvetory(id, payload) {
+      try {
+        const response = await api.put('/daily/' + id, payload)
+        console.log(response.data)
+      } catch (error) {
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
+    async newDailyInventory(payload) {
+      try {
+        const response = await api.post('/daily/', payload)
+        console.log(response.data)
+      } catch (error) {
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
   },
-
-
 })
 
 if (import.meta.hot) {
