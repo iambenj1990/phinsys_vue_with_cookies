@@ -156,22 +156,66 @@
               <q-input readonly dense label="Type" v-model="holder.dosage_form"></q-input>
             </div>
             <div class="col-12 col-md-2 q-mx-sm text-caption q-mb-md">
-              <q-input readonly dense label="Quantity" v-model="holder.Closing_quantity"></q-input>
+              <q-input
+                readonly
+                dense
+                label="Current Quantity"
+                v-model="holder.Closing_quantity"
+              ></q-input>
             </div>
           </div>
+
           <q-separator></q-separator>
-          <q-input
-            label="Adjusted Quantity"
-            type="text"
-            mask="#####"
-            autofocus
-            v-model="Adjusted_quantity"
-          />
+          <pre>Adjustment Type:</pre>
+          <div class="q-mx-sm q-my-md row flex">
+            <div class="col-12 col-md-1 text-caption">
+              <q-checkbox
+                keep-color
+                v-model="Increase"
+                label="In"
+                color="green"
+
+              />
+            </div>
+            <div class="col-12 col-md-1 text-caption">
+              <q-checkbox
+                keep-color
+                v-model="Decrease"
+                label="Out"
+                color="red"
+
+              />
+            </div>
+            <div class="col-12 col-md-2 text-caption q-mx-md">
+              <q-input
+                type="number"
+                dense
+                label="Desired Adjustment"
+                v-model="Adjusted_quantity"
+               @update:model-value="adjustTypeComputation()"
+              />
+            </div>
+          </div>
+
+          <q-separator></q-separator>
+
+          <div class="q-mx-sm row flex">
+            <q-input
+              label="Requested Quantity"
+              type="number"
+              mask="#####"
+              autofocus
+              readonly
+              v-model="final_Adjusted_quantity"
+            />
+          </div>
+
+          <q-input label="Remarks" type="textarea" v-model="remarks" />
         </q-card-section>
         <q-separator />
         <q-card-actions align="right">
           <q-btn flat label="Cancel" color="grey" @click="showAdjustment = false" />
-          <q-btn flat label="Add" color="primary"  @click ="adjustInventory"/>
+          <q-btn flat label="Add" color="primary" @click="adjustInventory" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -182,7 +226,6 @@
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { useIndicatorStore } from 'src/stores/indicatorsStore'
-
 
 export default {
   computed: {
@@ -307,7 +350,11 @@ export default {
   },
   data() {
     return {
+      Increase: false,
+      Decrease: false,
       Adjusted_quantity: 0,
+      final_Adjusted_quantity: 0,
+      remarks: '',
       open: false,
       close: false,
       showAdjustment: false,
@@ -345,12 +392,24 @@ export default {
   },
 
   methods: {
+    adjustTypeComputation() {
+      if (this.Increase) {
+        this.Decrease = false
+        this.final_Adjusted_quantity =
+          parseInt(this.Adjusted_quantity) + parseInt(this.inventoryAdjustment.Openning_quantity)
+      }
+      if (this.Decrease) {
+        this.Increase = false
+        this.final_Adjusted_quantity =
+          parseInt(this.Adjusted_quantity) - parseInt(this.inventoryAdjustment.Openning_quantity)
+      }
+    },
     async getDailyForAdjustment(id) {
       await this.transactionStore.getDailyInventory(id)
       this.inventoryAdjustment = this.transactionStore.SelecteddailyInventory[0]
       this.adjusted = this.transactionStore.SelecteddailyInventory[0]
 
-    //  console.log('Adjustment data => ', this.inventoryAdjustment)
+      console.log('Adjustment data => ', this.inventoryAdjustment)
     },
 
     async GetAdjustItem(data) {
@@ -410,7 +469,7 @@ export default {
       expirationDate.setHours(0, 0, 0, 0)
       today.setHours(0, 0, 0, 0)
 
-      return expirationDate <= today ? 'Expired' : 'Active'
+      return expirationDate <= today ? 'Expired' : 'In Stock'
     },
 
     getStockStatusColor(row) {
@@ -447,21 +506,20 @@ export default {
 
     async adjustInventory() {
       try {
-        this.inventoryAdjustment.status ='ADJUSTED'
+        this.inventoryAdjustment.status = 'ADJUSTED'
         this.inventoryAdjustment.remarks = 'Openning Quantity Adjusted'
-       // console.log('inventoryAdjustment => ',this.inventoryAdjustment)
+        // console.log('inventoryAdjustment => ',this.inventoryAdjustment)
         await this.updateDailyInventory(this.inventoryAdjustment.id, this.inventoryAdjustment)
 
         this.adjusted.id = 0
         this.adjusted.Openning_quantity = this.Adjusted_quantity
-        this.adjusted.Closing_quantity = this.adjusted.Openning_quantity - this.adjusted.quantity_out
-        this.adjusted.status ='OPEN'
-        this.adjusted.remarks ='Openning Quantity adjusted'
-       // console.log('ADJUSTED = > ',this.adjusted)
+        this.adjusted.Closing_quantity =
+          this.adjusted.Openning_quantity - this.adjusted.quantity_out
+        this.adjusted.status = 'OPEN'
+        this.adjusted.remarks = 'Openning Quantity adjusted'
+        // console.log('ADJUSTED = > ',this.adjusted)
         await this.newDailyInventory(this.adjusted)
         await this.fetchAllStocks()
-
-
       } catch (error) {
         console.log(error)
       }
@@ -470,6 +528,17 @@ export default {
   mounted() {
     this.fetchAllStocks()
   },
-  watch() {},
+  watch: {
+    Increase(newVal) {
+      if (newVal) {
+        this.adjustTypeComputation()
+      }
+    },
+    Decrease(newVal) {
+      if (newVal) {
+        this.adjustTypeComputation()
+      }
+    },
+  },
 }
 </script>

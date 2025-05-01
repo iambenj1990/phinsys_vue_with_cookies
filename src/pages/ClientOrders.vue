@@ -277,25 +277,32 @@
                 </q-td>
 
                 <q-td key="expiration_date" style="font-size: 11px" align="left">
-                  {{ props.row.expiration_date }}
+                  {{props.row.expiration_date }}
                 </q-td>
 
                 <q-td key="status" style="font-size: 11px" align="left">
-                  <q-badge  :style="{ backgroundColor: props.row.Closing_quantity === 0 ? '#F44336' : '#9CCC65' }">
-                    {{  props.row.Closing_quantity ?'In Stock': 'Out of Stock'  }}
+                  <q-badge  :style="{ backgroundColor: props.row.Closing_quantity === 0 ? '#F44336' : new Date(props.row.expiration_date) <= new Date() ? '#F44336' : '#9CCC65' }">
+                    <!-- {{  props.row.Closing_quantity ?'In Stock': 'Out of Stock'  }} -->
+                       {{ getStockStatus(props.row) }}
                   </q-badge>
 
                 </q-td>
 
                 <q-td key="actions" style="font-size: 11px" align="center">
                   <q-btn
-                    :disable="props.row.Closing_quantity === 0"
                     flat
                     rounded
                     color="primary"
                     style="background-color: orange"
                     @click="showData(props.row)"
                     icon="add_shopping_cart"
+                    :disable="
+                        !props.row.Closing_quantity
+                          ? true
+                          : new Date(props.row.expiration_date) <= new Date()
+                            ? true
+                            : false
+                      "
                   />
                   <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
                 </q-td>
@@ -557,7 +564,18 @@ export default {
   },
   methods: {
 
+    getStockStatus(row) {
+      if (!row.Closing_quantity) {
+        return 'Out of Stock'
+      }
+      const expirationDate = new Date(row.expiration_date)
+      const today = new Date()
+      // Optional: reset time to 00:00:00 for date-only comparison
+      expirationDate.setHours(0, 0, 0, 0)
+      today.setHours(0, 0, 0, 0)
 
+      return expirationDate <= today ? 'Expired' : 'In Stock'
+    },
 
     async remove_order(id) {
       await this.transactionStore.remove_order(id)
@@ -572,7 +590,7 @@ export default {
 
       this.transactionDetails.transaction_id = this.transaction_id
       this.transactionDetails.customer_id = this.selectedClient_id
-      this.transactionDetails.transaction_date = new Date().toISOString().slice(0, 10)
+      this.transactionDetails.transaction_date = new  Date().toLocaleDateString('en-CA')
       this.transactionDetails.item_id = payload.item_id
       this.transactionDetails.user_id = 1
       console.log(payload)

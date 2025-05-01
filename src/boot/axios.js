@@ -13,7 +13,7 @@ const api = axios.create({
 
               // baseURL: 'http://192.168.8.11:8000/api' //office
               baseURL: 'http://192.168.50.98:8000/api', //Home
-              withCredentials: true
+              withCredentials: false
             })
 
 export default defineBoot(({ app }) => {
