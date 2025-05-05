@@ -20,12 +20,14 @@ const routes = [
       { path: '/items/expired', component: () => import('pages/ItemsExpiredList.vue') }, // get expired items
       { path: '/items/low-quantity', component: () => import('pages/ItemsNoStockList.vue') }, // get low quantity items
       { path: '/items/movement', component: () => import('pages/ItemsMovementList.vue') }, // get low quantity items
+      { path: '/items/reports', component: () => import('pages/ItemReports.vue') }, // get low quantity items
 
       { path: '/inventory', component: () => import('pages/ItemsInventory.vue') }, // particular transaction order of a customer
       { path: '/inventory/open', component: () => import('pages/ClientList.vue') }, // particular transaction order of a customer
       { path: '/inventory/close', component: () => import('pages/ClientList.vue') }, // particular transaction order of a customer
       { path: '/inventory/adjustment', component: () => import('pages/ItemsAdjustmentList.vue') }, //get all items
       { path: '/users/new', component: () => import('pages/RegisterUsers.vue') }, // particular transaction order of a customer
+
 
 
 

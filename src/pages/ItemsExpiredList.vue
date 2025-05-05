@@ -2,12 +2,12 @@
   <q-page>
     <div class="flex flex-center q-ma-sm">
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
-        <div class="row q-gutter-md">
+        <!-- <div class="row q-gutter-md">
           <div class="col-12">
             <div align="left" class="text-h6 text-primary q-pa-md">Out of Stock Medicines</div>
           </div>
         </div>
-        <q-separator />
+        <q-separator /> -->
         <div v-if="loading" class="flex flex-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
         </div>
@@ -38,6 +38,20 @@
                     <q-icon name="search" />
                   </template>
                 </q-input>
+              </template>
+
+              <template v-slot:top-right>
+                <q-btn
+                  flat
+                  type="button"
+                  label="Export"
+                  colors="white"
+                  class="q-mr-md q-ml-md text-caption text-white"
+                  style="background-color: #26A65B;"
+                  color="primary"
+                  icon="import_export"
+                  @click="exportToExcel()"
+                />
               </template>
 
               <template #body="props">
@@ -91,9 +105,8 @@
                   </q-td> -->
 
                   <q-td key="daysTillExpire" style="font-size: 11px" align="left">
-                   {{ calculateDaysUntilExpiration( props.row.expiration_date) }}
+                    {{ calculateDaysUntilExpiration(props.row.expiration_date) }}
                   </q-td>
-
                 </q-tr>
               </template>
             </q-table>
@@ -108,8 +121,8 @@
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { Notify } from 'quasar'
+import ExcelJS from 'exceljs/dist/exceljs.min.js'
 export default {
-
   computed: {
     itemStore() {
       return useItemStore()
@@ -119,10 +132,7 @@ export default {
     },
   },
   setup() {
-
-
     return {
-
       pagination: {
         page: 1,
         rowsPerPage: 15,
@@ -216,7 +226,6 @@ export default {
     }
   },
   data() {
-
     return {
       color: '',
       rows: [],
@@ -239,20 +248,46 @@ export default {
   },
 
   methods: {
+    async exportToExcel() {
+      const workbook = new ExcelJS.Workbook()
+      const worksheet = workbook.addWorksheet('Expired Medicines')
 
-    calculateDaysUntilExpiration (expirationDate)  {
-      if (!expirationDate) return ''; // Handle null values
+      // Define columns
+      worksheet.columns = this.cols.map((col) => ({
+        header: col.label,
+        key: col.field,
+        width: 20,
+      }))
 
-      const today = new Date();
-      const expiry = new Date(expirationDate);
+      // Add rows
+      this.rows.forEach((row) => {
+        worksheet.addRow(row)
+      })
+
+      // Save the file
+      const buffer = await workbook.xlsx.writeBuffer()
+      const blob = new Blob([buffer], { type: 'application/octet-stream' })
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `Expired_Medicines_${new Date().toISOString()}.xlsx`
+      a.click()
+      window.URL.revokeObjectURL(url)
+    },
+
+    calculateDaysUntilExpiration(expirationDate) {
+      if (!expirationDate) return '' // Handle null values
+
+      const today = new Date()
+      const expiry = new Date(expirationDate)
 
       // Calculate the time difference in milliseconds
-      const differenceInTime = expiry.getTime() - today.getTime();
+      const differenceInTime = expiry.getTime() - today.getTime()
 
       // Calculate the time difference in days
-      const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+      const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24))
 
-      return differenceInDays;
+      return differenceInDays
     },
 
     editItem(id) {
@@ -265,13 +300,13 @@ export default {
         this.rows = this.itemStore.expiring
       } catch (error) {
         Notify.create({
-            type: 'negative',
-            message: error.response.data.message || 'An error occurred.',
-            position: 'center',
-            timeout: 5000,
-          })
-      }finally{
-        this.loading= false
+          type: 'negative',
+          message: error.response.data.message || 'An error occurred.',
+          position: 'center',
+          timeout: 5000,
+        })
+      } finally {
+        this.loading = false
       }
     },
 

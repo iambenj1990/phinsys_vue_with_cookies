@@ -2,12 +2,12 @@
   <q-page>
     <div class="flex flex-center q-ma-sm">
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
-        <div class="row q-gutter-md">
+        <!-- <div class="row q-gutter-md">
           <div class="col-12">
             <div align="left" class="text-h6 text-primary q-pa-md">Out of Stock Medicines</div>
           </div>
         </div>
-        <q-separator />
+        <q-separator /> -->
         <div v-if="loading" class="flex flex-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
         </div>
@@ -38,6 +38,19 @@
                     <q-icon name="search" />
                   </template>
                 </q-input>
+              </template>
+
+              <template #top-right>
+
+                <q-btn
+                  flat
+                  type="button"
+                  label="Export"
+                  class="q-mr-md q-ml-md text-caption text-white"
+                  style="background-color: #26A65B;"
+                  icon="import_export"
+                  @click="exportToExcel()"
+                />
               </template>
 
               <template #body="props">
@@ -107,6 +120,7 @@
 </template>
 
 <script>
+import ExcelJS from 'exceljs/dist/exceljs.min.js'
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { Notify } from 'quasar'
@@ -234,10 +248,39 @@ export default {
         expiration_date: '',
         user_id: 0,
       },
+
+
     }
   },
 
   methods: {
+    async exportToExcel() {
+      const workbook = new ExcelJS.Workbook()
+      const worksheet = workbook.addWorksheet('Out of Stock Medicines')
+
+      // Define columns
+      worksheet.columns = this.cols.map((col) => ({
+        header: col.label,
+        key: col.field,
+        width: 20,
+      }))
+
+      // Add rows
+      this.rows.forEach((row) => {
+        worksheet.addRow(row)
+      })
+
+      // Save the file
+      const buffer = await workbook.xlsx.writeBuffer()
+      const blob = new Blob([buffer], { type: 'application/octet-stream' })
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `Out_of_Stock_Medicines_${new Date().toISOString()}.xlsx`
+      a.click()
+      window.URL.revokeObjectURL(url)
+    },
+
     editItem(id) {
       console.log(id)
     },

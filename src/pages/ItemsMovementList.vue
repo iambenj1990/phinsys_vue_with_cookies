@@ -2,12 +2,12 @@
   <q-page>
     <div class="flex flex-center q-ma-sm">
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
-        <div class="row q-gutter-md">
+        <!-- <div class="row q-gutter-md">
           <div class="col-12">
             <div align="left" class="text-h6 text-primary">Supplies Information</div>
           </div>
-        </div>
-        <q-separator />
+        </div> -->
+        <!-- <q-separator /> -->
         <div v-if="loading" class="flex flex-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
         </div>
@@ -40,6 +40,8 @@
                 </q-input>
               </template>
               <template v-slot:top-right>
+
+
                 <q-btn flat label="Close Stocks" color="grey" @click="closeStock()" />
                 <q-btn
                   flat
@@ -169,22 +171,10 @@
           <pre>Adjustment Type:</pre>
           <div class="q-mx-sm q-my-md row flex">
             <div class="col-12 col-md-1 text-caption">
-              <q-checkbox
-                keep-color
-                v-model="Increase"
-                label="In"
-                color="green"
-
-              />
+              <q-checkbox keep-color v-model="Increase" label="In" color="green" />
             </div>
             <div class="col-12 col-md-1 text-caption">
-              <q-checkbox
-                keep-color
-                v-model="Decrease"
-                label="Out"
-                color="red"
-
-              />
+              <q-checkbox keep-color v-model="Decrease" label="Out" color="red" />
             </div>
             <div class="col-12 col-md-2 text-caption q-mx-md">
               <q-input
@@ -192,7 +182,7 @@
                 dense
                 label="Desired Adjustment"
                 v-model="Adjusted_quantity"
-               @update:model-value="adjustTypeComputation()"
+                @update:model-value="adjustTypeComputation()"
               />
             </div>
           </div>
@@ -226,6 +216,7 @@
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { useIndicatorStore } from 'src/stores/indicatorsStore'
+import ExcelJS from 'exceljs/dist/exceljs.min.js'
 
 export default {
   computed: {
@@ -350,6 +341,11 @@ export default {
   },
   data() {
     return {
+      openPrompt: false,
+      dateRange: {
+        from: '',
+        to: '',
+      },
       Increase: false,
       Decrease: false,
       Adjusted_quantity: 0,
@@ -392,6 +388,35 @@ export default {
   },
 
   methods: {
+
+
+    
+    async exportToExcel() {
+      const workbook = new ExcelJS.Workbook()
+      const worksheet = workbook.addWorksheet('Stock Movements')
+
+      // Define columns
+      worksheet.columns = this.cols.map((col) => ({
+        header: col.label,
+        key: col.field,
+        width: 20,
+      }))
+
+      // Add rows
+      this.rows.forEach((row) => {
+        worksheet.addRow(row)
+      })
+
+      // Save the file
+      const buffer = await workbook.xlsx.writeBuffer()
+      const blob = new Blob([buffer], { type: 'application/octet-stream' })
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `Stock_Movement_Medicines_${new Date().toISOString()}.xlsx`
+      a.click()
+      window.URL.revokeObjectURL(url)
+    },
     adjustTypeComputation() {
       if (this.Increase) {
         this.Decrease = false
