@@ -11,23 +11,39 @@ export const useItemStore = defineStore('items', {
     expiring: [],
     expired: [],
     po_items: [],
-    zero_stocks:[],
+    zero_stocks: [],
 
-    temp_id:''
+    temp_id: '',
+    hasOpening: false,
   }),
 
   actions: {
-    async getTempID(){
+    async openLookup() {
       try {
-        const response = await api.get ('/items/generate/tempno')
+        const response = await api.get('/daily/inventoryOpen/today')
+        this.hasOpening = response.data.status
+        console.log(this.hasOpening)
+      } catch (error) {
+        console.error(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
+    async getTempID() {
+      try {
+        const response = await api.get('/items/generate/tempno')
         this.temp_id = response.data
         console.log(this.temp_id)
       } catch (error) {
         console.error(error)
         Notify.create({
           type: 'negative',
-          message:
-            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
           timeout: 5000,
         })
@@ -41,8 +57,7 @@ export const useItemStore = defineStore('items', {
         console.error(error)
         Notify.create({
           type: 'negative',
-          message:
-            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
           timeout: 5000,
         })
@@ -57,8 +72,7 @@ export const useItemStore = defineStore('items', {
         console.log(error)
         Notify.create({
           type: 'negative',
-          message:
-            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
           timeout: 5000,
         })
@@ -73,8 +87,7 @@ export const useItemStore = defineStore('items', {
         console.log(error)
         Notify.create({
           type: 'negative',
-          message:
-            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
           timeout: 5000,
         })
@@ -84,12 +97,11 @@ export const useItemStore = defineStore('items', {
     async postItem(payload) {
       try {
         const response = await api.post('/items/new', payload)
-         console.log(response.data.success)
-         console.table(response.data.item)
+        console.log(response.data.success)
+        console.table(response.data.item)
         Notify.create({
           type: 'positive',
-          message:
-           'Item saved',
+          message: 'Item saved',
           position: 'center',
           timeout: 5000,
         })
@@ -97,8 +109,7 @@ export const useItemStore = defineStore('items', {
         console.log(error)
         Notify.create({
           type: 'negative',
-          message:
-            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
           timeout: 5000,
         })
@@ -113,8 +124,7 @@ export const useItemStore = defineStore('items', {
         console.log(error)
         Notify.create({
           type: 'negative',
-          message:
-            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
           timeout: 5000,
         })
@@ -129,8 +139,7 @@ export const useItemStore = defineStore('items', {
         console.log(error)
         Notify.create({
           type: 'negative',
-          message:
-            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
           timeout: 5000,
         })
@@ -143,8 +152,7 @@ export const useItemStore = defineStore('items', {
         console.log(response.data.success, ' --- ', response.data.message)
         Notify.create({
           type: 'positive',
-          message:
-            'Items Deleted Successfully',
+          message: 'Items Deleted Successfully',
           position: 'center',
           timeout: 5000,
         })
@@ -152,8 +160,7 @@ export const useItemStore = defineStore('items', {
         console.log(error)
         Notify.create({
           type: 'negative',
-          message:
-            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
           timeout: 5000,
         })
@@ -169,8 +176,7 @@ export const useItemStore = defineStore('items', {
         console.log(error)
         Notify.create({
           type: 'negative',
-          message:
-            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
           timeout: 5000,
         })
@@ -185,8 +191,7 @@ export const useItemStore = defineStore('items', {
         console.log(error)
         Notify.create({
           type: 'negative',
-          message:
-            error.response?.data?.message || error.message || 'An unexpected error occurred',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
           timeout: 5000,
         })
@@ -254,8 +259,7 @@ export const useItemStore = defineStore('items', {
     async outOfStocks() {
       try {
         const response = await api.get('/daily/inventory/lowquantity')
-        this.zero_stocks =response.data.stocks
-
+        this.zero_stocks = response.data.stocks
 
         // Notify.create({
         //   type: 'positive',
@@ -265,27 +269,26 @@ export const useItemStore = defineStore('items', {
         // })
       } catch (error) {
         // if (error.response && error.response.status === 409) {
-          // Show notification for HTTP 409 error
-          Notify.create({
-            type: 'negative',
-            message: error.response.data.message || 'An error occurred.',
-            position: 'center',
-            timeout: 5000,
-          })
-      //   } else {
-      //     // Show generic error notification
-      //     Notify.create({
-      //       type: 'negative',
-      //       message:
-      //         error.response?.data?.message || error.message || 'An unexpected error occurred',
-      //       position: 'center',
-      //       timeout: 5000,
-      //     })
-      //   }
-      //   throw error // Optional: Re-throw the error for further handling
-       }
+        // Show notification for HTTP 409 error
+        Notify.create({
+          type: 'negative',
+          message: error.response.data.message || 'An error occurred.',
+          position: 'center',
+          timeout: 5000,
+        })
+        //   } else {
+        //     // Show generic error notification
+        //     Notify.create({
+        //       type: 'negative',
+        //       message:
+        //         error.response?.data?.message || error.message || 'An unexpected error occurred',
+        //       position: 'center',
+        //       timeout: 5000,
+        //     })
+        //   }
+        //   throw error // Optional: Re-throw the error for further handling
+      }
     },
-
   },
 })
 if (import.meta.hot) {

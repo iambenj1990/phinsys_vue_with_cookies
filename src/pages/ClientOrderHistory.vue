@@ -26,8 +26,8 @@
               <q-btn
                 color="primary"
                 label="New Transaction"
-                to="/customers/orders/new"
                 icon="add"
+                @click="lookforOpen"
                 flat
               />
             </template>
@@ -82,6 +82,10 @@
         </q-card-section>
       </q-card>
     </div>
+    <q-dialog v-model="warning" persistent>
+
+    </q-dialog>
+
 
     <q-dialog v-model="DeleteClient" persistent>
       <q-card class="q-pa-sm" style="max-width: 400px; width: 100%">
@@ -98,7 +102,9 @@
   </q-page>
 </template>
 <script>
+
 import { useCustomerStore } from '../stores/customersStore'
+import { useItemStore } from 'src/stores/itemsStore'
 export default {
   setup() {
     return {
@@ -193,6 +199,8 @@ export default {
 
   data() {
     return {
+      hasOpentransaction: false,
+      warning: false,
       Selected_ID: 0,
       DeleteClient: false,
       search: '',
@@ -261,14 +269,39 @@ export default {
         console.error(error)
       }
     },
+
+    async lookforOpen(){
+      try{
+        await this.Items.openLookup()
+        this.hasOpentransaction = this.Items.hasOpening
+
+        if (this.hasOpentransaction == false) {
+          this.$router.push({'path': '/customers/orders/new'})
+        } else
+          this.$q.notify({
+            type: 'negative',
+            message: 'No Open Transaction Available!',
+            position: 'center',
+            timeout: 1200,
+          })
+
+
+    } catch (error) {
+        console.log(error)
+      }
+    },
   },
   computed: {
     Customers() {
       return useCustomerStore()
     },
+    Items() {
+      return useItemStore()
+    },
   },
   mounted() {
     this.get_clients()
+
   },
 }
 </script>

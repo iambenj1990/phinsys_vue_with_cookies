@@ -85,20 +85,10 @@
                   </q-td>
 
                   <q-td key="Closing_quantity" style="font-size: 11px" align="left">
-                    <q-badge
-                      style="width: auto"
-                      :color="
-                        getStockColor(props.row.Closing_quantity, props.row.Openning_quantity)
-                      "
-                      text-color="black"
-                      class="flex flex-center q-pa-sm "
-                    >
                       {{
-                        !props.row.Closing_quantity
-                          ? 'No Stocks Available'
-                          : props.row.Closing_quantity
+                        props.row.Closing_quantity
                       }}
-                    </q-badge>
+
                   </q-td>
 
                   <q-td

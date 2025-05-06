@@ -261,7 +261,11 @@ export default {
 
       // Add rows
       this.rows.forEach((row) => {
-        worksheet.addRow(row)
+        const rowWithDays = {
+      ...row,
+      daysTillExpire: this.calculateDaysUntilExpiration(row.expiration_date),
+    }
+        worksheet.addRow(rowWithDays)
       })
 
       // Save the file
