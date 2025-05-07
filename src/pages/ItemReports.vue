@@ -3,7 +3,7 @@
     <div class="q-pa-md">
       <q-card>
         <q-card-section>
-          <div class="text-h6">Item Reports</div>
+          <div class="text-h6 text-blue" >Pharmarcy Reports</div>
         </q-card-section>
 
         <q-card-section>
@@ -19,6 +19,7 @@
             <q-tab name="Movement" label="Stock Movements" />
             <q-tab name="Expired" label="Expired Stocks" />
             <q-tab name="Low" label="Low Stocks" />
+            <q-tab name="Dispense" label="Dispense" />
           </q-tabs>
           <q-separator />
 
@@ -37,6 +38,11 @@
               <!-- <div class="text-h6">Movies</div> -->
               <low />
             </q-tab-panel>
+
+            <q-tab-panel name="Dispense">
+              <!-- <div class="text-h6">Movies</div> -->
+              <dispense />
+            </q-tab-panel>
           </q-tab-panels>
 
           <q-btn label="Action" color="primary" @click="onAction" />
@@ -50,10 +56,12 @@
 import expire from 'pages/ItemsExpiredList.vue'
 import low from 'pages/ItemsNoStockList.vue'
 import stock from './ItemsMovementList.vue'
+import dispense from './ItemsMonthlyDispenseReport.vue'
 
 export default {
   name: 'ItemReports',
   components: {
+    dispense,
     expire,
     low,
     stock,
