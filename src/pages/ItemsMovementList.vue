@@ -8,6 +8,10 @@
           </div>
         </div> -->
         <!-- <q-separator /> -->
+        <div class="q-my-sm q-mx-sm" align="right">
+          <q-btn flat label="Close Stocks" color="grey" @click="closeStock()" />
+          <q-btn flat label="Open Stocks" class="q-mx-sm" color="green" @click="openStock()" />
+        </div>
         <div v-if="loading" class="flex flex-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
         </div>
@@ -25,31 +29,47 @@
               v-model:pagination="pagination"
             >
               <template v-slot:top-left>
-                <q-input
+                <div class="q-gutter-sm flex">
+                  <q-input
                   borderless
                   dense
                   debounce="300"
                   v-model="filter"
                   placeholder="Search"
-                  class="full-width"
+                  filled
                   style="width: 300px"
+                  class="q-mr-md"
                 >
                   <template v-slot:append>
                     <q-icon name="search" />
                   </template>
                 </q-input>
-              </template>
-              <template v-slot:top-right>
+                <q-input dense filled v-model="dateRange" mask="####-##-##" :rules="['date']">
+                  <template v-slot:append>
+                    <q-icon name="event" class="cursor-pointer">
+                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                        <q-date v-model="dateRange" mask="YYYY-MM-DD" @update:model-value="showStocks(dateRange)">
+                          <div class="row items-center justify-end">
+                            <q-btn v-close-popup label="Close" color="primary" flat />
+                          </div>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+                </q-input>
 
-
-                <q-btn flat label="Close Stocks" color="grey" @click="closeStock()" />
                 <q-btn
+                  dense
                   flat
-                  label="Open Stocks"
-                  class="q-mx-sm"
                   color="green"
-                  @click="openStock()"
+                  label="Export"
+                  icon="import_export"
+                  @click="exportToExcel"
+                  style="height: 40px; "
+
                 />
+                </div>
+
               </template>
 
               <template #body="props">
@@ -69,12 +89,13 @@
                   <q-td key="dosage_form" style="font-size: 11px" align="left">
                     {{ props.row.dosage_form }}
                   </q-td>
-                  <q-td key="Openning_quantity" style="font-size: 11px" align="left">
+                  <!-- <q-td key="Openning_quantity" style="font-size: 11px" align="left">
                     {{ !props.row.Openning_quantity ? '0' : props.row.Openning_quantity }}
                   </q-td>
                   <q-td key="unit" style="font-size: 11px" align="left">
                     {{ props.row.unit }}
-                  </q-td>
+                      pcs
+                  </q-td> -->
 
                   <q-td key="expiration_date" style="font-size: 11px" align="left">
                     {{ props.row.expiration_date }}
@@ -83,34 +104,35 @@
                   <q-td key="Closing_quantity" style="font-size: 11px" align="left">
                     <q-badge
                       style="width: 100px"
-                      :color="
-                        getStockColor(props.row.Closing_quantity, props.row.Openning_quantity)
-                      "
+                      :color="getStockColor(props.row.Closing_quantity, props.row.quantity)"
                       text-color="black"
                       class="flex flex-center q-pa-xs"
                     >
-                      {{ !props.row.Closing_quantity ? '0' : props.row.Closing_quantity }}
+                      {{
+                        !props.row.total_closing_quantity ? '0' : props.row.total_closing_quantity
+                      }}
                     </q-badge>
                   </q-td>
 
                   <q-td
-                    key="Status"
+                    key="stock_status"
                     style="font-size: 11px"
                     class="text-weight-bolder"
                     align="left"
                   >
-                    <q-badge :color="getStockStatusColor(props.row)">
+                    <!-- <q-badge :color="getStockStatusColor(props.row)">
                       {{ getStockStatus(props.row) }}
-                    </q-badge>
+                    </q-badge> -->
+                    {{ props.row.stock_status }}
                   </q-td>
 
                   <q-td
-                    key="last_inventory_date"
+                    key="transaction_date"
                     style="font-size: 11px"
                     class="text-weight-bolder"
                     align="left"
                   >
-                    {{ props.row.last_inventory_date }}
+                    {{ props.row.transaction_date }}
                   </q-td>
 
                   <q-td key="actions" style="font-size: 11px" align="center">
@@ -209,6 +231,29 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <q-dialog v-model="openDate" persistent style="max-width: 500px; width: 50%">
+      <q-card style="max-width: 320px; width: 100%">
+        <q-card-section>
+          <q-date
+            v-model="dateRange"
+            range
+            mask="YYYY-MM-DD"
+            label="Select Date Range"
+            :min="today"
+            :max="today"
+          />
+          <q-separator></q-separator>
+          <pre>Selected Date Range:</pre>
+          <pre>FROM: {{ this.dateRange.from }}</pre>
+          <pre>TO: {{ this.dateRange.to }}</pre>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Close" color="grey" @click="clearDates()" />
+          <q-btn flat label="Add" color="primary" @click="showCLosedStocks(this.dateRange)" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -217,6 +262,7 @@ import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { useIndicatorStore } from 'src/stores/indicatorsStore'
 import ExcelJS from 'exceljs/dist/exceljs.min.js'
+import { date } from 'quasar'
 
 export default {
   computed: {
@@ -228,8 +274,10 @@ export default {
     },
   },
   setup() {
+    const today = date.formatDate(new Date(), 'YYYY-MM-DD')
     const indicatorStore = useIndicatorStore()
     return {
+      today,
       indicatorStore,
       pagination: {
         page: 1,
@@ -276,22 +324,22 @@ export default {
           field: 'dosage_form',
           sortable: true,
         },
-        {
-          name: 'Openning_quantity',
-          required: true,
-          label: 'Quantity',
-          align: 'left',
-          field: 'Openning_quantity',
-        },
+        // {
+        //   name: 'Openning_quantity',
+        //   required: true,
+        //   label: 'Quantity',
+        //   align: 'left',
+        //   field: 'Openning_quantity',
+        // },
 
-        {
-          name: 'unit',
-          required: true,
-          label: 'Unit',
-          align: 'left',
-          field: 'unit',
-          sortable: true,
-        },
+        // {
+        //   name: 'unit',
+        //   required: true,
+        //   label: 'Unit',
+        //   align: 'left',
+        //   field: 'unit',
+        //   sortable: true,
+        // },
 
         {
           name: 'expiration_date',
@@ -303,30 +351,30 @@ export default {
         },
 
         {
-          name: 'Closing_quantity',
+          name: 'total_closing_quantity',
           required: true,
           label: 'Remaining Quantity',
           align: 'left',
-          field: 'Closing_quantity',
+          field: 'total_closing_quantity',
           format: (val) => (val ? val : 0), // If empty, set to 0
           sortable: true,
         },
 
         {
-          name: 'status',
+          name: 'stock_status',
           required: true,
           label: 'Status',
           align: 'left',
-          field: 'Status',
+          field: 'stock_status',
           format: (val) => (val ? val : 0), // If empty, set to 0
         },
 
         {
-          name: 'last_inventory_date',
+          name: 'transaction_date',
           required: true,
           label: 'As of',
           align: 'left',
-          field: 'last_inventory_date',
+          field: 'transaction_date',
           format: (val) => (val ? val : 0), // If empty, set to 0
         },
         {
@@ -341,11 +389,9 @@ export default {
   },
   data() {
     return {
+      openDate: false,
       openPrompt: false,
-      dateRange: {
-        from: '',
-        to: '',
-      },
+      dateRange: this.today,
       Increase: false,
       Decrease: false,
       Adjusted_quantity: 0,
@@ -388,9 +434,18 @@ export default {
   },
 
   methods: {
+    async showStocks(date) {
+      try {
+        await this.itemStore.getStocksList( date)
+        this.rows = this.itemStore.items
+      } catch (error) {
+        console.log(error)
+      }
+    },
 
-
-    
+    clearDates() {
+      this.dateRange=''
+    },
     async exportToExcel() {
       const workbook = new ExcelJS.Workbook()
       const worksheet = workbook.addWorksheet('Stock Movements')
@@ -551,7 +606,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchAllStocks()
+    this.showStocks(this.today)
   },
   watch: {
     Increase(newVal) {

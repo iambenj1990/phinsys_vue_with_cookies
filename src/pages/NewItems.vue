@@ -169,7 +169,7 @@
               label="Update"
               color="primary"
               style="width: 100px"
-              @click="handleSubmit()"
+
             />
           </div>
           <div align="right" v-else-if="!toUpdate">
@@ -178,7 +178,7 @@
               label="Add"
               color="primary"
               style="width: 100px"
-              @click="handleSubmit()"
+
             />
           </div>
         </q-card-section>

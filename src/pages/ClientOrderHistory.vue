@@ -14,13 +14,14 @@
           <q-table
             flat
             bordered
-            title="Customer list"
+            title="Daily Customer list"
             :filter="search"
             :rows="rows"
             :columns="columns"
             row-key="id"
             binary-state-sort
             no-data-label="No data available"
+            title-class="text-blue-9 text-bold"
           >
             <template v-slot:top-right>
               <q-btn

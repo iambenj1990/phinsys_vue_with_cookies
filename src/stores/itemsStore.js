@@ -99,14 +99,10 @@ export const useItemStore = defineStore('items', {
         const response = await api.post('/items/new', payload)
         console.log(response.data.success)
         console.table(response.data.item)
-        Notify.create({
-          type: 'positive',
-          message: 'Item saved',
-          position: 'center',
-          timeout: 5000,
-        })
+
       } catch (error) {
         console.log(error)
+
         Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
@@ -221,6 +217,22 @@ export const useItemStore = defineStore('items', {
           })
         }
         throw error // Optional: Re-throw the error for further handling
+      }
+    },
+
+    async getStocksList(date) {
+      try {
+        const response = await api.get('/daily/inventory/get-list/' + date)
+        this.items = response.data.list
+        console.log(this.items)
+      } catch (error) {
+        console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 

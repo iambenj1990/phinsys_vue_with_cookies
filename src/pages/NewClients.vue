@@ -7,7 +7,7 @@
         </div>
       </div>
       <q-separator />
-
+      <q-form @submit.prevent="submitCustomerForm" ref="customerForm">
       <div class="row q-gutter-md q-pt-lg">
         <div class="col-12 col-md-3 q-pa-sm">
           <q-input
@@ -258,7 +258,7 @@
       <!-- <pre>{{ CustomerInfo.category }}</pre> -->
 
 
-
+    </q-form>
 
 
       <div class="row q-gutter-md q-pt-md" style="display: flex; justify-content: space-between;" >
@@ -279,7 +279,7 @@
             label="Save"
             class="q-mr-sm q-ml-md text-caption"
             color="primary"
-            @click="Insert_Customer(CustomerInfo)"
+            @click="submitCustomerForm()"
              v-if="Customer.isSave"
              style="width: 100px;"
           />
@@ -290,7 +290,7 @@
             label="Update"
             class="q-mr-sm q-ml-md text-caption"
             color="primary"
-            @click="updateCustomer(Customer.customer_id,this.CustomerInfo)"
+            @click=submitCustomerForm()
             v-else-if="Customer.isEdit"
           />
         <!-- </div> -->
@@ -391,7 +391,24 @@ export default {
     }
   },
   methods: {
+
+    async submitCustomerForm () {
+    const isValid = await this.$refs.customerForm.validate();
+
+    if (!isValid) {
+      this.$q.notify({ type: 'negative', message: 'Please complete all required fields' });
+      return;
+    }
+
+    if (this.Customer.isSave) {
+      this.Insert_Customer(this.CustomerInfo);
+    } else if (this.Customer.isEdit) {
+      this.updateCustomer(this.Customer.customer_id, this.CustomerInfo);
+    }
+  },
+
     clearInputs(){
+      this.$refs.customerForm.resetValidation();
       this.Customer.customer_id = 0
      // this.CustomerInfo =JSON.parse(JSON.stringify(this.CustomerInfoDefault))
       this.CustomerInfo = JSON.parse(JSON.stringify(this.CustomerInfoDefault))

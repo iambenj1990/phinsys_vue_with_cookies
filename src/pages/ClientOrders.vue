@@ -177,7 +177,8 @@
                       {{ props.row.quantity }}
                     </q-td>
                     <q-td key="unit" style="font-size: 11px" align="left">
-                      {{ props.row.unit }}
+                      <!-- {{ props.row.unit }} -->
+                        pcs
                     </q-td>
                     <q-td key="actions" style="font-size: 11px" align="center">
                       <q-btn
@@ -196,6 +197,17 @@
                   </q-tr>
                 </template>
               </q-table>
+              <div class="q-py-sm" align="right">
+                <q-btn
+                  color="primary"
+                  label="Submit"
+                  icon="check"
+                  @click="clearData()"
+                  :disabled="rows.length==0"
+
+                />
+              </div>
+
             </q-card>
           </div>
         </q-card-section>
@@ -272,8 +284,8 @@
 
                 </q-td>
                 <q-td key="unit" style="font-size: 11px" align="left">
-                  <!-- {{ props.row.unit }} -->
-                    pcs
+                   <!-- {{ props.row.dosage_form }} -->
+                     pcs
                 </q-td>
 
                 <q-td key="expiration_date" style="font-size: 11px" align="left">
@@ -329,7 +341,7 @@
             mask="#####"
             autofocus
           />
-          <q-select
+          <!-- <q-select
             v-model="transactionDetails.unit"
             :options="unit_per_piece"
             label="Unit"
@@ -337,7 +349,7 @@
             style="width: 100%"
             :disable="transactionDetails.quantity === 0"
             :rules="[(val) => !!val || 'Unit is required']"
-          />
+          /> -->
         </q-card-section>
         <q-separator />
         <q-card-actions align="right">
@@ -566,7 +578,6 @@ export default {
         transaction_date: 0,
         item_id: 0,
         quantity: 0,
-        unit:'',
         user_id: 0,
       },
     }
@@ -577,6 +588,19 @@ export default {
   },
   methods: {
 
+    clearData(){
+      this.costumer={}
+      this.transaction_id=0
+      this.rows=[]
+
+      this.$q.notify({
+        type: 'positive',
+        message: `Order submitted`,
+        position: 'center',
+        timeout: 1200,
+      })
+
+    },
     getStockStatus(row) {
       if (!row.Closing_quantity) {
         return 'Out of Stock'
@@ -595,6 +619,8 @@ export default {
       this.getOrders(this.transaction_id)
       this.$q.notify({ type: 'positive', message: 'order removed successful!' })
     },
+
+
     showData(payload) {
       if (!payload.Openning_quantity && !payload.Closing_quantity) {
         this.$q.notify({ type: 'negative', message: 'Cannot add item Stocks still closed!' })
@@ -605,6 +631,7 @@ export default {
       this.transactionDetails.customer_id = this.selectedClient_id
       this.transactionDetails.transaction_date = new  Date().toLocaleDateString('en-CA')
       this.transactionDetails.item_id = payload.item_id
+      this.transactionDetails.unit = payload.dosage_form
       this.transactionDetails.user_id = 1
       console.log(payload)
       console.log(this.transactionDetails)
@@ -617,6 +644,7 @@ export default {
     },
 
     async add_Order(payload) {
+      console.log('add order => ',payload)
 
       payload.quantity = Number(payload.quantity)
       this.showQuantity = false

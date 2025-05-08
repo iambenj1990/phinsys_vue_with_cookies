@@ -47,6 +47,7 @@ export const useTransactionStore = defineStore('transactions', {
       try {
         await api.post('/orders/new', payload)
       } catch (error) {
+        console.log(error)
         Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',

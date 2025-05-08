@@ -45,7 +45,7 @@
             </q-tab-panel>
           </q-tab-panels>
 
-          <q-btn label="Action" color="primary" @click="onAction" />
+        
         </q-card-section>
       </q-card>
     </div>

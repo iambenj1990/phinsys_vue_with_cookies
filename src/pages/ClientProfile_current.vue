@@ -112,7 +112,8 @@
                       {{ props.row.quantity }}
                     </q-td>
                     <q-td key="unit" style="font-size: 11px" align="left">
-                      {{ props.row.unit }}
+                      <!-- {{ props.row.unit }} -->
+                        pcs
                     </q-td>
                   </q-tr>
                 </template>
