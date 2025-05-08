@@ -36,11 +36,11 @@
               </template>
               <template v-slot:top-right>
                 <q-btn
-                  color="primary"
-                  label="Export to Excel"
-                  icon="save"
+                  color="green"
+                  label="Export"
+                  icon="import_export"
                   @click="exportToExcel"
-                  flat
+
                 />
               </template>
             </q-table>
@@ -161,7 +161,7 @@ export default {
       try {
          await this.reportStore.MonthlyDispenseReports()
         const data = this.reportStore.monthly_dispense
-
+        console.table( data)
 
         const pivot = {}
 
@@ -185,6 +185,7 @@ export default {
         })
 
         this.rows =  Object.values(pivot)
+        console.table( this.rows)
         this.loading = false
       } catch (error) {
         console.error('Error fetching monthly dispense report:', error)

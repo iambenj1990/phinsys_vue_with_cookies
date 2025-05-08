@@ -6,6 +6,7 @@
           <div align="left" class="text-h6 text-primary">Medicine Information</div>
         </q-card-section>
         <q-separator></q-separator>
+        <q-form @submit.prevent="handleSubmit" ref="formRef">
         <q-card-section>
           <div>
             <q-checkbox v-model="useTemp" size="xs" label="Use Temporary ID" @update:model-value="get_temp_id" style="color: grey;"/>
@@ -136,6 +137,21 @@
                 inputmode="numeric"
                 lazy-rules
                 :rules="[(val) => !!val || 'Price is required']"
+                @update:model-value="computePrice"
+              />
+            </div>
+            <div class="col-12 col-md-1 q-pa-sm">
+              <q-input
+                dense
+                v-model="MedicineInfo.price_per_pcs"
+                prefix="₱"
+                label="Price / pcs"
+                class="full-width"
+                type="number"
+                inputmode="numeric"
+                lazy-rules
+                :rules="[(val) => !!val || 'Price is required']"
+                readonly
               />
             </div>
           </div>
@@ -153,7 +169,7 @@
               label="Update"
               color="primary"
               style="width: 100px"
-              @click="updateItem(this.selected_id, this.MedicineInfo)"
+              @click="handleSubmit()"
             />
           </div>
           <div align="right" v-else-if="!toUpdate">
@@ -162,10 +178,11 @@
               label="Add"
               color="primary"
               style="width: 100px"
-              @click="insertNewItem(this.MedicineInfo)"
+              @click="handleSubmit()"
             />
           </div>
         </q-card-section>
+      </q-form>
         <q-separator />
         <q-card-section>
           <div>
@@ -384,6 +401,7 @@ export default {
         box_quantity: 0,
         quantity_per_box: 0,
         price: 0,
+        price_per_pcs:0,
         expiration_date: '',
         user_id: 1,
       },
@@ -392,7 +410,28 @@ export default {
 
   methods: {
 
+    async handleSubmit() {
+    const valid = await this.$refs.formRef.validate();
+    if (!valid) {
+      this.$q.notify({ type: 'negative', message: 'Please complete all required fields.' });
+      return;
+    }
 
+    if (this.toUpdate) {
+      this.updateItem(this.selected_id, this.MedicineInfo);
+    } else {
+      this.insertNewItem(this.MedicineInfo);
+    }
+  },
+
+
+
+
+    computePrice() {
+   this.MedicineInfo.price_per_pcs =
+        this.MedicineInfo.price / this.MedicineInfo.quantity
+        this.MedicineInfo.price_per_pcs = Math.round(this.MedicineInfo.price_per_pcs * 100) / 100
+    },
     handleUnitChange() {
       //Reset values when unit change
       if (this.MedicineInfo.unit !== 'BOX') {
@@ -409,6 +448,7 @@ export default {
     },
 
     viewReset() {
+      this.$refs.formRef.resetValidation();
       this.toUpdate = false
       this.inputReset()
     },

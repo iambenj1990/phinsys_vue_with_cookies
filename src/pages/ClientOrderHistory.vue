@@ -280,9 +280,9 @@ export default {
         } else
           this.$q.notify({
             type: 'negative',
-            message: 'No Open Transaction Available!',
+            message: 'Unable to proceed, Please Coordinate with personnel incharge to open Inventory!',
             position: 'center',
-            timeout: 1200,
+            timeout: 2200,
           })
 
 

@@ -329,6 +329,15 @@
             mask="#####"
             autofocus
           />
+          <q-select
+            v-model="transactionDetails.unit"
+            :options="unit_per_piece"
+            label="Unit"
+            class="q-mt-sm"
+            style="width: 100%"
+            :disable="transactionDetails.quantity === 0"
+            :rules="[(val) => !!val || 'Unit is required']"
+          />
         </q-card-section>
         <q-separator />
         <q-card-actions align="right">
@@ -516,6 +525,9 @@ export default {
   },
   data() {
     return {
+      unit_per_piece: [
+        'pcs','bottle','sachet','vial','ampule'
+      ],
       isEditable: false,
       selectedClient_id: 0,
       transaction_id: 0,
@@ -554,6 +566,7 @@ export default {
         transaction_date: 0,
         item_id: 0,
         quantity: 0,
+        unit:'',
         user_id: 0,
       },
     }
