@@ -16,7 +16,7 @@
             indicator-color="primary"
             narrow-indicator
           >
-            <q-tab name="Movement" label="Stock Movements" />
+            <q-tab name="Inventory" label="Inventory" />
             <q-tab name="Expired" label="Expired Stocks" />
             <q-tab name="Low" label="Low Stocks" />
             <q-tab name="Dispense" label="Dispense" />
@@ -24,9 +24,9 @@
           <q-separator />
 
           <q-tab-panels v-model="tab" animated>
-            <q-tab-panel name="Movement">
+            <q-tab-panel name="Inventory">
               <!-- <div class="text-h6">Mails</div> -->
-              <stock />
+              <inventory />
             </q-tab-panel>
 
             <q-tab-panel name="Expired">
@@ -45,7 +45,7 @@
             </q-tab-panel>
           </q-tab-panels>
 
-        
+
         </q-card-section>
       </q-card>
     </div>
@@ -55,16 +55,18 @@
 <script>
 import expire from 'pages/ItemsExpiredList.vue'
 import low from 'pages/ItemsNoStockList.vue'
-import stock from './ItemsMovementList.vue'
+//import stock from './ItemsMovementList.vue'
 import dispense from './ItemsMonthlyDispenseReport.vue'
+import inventory from './ItemsInventory.vue'
 
 export default {
   name: 'ItemReports',
   components: {
+    inventory,
     dispense,
     expire,
     low,
-    stock,
+   // stock,
   },
   setup() {
     return {}
@@ -72,7 +74,7 @@ export default {
   data() {
     return {
       // Add your component data here
-      tab: 'Movement', // Default tab
+      tab: 'Inventory', // Default tab
     }
   },
   methods: {

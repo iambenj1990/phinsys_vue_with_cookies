@@ -107,21 +107,33 @@
                 </q-item-label>
               </q-item-section>
             </q-item>
-            <!-- <q-item clickable v-ripple  to="/items/expired">
+
+          </q-expansion-item>
+
+          <q-expansion-item
+            label="Settings"
+            expand-separator
+            icon="settings"
+            class="text-subtitle2"
+              v-model="expanded"
+          >
+            <q-item clickable v-ripple to="/users/list">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
-                  <q-icon name="report_problem" class="q-ml-md q-mr-md" size="24px" />Expired
+                  <q-icon name="manage_accounts" class="q-ml-md q-mr-md" size="24px" />Users Management
                 </q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable v-ripple to="/inventory" >
+            <q-item clickable v-ripple to="/items/categories">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
-                  <q-icon name="list_alt" class="q-ml-md q-mr-md" size="24px"/>Stocks
+                  <q-icon name="category" class="q-ml-md q-mr-md" size="24px" />Libraries
                 </q-item-label>
               </q-item-section>
-            </q-item> -->
-          </q-expansion-item>
+            </q-item>
+
+
+        </q-expansion-item>
         </q-list>
       </q-scroll-area>
     </q-drawer>

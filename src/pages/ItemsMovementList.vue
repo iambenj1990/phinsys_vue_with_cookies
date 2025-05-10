@@ -44,7 +44,8 @@
                     <q-icon name="search" />
                   </template>
                 </q-input>
-                <q-input dense filled v-model="dateRange" mask="####-##-##" :rules="['date']">
+                <q-input filled dense type="date" v-model="dateRange" @update:model-value="showStocks(dateRange)"/>
+                  <!-- <q-input dense filled v-model="dateRange" mask="####-##-##" :rules="['date']">
                   <template v-slot:append>
                     <q-icon name="event" class="cursor-pointer">
                       <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -56,7 +57,7 @@
                       </q-popup-proxy>
                     </q-icon>
                   </template>
-                </q-input>
+                </q-input> -->
 
                 <q-btn
                   dense
@@ -446,6 +447,7 @@ export default {
     clearDates() {
       this.dateRange=''
     },
+
     async exportToExcel() {
       const workbook = new ExcelJS.Workbook()
       const worksheet = workbook.addWorksheet('Stock Movements')
@@ -472,6 +474,7 @@ export default {
       a.click()
       window.URL.revokeObjectURL(url)
     },
+
     adjustTypeComputation() {
       if (this.Increase) {
         this.Decrease = false
@@ -484,6 +487,7 @@ export default {
           parseInt(this.Adjusted_quantity) - parseInt(this.inventoryAdjustment.Openning_quantity)
       }
     },
+
     async getDailyForAdjustment(id) {
       await this.transactionStore.getDailyInventory(id)
       this.inventoryAdjustment = this.transactionStore.SelecteddailyInventory[0]
@@ -508,7 +512,8 @@ export default {
     async openStock() {
       try {
         await this.itemStore.openingStocks()
-        await this.fetchAllStocks()
+        // await this.fetchAllStocks()
+        await this.showStocks(this.today)
       } catch (error) {
         console.log(error)
       }
@@ -517,7 +522,8 @@ export default {
     async closeStock() {
       try {
         await this.itemStore.closingStocks()
-        await this.fetchAllStocks()
+        // await this.fetchAllStocks()
+        await this.showStocks(this.today)
       } catch (error) {
         console.log(error)
       }
@@ -536,7 +542,7 @@ export default {
       if (percentage <= 10) return 'orange' // Critical (≤10%)
       if (percentage <= 20) return 'yellow' // Low (≤20%)
       if (percentage <= 50) return 'blue' // Medium (≤50%)
-      return 'green' // Safe (>50%)
+      return 'light-green' // Safe (>50%)
     },
 
     getStockStatus(row) {
@@ -605,15 +611,18 @@ export default {
       }
     },
   },
+
   mounted() {
     this.showStocks(this.today)
   },
+
   watch: {
     Increase(newVal) {
       if (newVal) {
         this.adjustTypeComputation()
       }
     },
+
     Decrease(newVal) {
       if (newVal) {
         this.adjustTypeComputation()

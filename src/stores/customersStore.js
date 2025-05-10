@@ -76,9 +76,9 @@ export const useCustomerStore = defineStore('customers', {
       }
     },
 
-    async getCustomerOftheDay(){
+    async getCustomerOftheDay(payload){
       try {
-        const response = await api.get('/orders/transaction/latest')
+        const response = await api.get('/orders/transaction/latest/'+ payload)
         this.customersOftheDay= response.data.data
       } catch (error) {
         console.log(error)

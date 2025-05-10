@@ -11,26 +11,53 @@
         </q-card-section>
 
         <q-card-section>
+          <div class="text-h6 text-primary q-my-sm">Daily Customers</div>
+          <div class="q-pa-sm row items-center justify-between" >
+           <div class="flex justify-start">
+             <q-input
+              dense
+              flat
+              type="date"
+              filled
+              v-model="Trans_Date"
+              label="Transaction Date"
+              class="text-h11"
+              style="width: 150px;"
+              @update:model-value="get_clients(this.Trans_Date)"
+            />
+           </div>
+           <div class="row items-center">
+            <q-btn
+              class="q-mr-sm"
+              style="font-size: 13px"
+              dense
+              color="primary"
+              label="New Transaction"
+              icon="add"
+              @click="lookforOpen"
+              flat
+            />
+
+           </div>
+
+          </div>
           <q-table
             flat
             bordered
-            title="Daily Customer list"
             :filter="search"
             :rows="rows"
             :columns="columns"
             row-key="id"
             binary-state-sort
             no-data-label="No data available"
-            title-class="text-blue-9 text-bold"
           >
             <template v-slot:top-right>
               <q-btn
-                color="primary"
-                label="New Transaction"
-                icon="add"
-                @click="lookforOpen"
-                flat
-              />
+              style="font-size: 12px"
+              color="green"
+              label="Export"
+              icon="import_export"
+            />
             </template>
 
             <template #body="props">
@@ -83,11 +110,7 @@
         </q-card-section>
       </q-card>
     </div>
-    <q-dialog v-model="warning" persistent>
-
-    </q-dialog>
-
-
+    <q-dialog v-model="warning" persistent> </q-dialog>
     <q-dialog v-model="DeleteClient" persistent>
       <q-card class="q-pa-sm" style="max-width: 400px; width: 100%">
         <q-card-section>
@@ -100,15 +123,20 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <pre>{{ this.Trans_Date }}</pre>
   </q-page>
 </template>
 <script>
-
 import { useCustomerStore } from '../stores/customersStore'
 import { useItemStore } from 'src/stores/itemsStore'
+import { date } from 'quasar'
+
 export default {
   setup() {
+    const today = date.formatDate(Date.now(), 'YYYY-MM-DD')
     return {
+      today,
       columns: [
         {
           name: 'lastname',
@@ -116,7 +144,7 @@ export default {
           field: 'lastname',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
         {
@@ -125,7 +153,7 @@ export default {
           field: 'firstname',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
         {
@@ -134,7 +162,7 @@ export default {
           field: 'middlename',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
         {
@@ -143,7 +171,7 @@ export default {
           field: 'ext',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
 
@@ -153,7 +181,7 @@ export default {
           field: 'birthdate',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
 
@@ -163,7 +191,7 @@ export default {
           field: 'age',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
 
@@ -173,7 +201,7 @@ export default {
           field: 'contact_number',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
         {
@@ -182,7 +210,7 @@ export default {
           field: 'barangay',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
 
@@ -191,7 +219,7 @@ export default {
           label: 'Actions',
           field: 'actions',
           align: 'center',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
       ],
@@ -200,6 +228,7 @@ export default {
 
   data() {
     return {
+      Trans_Date: this.today,
       hasOpentransaction: false,
       warning: false,
       Selected_ID: 0,
@@ -238,15 +267,14 @@ export default {
       this.Customers.isEdit = true
       this.Customers.isSave = false
       this.Customers.customer_id = id.customer_id
-      this.Customers.transactions_id =id.transaction_id
+      this.Customers.transactions_id = id.transaction_id
 
-
-       console.log(id)
+      console.log(id)
     },
 
-    async get_clients() {
+    async get_clients(payload) {
       try {
-        await this.Customers.getCustomerOftheDay()
+        await this.Customers.getCustomerOftheDay(payload)
         this.rows = this.Customers.customersOftheDay //fetch all clients from array
         //console.log(this.rows)
       } catch (error) {
@@ -271,23 +299,22 @@ export default {
       }
     },
 
-    async lookforOpen(){
-      try{
+    async lookforOpen() {
+      try {
         await this.Items.openLookup()
         this.hasOpentransaction = this.Items.hasOpening
 
         if (this.hasOpentransaction == false) {
-          this.$router.push({'path': '/customers/orders/new'})
+          this.$router.push({ path: '/customers/orders/new' })
         } else
           this.$q.notify({
             type: 'negative',
-            message: 'Unable to proceed, Please Coordinate with personnel incharge to open Inventory!',
+            message:
+              'Unable to proceed, Please Coordinate with personnel incharge to open Inventory!',
             position: 'center',
             timeout: 2200,
           })
-
-
-    } catch (error) {
+      } catch (error) {
         console.log(error)
       }
     },
@@ -301,8 +328,7 @@ export default {
     },
   },
   mounted() {
-    this.get_clients()
-
+    this.get_clients(this.today)
   },
 }
 </script>

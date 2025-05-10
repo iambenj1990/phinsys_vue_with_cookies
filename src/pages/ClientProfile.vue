@@ -118,8 +118,18 @@
                   </q-tr>
                 </template>
               </q-table>
+              <div class="q-pa-sm flex justify-end">
+              <q-btn
+                style="font-size: 13px"
+                color="red"
+                label="Close"
+                @click="$router.go(-1)"
+              />
+            </div>
             </q-card>
+
           </div>
+
         </q-card-section>
       </q-card>
     </div>

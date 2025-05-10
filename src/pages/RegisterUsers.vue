@@ -74,7 +74,8 @@
           ]"
         />
 
-        <div class="row q-mt-lg">
+        <div class="row q-mt-lg flex justify-end">
+          <q-btn flat label="Cancel" type="submit" color="grey" class="q-mr-md" @click="oncancel()"/>
           <q-btn label="Register" type="submit" color="primary" />
         </div>
       </q-form>
@@ -109,6 +110,10 @@ export default {
     }
   },
   methods: {
+    oncancel() {
+      this.resetForm()
+      this.$router.go(-1)
+    },
     onSubmit() {
       this.$refs.registrationForm.validate().then((success) => {
         if (success) {
