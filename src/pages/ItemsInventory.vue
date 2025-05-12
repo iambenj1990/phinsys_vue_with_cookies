@@ -4,7 +4,7 @@
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
         <!-- <div class="row q-gutter-md">
           <div class="col-12">
-           <div align="left" class="q-ma-md text-h6 text-primary">Medicine Inventory</div> 
+           <div align="left" class="q-ma-md text-h6 text-primary">Medicine Inventory</div>
           </div>
         </div>
         <q-separator /> -->
@@ -25,7 +25,6 @@
               v-model:pagination="pagination"
             >
               <template v-slot:top-left>
-
                 <q-input
                   borderless
                   dense
@@ -42,31 +41,24 @@
               </template>
               <template v-slot:top-right>
                 <div class="q-gutter-sm flex">
-                <q-input dense filled v-model="dateRange" mask="####-##-##" :rules="['date']">
-                  <template v-slot:append>
-                    <q-icon name="event" class="cursor-pointer">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="dateRange" mask="YYYY-MM-DD" @update:model-value="showStocks(dateRange)">
-                          <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" flat />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                    </q-icon>
-                  </template>
-                </q-input>
+                  <q-input
+                    dense
+                    type="date"
+                    v-model="dateRange"
+                    format="YYYY-MM-DD"
+                    @update:model-value="showStocks(dateRange)"
+                  />
 
-                <q-btn
-                  dense
-                  flat
-                  color="green"
-                  label="Export"
-                  icon="import_export"
-                  @click="exportToExcel"
-                  style="height: 40px; "
-
-                />
-              </div>
+                  <q-btn
+                    dense
+                    flat
+                    color="green"
+                    label="Export"
+                    icon="import_export"
+                    @click="exportToExcel"
+                    style="height: 40px"
+                  />
+                </div>
               </template>
 
               <template #body="props">
@@ -94,7 +86,7 @@
 
                   <q-td key="unit" style="font-size: 11px" align="left">
                     <!-- {{ props.row.unit }} -->
-                      pcs
+                    pcs
                   </q-td>
 
                   <q-td key="Closing_quantity" style="font-size: 11px" align="left">
@@ -104,9 +96,7 @@
                       text-color="black"
                       class="flex flex-center q-pa-xs"
                     >
-                      {{
-                        props.row.total_closing_quantity
-                      }}
+                      {{ props.row.total_closing_quantity }}
                     </q-badge>
                   </q-td>
 
@@ -303,7 +293,6 @@ export default {
           field: 'transaction_date',
           format: (val) => (val ? val : 0), // If empty, set to 0
         },
-
       ],
     }
   },
@@ -347,7 +336,6 @@ export default {
   },
 
   methods: {
-
     async exportToExcel() {
       const workbook = new ExcelJS.Workbook()
       const worksheet = workbook.addWorksheet('Stock Movements')
@@ -390,7 +378,7 @@ export default {
 
     async showStocks(date) {
       try {
-        await this.itemStore.getStocksList( date)
+        await this.itemStore.getStocksList(date)
         this.rows = this.itemStore.items
       } catch (error) {
         console.log(error)

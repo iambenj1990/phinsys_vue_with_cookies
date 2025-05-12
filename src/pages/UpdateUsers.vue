@@ -2,7 +2,8 @@
   <q-page class="flex flex-center">
     <q-card class="q-pa-lg" style="min-width: 350px; max-width: 800px; width: 100%">
       <q-card-section>
-        <div class="text-h6 text-left" style="color: #4b4e6d">User Registration</div>
+        <div class="text-h6 text-left" style="color: #4b4e6d">User Profile</div>
+
       </q-card-section>
 
       <q-form ref="registrationForm" @submit.prevent="onSubmit">
@@ -57,9 +58,9 @@
           label="Password"
           type="password"
           :rules="[
-            (val) => !!val || 'Password is required',
+            (val) => !userStore.selected_id || !!val || 'Password is required',
             (val) => val.length >= 8 || 'Password must be at least 8 characters',
-            (val) => val.length <= 16 || 'Password must be at least 16 characters',
+            (val) => val.length <= 16 || 'Password must be not more than 16 characters',
           ]"
           class="q-mb-md"
         />
@@ -69,14 +70,14 @@
           label="Confirm Password"
           type="password"
           :rules="[
-            (val) => !!val || 'Confirm password is required',
-            (val) => val === form.password || 'Passwords do not match',
+            (val) => !userStore.selected_id || !!val || 'Confirm password is required',
+            val => !val || val === (form?.password || '') || 'Passwords do not match',
           ]"
         />
 
         <div class="row q-mt-lg flex justify-end">
           <q-btn flat label="Cancel" type="submit" color="grey" class="q-mr-md" @click="oncancel()"/>
-          <q-btn label="Register" type="submit" color="primary" />
+          <q-btn label="Update" type="submit" color="primary" />
         </div>
       </q-form>
     </q-card>
@@ -88,6 +89,7 @@
 import { useUserStore } from 'src/stores/userStore'
 export default {
   name: 'UserRegistrationForm',
+
   setup() {
     const userStore = useUserStore()
     return {
@@ -114,19 +116,23 @@ export default {
       this.resetForm()
       this.$router.go(-1)
     },
-    onSubmit() {
-      this.$refs.registrationForm.validate().then((success) => {
+   async onSubmit() {
+     const success = await this.$refs.registrationForm.validate()
         if (success) {
 
-          this.insertNewUser(this.form)
+          // this.insertNewUser(this.form)
           // Handle successful registration here
-          console.log('Registration successful:', this.form)
+          // console.log('Upda successful:', this.form)
 
-          this.$q.notify({
-            type: 'positive',
-            message: 'User registered successfully!',
-          })
+          // this.$q.notify({
+          //   type: 'positive',
+          //   message: 'User registered successfully!',
+          // })
           // Optionally clear form
+          console.log( this.form)
+          this.userStore.updateUser(this.userStore.selected_id,this.form)
+
+
           this.resetForm()
           this.$router.go(-1)
         } else {
@@ -136,7 +142,7 @@ export default {
             message: 'Please fill in all required fields.',
           })
         }
-      })
+
     },
     resetForm() {
       this.form = {
@@ -153,13 +159,31 @@ export default {
       this.$refs.registrationForm.resetValidation()
     },
 
-    async insertNewUser(payload) {
+    async getUser(id){
       try {
-        await this.userStore.newUser(payload)
+        await this.userStore.getUser(id)
+        Object.assign(this.form, this.userStore.user)
+        // this.form = this.userStore.user
       } catch (error) {
-        console.log(error)
+        console.error('Error fetching user:', error)
+        this.$q.notify({
+          type: 'negative',
+          message: 'Unable to fetch user',
+          position: 'center',
+          timeout: 1000,
+        })
       }
     },
+
+
+
+  },
+   mounted() {
+    // Fetch data or perform any setup when the component is mounted
+    // console.log('Selected ID:', this.userStore.selected_id)
+    if (this.userStore.selected_id) {
+      this.getUser(this.userStore.selected_id)
+    }
   },
 }
 </script>
