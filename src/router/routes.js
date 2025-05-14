@@ -34,9 +34,9 @@ const routes = [
        { path: '/users/user/', component: () => import('pages/UpdateUsers.vue') }, // particular transaction order of a customer
       { path: '/users/list', component: () => import('pages/RegisteredUsersList.vue') }, // particular transaction order of a customer
 
-       { path: '/libraries/units', component: () => import('pages/library/unitsList.vue') }, // particular transaction order of a customer
+       { path: '/libraries/units', component: () => import('src/pages/library/UnitsList.vue') }, // particular transaction order of a customer
 
-
+       { path: '/libraries/list', component: () => import('src/pages/library/LibraryPage.vue') }, // particular transaction order of a customer
     ]
   },
   {

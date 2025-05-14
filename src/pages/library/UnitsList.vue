@@ -15,9 +15,24 @@
               dense
               required
               class="q-mt-md"
+
             />
-            <div class="text-right">
-              <q-btn label="Add Unit" color="primary" type="submit" class="q-mt-md" />
+            <div class="flex justify-end">
+               <q-btn
+                label="Cancel"
+                color="red"
+                class="q-mt-md q-mr-md"
+
+                @click="clear()"
+              />
+              <q-btn
+                label="Update"
+                color="primary"
+                class="q-mt-md q-mr-md"
+                v-if="toUpdate"
+                @click="unitUpdate(this.selected_id, this.newUnit)"
+              />
+              <q-btn v-else label="Add" color="primary" type="submit" class="q-mt-md" />
             </div>
           </q-form>
         </q-card-section>
@@ -44,7 +59,12 @@
                 </q-td>
 
                 <q-td key="actions" style="font-size: 11px" align="left">
-                  <q-btn flat icon="delete" color="negative" @click="open_deleteDialog(props.row.id)" />
+                  <q-btn
+                    flat
+                    icon="delete"
+                    color="negative"
+                    @click="open_deleteDialog(props.row.id)"
+                  />
                   <q-btn flat icon="edit" color="amber" @click="getUnit(props.row.id)" />
                 </q-td>
               </q-tr>
@@ -56,7 +76,6 @@
       <q-dialog
         v-model="dialog"
         persistent
-        :maximized="maximizedToggle"
         :style="{ width: '90%', height: '90%' }"
         transition-show="slide-up"
         transition-hide="slide-down"
@@ -66,13 +85,19 @@
             <div>
               <pre>Are you sure you want to delete this unit?</pre>
             </div>
-              <div class="flex justify-end">
-                <q-btn flat label="No" color="grey"  class="q-mt-md q-mr-md" @click= "dialog = false" />
-                <q-btn flat label="Yes" color="primary"  class="q-mt-md " @click ="this.deleteUnit(this.selected_id)"/>
-              </div>
+            <div class="flex justify-end">
+              <q-btn flat label="No" color="grey" class="q-mt-md q-mr-md" @click="dialog = false" />
+              <q-btn
+                flat
+                label="Yes"
+                color="primary"
+                class="q-mt-md"
+                @click="this.deleteUnit(this.selected_id)"
+              />
+            </div>
           </q-card-section>
         </q-card>
-    </q-dialog>
+      </q-dialog>
     </q-page>
   </div>
 </template>
@@ -106,25 +131,41 @@ export default {
     }
   },
   methods: {
+    clear(){
+      this.newUnit.description = ''
+      this.newUnit.symbol = ''
+      this.toUpdate = false
+    },
+
     async getUnits() {
       await this.unitStore.getUnits()
       this.units = this.unitStore.units
-      this.toUpdate = true
+
     },
 
     async getUnit(id) {
-
-    try {
-      console.log('Fetching unit with ID:', id)
-      await this.unitStore.getUnit(id)
-      this.newUnit = this.unitStore.unit
-    }
-    catch(error){
-      console.error('Error fetching unit:', error)
-      this.$q.notify({ type: 'negative', message: 'Error fetching unit.' })
-    }
+      try {
+        // console.log('Fetching unit with ID:', id)
+        this.selected_id = id
+        await this.unitStore.getUnit(id)
+        this.newUnit = this.unitStore.unit
+        this.toUpdate = true
+      } catch (error) {
+        console.error('Error fetching unit:', error)
+        this.$q.notify({ type: 'negative', message: 'Error fetching unit.' })
+      }
     },
 
+    async unitUpdate(id, payload) {
+      try {
+        await this.unitStore.updateUnit(id, payload)
+        this.getUnits()
+        this.toUpdate = false
+      } catch (error) {
+        console.error('Error updating unit:', error)
+        this.$q.notify({ type: 'negative', message: 'Error updating unit.' })
+      }
+    },
     async addUnit() {
       const valid = this.$refs.formRef.validate()
       if (!valid) {
@@ -137,14 +178,7 @@ export default {
         symbol: this.newUnit.symbol,
       }
 
-      if (this.toUpdate) {
-        newUnit.id = this.newUnit.id
-        await this.unitStore.updateUnit(newUnit.id,newUnit)
-        this.rows= this.unitStore.units
-        this.toUpdate = false
-      } else {
-        await this.unitStore.newUnit(newUnit)
-      }
+      await this.unitStore.newUnit(newUnit)
       this.getUnits()
       this.newUnit.description = ''
       this.newUnit.symbol = ''
@@ -155,18 +189,17 @@ export default {
       this.selected_id = id
     },
 
-   async deleteUnit(id) {
-    try{
-      await this.unitStore.removeUnit(id)
-      this.getUnits()
-      this.dialog = false
-    } catch(error){
-      console.error('Error deleting unit:', error)
-    }
-
-
+    async deleteUnit(id) {
+      try {
+        await this.unitStore.removeUnit(id)
+        this.getUnits()
+        this.newUnit.description = ''
+        this.newUnit.symbol = ''
+        this.dialog = false
+      } catch (error) {
+        console.error('Error deleting unit:', error)
+      }
     },
-
   },
   mounted() {
     this.getUnits()
