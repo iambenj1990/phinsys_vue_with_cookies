@@ -41,9 +41,7 @@
       <q-separator spaced />
 
       <q-card>
-        <q-card-section>
-          <div class="text-h6">Units List</div>
-        </q-card-section>
+      
         <q-card-section>
           <q-table :rows="units" :columns="columns" row-key="id" flat bordered>
             <template #body="props">

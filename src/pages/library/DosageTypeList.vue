@@ -1,16 +1,16 @@
 <template>
-  <div class="units-list">
+  <div class="dosage-list">
     <q-page padding>
       <q-card>
         <q-card-section>
           <div class="text-h6 text-green" >Dosage Type Library</div>
         </q-card-section>
         <q-card-section>
-          <q-form @submit.prevent="addUnit" ref="formRef">
-            <q-input v-model="newUnit.description" label="Unit Name" outlined dense required />
+          <q-form @submit.prevent="addDosageType" ref="formRef">
+
             <q-input
-              v-model="newUnit.symbol"
-              label="Unit Symbol"
+              v-model="newdosage.type"
+              label="Dosage Type"
               outlined
               dense
               required
@@ -30,7 +30,7 @@
                 color="primary"
                 class="q-mt-md q-mr-md"
                 v-if="toUpdate"
-                @click="unitUpdate(this.selected_id, this.newUnit)"
+                @click="updateDosageType(this.selected_id, this.newdosage)"
               />
               <q-btn v-else label="Add" color="primary" type="submit" class="q-mt-md" />
             </div>
@@ -41,21 +41,16 @@
       <q-separator spaced />
 
       <q-card>
+        
         <q-card-section>
-          <div class="text-h6">Units List</div>
-        </q-card-section>
-        <q-card-section>
-          <q-table :rows="units" :columns="columns" row-key="id" flat bordered>
+          <q-table :rows="rows" :columns="columns" row-key="id" flat bordered>
             <template #body="props">
               <q-tr :v-bind="props">
                 <!-- <q-td key="id" style="font-size: 11px" align="left">
                 {{ props.row.id }}
               </q-td> -->
-                <q-td key="name" style="font-size: 11px" align="left">
-                  {{ props.row.description }}
-                </q-td>
-                <q-td key="symbol" style="font-size: 11px" align="left">
-                  {{ props.row.symbol }}
+                <q-td key="type" style="font-size: 11px" align="left">
+                  {{ props.row.type }}
                 </q-td>
 
                 <q-td key="actions" style="font-size: 11px" align="left">
@@ -65,7 +60,7 @@
                     color="negative"
                     @click="open_deleteDialog(props.row.id)"
                   />
-                  <q-btn flat icon="edit" color="amber" @click="getUnit(props.row.id)" />
+                  <q-btn flat icon="edit" color="amber" @click="getDosageType(props.row.id)" />
                 </q-td>
               </q-tr>
             </template>
@@ -83,7 +78,7 @@
         <q-card>
           <q-card-section>
             <div>
-              <pre>Are you sure you want to delete this unit?</pre>
+              <pre>Are you sure you want to delete this dosage type?</pre>
             </div>
             <div class="flex justify-end">
               <q-btn flat label="No" color="grey" class="q-mt-md q-mr-md" @click="dialog = false" />
@@ -92,7 +87,7 @@
                 label="Yes"
                 color="primary"
                 class="q-mt-md"
-                @click="this.deleteUnit(this.selected_id)"
+                @click="this.deleteDosageType(this.selected_id)"
               />
             </div>
           </q-card-section>
@@ -103,17 +98,16 @@
 </template>
 
 <script>
-import { useUnitStore } from 'src/stores/libUnitStore'
+import { useDosageStore } from 'src/stores/libDosageTypeStore'
 export default {
-  name: 'UnitsList',
+  name: 'DosageList',
   setup() {
-    const unitStore = useUnitStore()
+    const dosageStore = useDosageStore()
     return {
-      unitStore,
+      dosageStore,
 
       columns: [
-        { name: 'description', label: 'Unit Name', align: 'left', field: 'description' },
-        { name: 'symbol', label: 'Symbol', align: 'left', field: 'symbol' },
+        { name: 'type', label: 'Dosage Type', align: 'left', field: 'type' },
         { name: 'actions', label: 'Actions', align: 'center' },
       ],
     }
@@ -123,65 +117,67 @@ export default {
       selected_id: null,
       dialog: false,
       toUpdate: false,
-      newUnit: {
-        description: '',
-        symbol: '',
+      newdosage: {
+        type: '',
       },
-      units: [],
+      rows: [],
     }
   },
   methods: {
     clear(){
-      this.newUnit.description = ''
-      this.newUnit.symbol = ''
+      this.newdosage.type = ''
       this.toUpdate = false
     },
 
-    async getUnits() {
-      await this.unitStore.getUnits()
-      this.units = this.unitStore.units
-
+    async getDosageTypes() {
+      try {
+        await this.dosageStore.getDosagesTypes()
+        this.rows = this.dosageStore.dosageTypes
+      } catch (error) {
+        console.error('Error fetching dosage types:', error)
+        this.$q.notify({ type: 'negative', message: 'Error fetching dosage types.' })
+      }
     },
 
-    async getUnit(id) {
+    async getDosageType(id) {
       try {
-        // console.log('Fetching unit with ID:', id)
         this.selected_id = id
-        await this.unitStore.getUnit(id)
-        this.newUnit = this.unitStore.unit
+        await this.dosageStore.getDosageType(id)
+       this.newdosage.type = this.dosageStore.dosageInfo
         this.toUpdate = true
       } catch (error) {
-        console.error('Error fetching unit:', error)
-        this.$q.notify({ type: 'negative', message: 'Error fetching unit.' })
+        console.error('Error fetching dosage type:', error)
+        this.$q.notify({ type: 'negative', message: 'Error fetching dosage type.' })
       }
     },
 
-    async unitUpdate(id, payload) {
+    async updateDosageType(id, payload) {
       try {
-        await this.unitStore.updateUnit(id, payload)
-        this.getUnits()
-        this.toUpdate = false
+        await this.dosageStore.updateDosageType(id, payload)
+        this.getDosageTypes()
+        this.clear()
       } catch (error) {
-        console.error('Error updating unit:', error)
-        this.$q.notify({ type: 'negative', message: 'Error updating unit.' })
+        console.error('Error updating dosage type:', error)
+        this.$q.notify({ type: 'negative', message: 'Error updating dosage type.' })
       }
     },
-    async addUnit() {
+    async addDosageType() {
       const valid = this.$refs.formRef.validate()
       if (!valid) {
         this.$q.notify({ type: 'negative', message: 'Please complete all required fields.' })
         return
       }
 
-      const newUnit = {
-        description: this.newUnit.description,
-        symbol: this.newUnit.symbol,
+      const new_dosage = {
+        type: this.newdosage.type,
       }
 
-      await this.unitStore.newUnit(newUnit)
-      this.getUnits()
-      this.newUnit.description = ''
-      this.newUnit.symbol = ''
+      console.log('New dosage type:', new_dosage)
+
+      await this.dosageStore.newDosageType(new_dosage)
+      this.getDosageTypes()
+      this.newdosage.type = ''
+
     },
 
     open_deleteDialog(id) {
@@ -189,26 +185,26 @@ export default {
       this.selected_id = id
     },
 
-    async deleteUnit(id) {
+    async deleteDosageType(id) {
       try {
-        await this.unitStore.removeUnit(id)
-        this.getUnits()
-        this.newUnit.description = ''
-        this.newUnit.symbol = ''
+        await this.dosageStore.removeDosageType(id)
+        this.getDosageTypes()
+        this.newdosage.type = ''
+
         this.dialog = false
       } catch (error) {
-        console.error('Error deleting unit:', error)
+        console.error('Error deleting dosage type:', error)
       }
     },
   },
   mounted() {
-    this.getUnits()
+    this.getDosageTypes()
   },
 }
 </script>
 
 <style scoped>
-.units-list {
+.dosage-list {
   max-width: 800px;
   margin: auto;
 }

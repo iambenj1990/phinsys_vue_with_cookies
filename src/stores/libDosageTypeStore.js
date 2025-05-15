@@ -12,10 +12,10 @@ export const useDosageStore = defineStore('dosage', {
 
   actions: {
 
-    async getDosageTypes() {
+    async getDosagesTypes() {
       try {
-        const response = await api.get('/system/library/units')
-        this.dosageTypes = response.data.dosages
+        const response = await api.get('/system/library/dosages')
+        this.dosageTypes = response.data.dosagetypes
       } catch (error) {
         console.error(error)
         Notify.create({
@@ -28,8 +28,8 @@ export const useDosageStore = defineStore('dosage', {
     },
     async getDosageType(id) {
       try {
-        const response = await api.get('/system/library/units/'+ id)
-        this.dosageTypes = response.data.dosage
+        const response = await api.get('/system/library/dosages/'+ id)
+        this.dosageInfo = response.data.dosagetype.type
       } catch (error) {
         console.error(error)
         Notify.create({
@@ -41,10 +41,10 @@ export const useDosageStore = defineStore('dosage', {
       }
     },
 
-    async newUnit(payload) {
+    async newDosageType(payload) {
       try {
-        await api.post('/system/library/units', payload)
-        this.getDosageTypes()
+        await api.post('/system/library/dosages', payload)
+        this.getDosagesTypes()
         Notify.create({
           type: 'positive',
           message: 'Unit created successfully',
@@ -64,8 +64,8 @@ export const useDosageStore = defineStore('dosage', {
 
     async updateDosageType(id,payload) {
       try {
-        await api.put('/system/library/units/'+ id, payload)
-        this.getDosageTypes()
+        await api.put('/system/library/dosages/'+ id, payload)
+        this.getDosagesTypes()
         Notify.create({
           type: 'positive',
           message: 'Unit updated successfully',
@@ -85,8 +85,8 @@ export const useDosageStore = defineStore('dosage', {
 
     async removeDosageType(id) {
     try {
-      await api.delete('/system/library/units/'+ id)
-      this.getDosageTypes()
+      await api.delete('/system/library/dosages/'+ id)
+      this.getDosagesTypes()
       Notify.create({
         type: 'positive',
         message: 'Unit deleted successfully',
