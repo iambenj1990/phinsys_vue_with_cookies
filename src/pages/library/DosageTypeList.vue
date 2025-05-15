@@ -3,7 +3,7 @@
     <q-page padding>
       <q-card>
         <q-card-section>
-          <div class="text-h6 text-green">Unit of Measurement</div>
+          <div class="text-h6 text-green" >Dosage Type Library</div>
         </q-card-section>
         <q-card-section>
           <q-form @submit.prevent="addUnit" ref="formRef">

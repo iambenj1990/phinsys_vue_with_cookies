@@ -3,7 +3,7 @@
     <div class="q-pa-md">
       <q-card>
         <q-card-section>
-          <div class="text-h6 text-blue" >Pharmarcy Reports</div>
+          <div class="text-h6 text-blue" >Configurations & Libraries</div>
         </q-card-section>
 
         <q-card-section>
@@ -17,9 +17,10 @@
             narrow-indicator
           >
             <q-tab name="Unit" label="Unit" />
-            <q-tab name="Configuration" label="Config" />
-            <q-tab name="Low" label="Low Stocks" />
-            <q-tab name="Dispense" label="Dispense" />
+            <q-tab name="Dosage" label="Dosage Type" />
+             <q-tab name="Configuration" label="Config" />
+
+           <!---- <q-tab name="Dispense" label="Dispense" /> -->
           </q-tabs>
           <q-separator />
 
@@ -29,20 +30,18 @@
               <units />
             </q-tab-panel>
 
-            <q-tab-panel name="Expired">
+            <q-tab-panel name="Dosage">
               <!-- <div class="text-h6">Alarms</div> -->
-              <!-- <expire /> -->
+             <DosageType />
             </q-tab-panel>
 
-            <q-tab-panel name="Low">
-              <!-- <div class="text-h6">Movies</div> -->
-              <!-- <low /> -->
+            <!-- <q-tab-panel name="Dosage Form">
+
             </q-tab-panel>
 
             <q-tab-panel name="Dispense">
-              <!-- <div class="text-h6">Movies</div> -->
-              <!-- <dispense /> -->
-            </q-tab-panel>
+
+            </q-tab-panel> -->
           </q-tab-panels>
 
 
@@ -54,6 +53,7 @@
 
 <script>
 import units from 'src/pages/library/UnitsList.vue'
+import DosageType from 'src/pages/library/DosageTypeList.vue'
 // import low from 'pages/ItemsNoStockList.vue'
 // //import stock from './ItemsMovementList.vue'
 // import dispense from './ItemsMonthlyDispenseReport.vue'
@@ -63,6 +63,7 @@ export default {
   name: 'ItemReports',
   components: {
     units,
+    DosageType
   },
   setup() {
     return {}
