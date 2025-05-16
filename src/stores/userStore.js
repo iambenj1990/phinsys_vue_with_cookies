@@ -41,6 +41,7 @@ export const useUserStore = defineStore('users', {
 
     async newUser(payload) {
       try {
+        payload.status = 'Active'
         const response = await api.post('/system/user/new', payload)
         // console.log(response.data.success)
         if (response.data.success) {
@@ -52,6 +53,7 @@ export const useUserStore = defineStore('users', {
           })
         }
       } catch (error) {
+        console.log(error)
         Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
@@ -67,7 +69,7 @@ export const useUserStore = defineStore('users', {
         // Add password_confirmation if password is being updated
         if (payload.password) {
           payload.password_confirmation = payload.confirm_password
-         
+
         }
         // Remove confirm_password from payload before sending to API
 
@@ -118,6 +120,49 @@ export const useUserStore = defineStore('users', {
         })
       }
     },
+   async deactivateUser(id){
+      try {
+        const response = await api.put('/system/user/profile-deactivate/' + id)
+        // console.log(response.data.success)
+        if (response.data.success) {
+          Notify.create({
+            type: 'positive',
+            message: 'User Successfully Deactivated.',
+            position: 'center',
+            timeout: 5000,
+          })
+        }
+      } catch (error) {
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+   },
+
+   async activateUser(id){
+      try {
+        const response = await api.put('/system/user/profile-activate/' + id)
+        // console.log(response.data.success)
+        if (response.data.success) {
+          Notify.create({
+            type: 'positive',
+            message: 'User Successfully Activated.',
+            position: 'center',
+            timeout: 5000,
+          })
+        }
+      } catch (error) {
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+   },
 
     async loginUser(payload) {
       try {

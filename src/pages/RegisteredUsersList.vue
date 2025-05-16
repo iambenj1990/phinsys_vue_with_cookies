@@ -19,7 +19,7 @@
             dense
             flat
             icon="add_moderator"
-            label="Add User"
+            label="New User"
             color="green"
             class="q-mb-md text-caption"
             @click="$router.push('/users/new')"
@@ -48,24 +48,48 @@
               <q-td key="status" style="font-size: 11px" align="left">
                 <q-chip
                   class="q-mr-sm"
-                  color="green"
+                  :color="props.row.status === 'Active' ? 'green' : 'red'"
                   text-color="white"
-                  size="sm">
-                       {{ props.row.office }}
-                </q-chip>
-
-              </q-td>
-              <q-td key="actions" style="font-size: 11px" align="left">
-                <q-btn
-                  dense
-                  flat
-                  icon="person_off"
-                  class="q-mr-sm"
-                  color="amber"
-                  @click="$router.push('/users/view/' + props.row.id)"
+                  size="sm"
                 >
-                  <q-tooltip> Deactivate </q-tooltip>
-                </q-btn>
+                  {{ props.row.status }}
+                </q-chip>
+              </q-td>
+              <q-td key="actions" style="font-size: 11px" align="left" class="flex">
+                <div v-if="props.row.status === 'Active'">
+                  <q-btn
+                    dense
+                    flat
+                    icon="person_off"
+                    class="q-mr-sm"
+                    color="amber"
+                    @click="
+                      () => {
+                        dialogInactive = true
+                        getUser(props.row.id)
+                      }
+                    "
+                  >
+                    <q-tooltip> Deactivate </q-tooltip>
+                  </q-btn>
+                </div>
+                <div v-if="props.row.status === 'Inactive'">
+                  <q-btn
+                    dense
+                    flat
+                    icon="person"
+                    class="q-mr-sm"
+                    color="amber"
+                    @click="
+                      () => {
+                        dialogActive = true
+                        getUser(props.row.id)
+                      }
+                    "
+                  >
+                    <q-tooltip>Activate </q-tooltip>
+                  </q-btn>
+                </div>
 
                 <q-btn
                   dense
@@ -75,21 +99,83 @@
                   color="primary"
                   @click="getUser(props.row.id)"
                   to="/users/user/"
-                 >
+                >
                   <q-tooltip> Edit </q-tooltip>
                 </q-btn>
 
-
+                <q-btn
+                  dense
+                  flat
+                  icon="badge"
+                  class="q-mr-sm"
+                  color="green"
+                  @click="
+                    () => {
+                      getUser(props.row.id)
+                      $router.push('/users/credentials')
+                    }
+                  "
+                >
+                  <q-tooltip> Credentials </q-tooltip>
+                </q-btn>
               </q-td>
             </q-tr>
           </template>
         </q-table>
       </q-card-section>
     </q-card>
+    <q-dialog v-model="dialogInactive" persistent>
+      <q-card>
+        <q-card-section class="q-pt-none">
+          <div class="text-h6 q-pt-md text-green">Deactivate User</div>
+        </q-card-section>
+
+        <q-card-section>
+          <div class="text-subtitle2 text-weight-regular">
+            Are you sure you want to deactivate this user?
+          </div>
+        </q-card-section>
+
+        <q-card-actions>
+          <q-btn flat label="Cancel" @click="dialogInactive = false" />
+          <q-btn
+            flat
+            label="Deactivate"
+            color="negative"
+            @click="deactivateUser(userStore.selected_id)"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <q-dialog v-model="dialogActive" persistent>
+      <q-card>
+        <q-card-section class="q-pt-none">
+          <div class="text-h6 q-pt-md text-green">Activate User</div>
+        </q-card-section>
+
+        <q-card-section>
+          <div class="text-subtitle2 text-weight-regular">
+            Are you sure you want to activate this user?
+          </div>
+        </q-card-section>
+
+        <q-card-actions>
+          <q-btn flat dense label="Cancel" color="grey" @click="dialogActive = false" />
+          <q-btn
+            flat
+            dense
+            label="Activate"
+            color="primary"
+            @click="activateUser(userStore.selected_id)"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script>
+
 import { useUserStore } from 'src/stores/userStore'
 export default {
   name: 'RegisteredUsersList',
@@ -121,11 +207,12 @@ export default {
     getUser(id) {
       this.userStore.selected_id = id
       console.log(id)
-      console.log( this.userStore.selected_id)
+      console.log(this.userStore.selected_id)
     },
     async getUsers() {
       try {
         await this.userStore.getUsers()
+
         this.rows = this.userStore.users
       } catch (error) {
         console.error('Error fetching users:', error)
@@ -137,9 +224,41 @@ export default {
         })
       }
     },
+    async deactivateUser(id) {
+      try {
+        await this.userStore.deactivateUser(id)
+        this.getUsers()
+        this.dialogInactive = false
+      } catch (error) {
+        console.error('Error deactivating user:', error)
+        this.$q.notify({
+          type: 'negative',
+          message: 'Unable to deactivate user',
+          position: 'center',
+          timeout: 1000,
+        })
+      }
+    },
+    async activateUser(id) {
+      try {
+        await this.userStore.activateUser(id)
+        this.getUsers()
+        this.dialogActive = false
+      } catch (error) {
+        console.error('Error deactivating user:', error)
+        this.$q.notify({
+          type: 'negative',
+          message: 'Unable to activate user',
+          position: 'center',
+          timeout: 1000,
+        })
+      }
+    },
   },
   data() {
     return {
+      dialogActive: false,
+      dialogInactive: false,
       search: '',
       rows: [],
     }

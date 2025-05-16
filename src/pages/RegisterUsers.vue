@@ -121,11 +121,6 @@ export default {
           this.insertNewUser(this.form)
           // Handle successful registration here
           console.log('Registration successful:', this.form)
-
-          this.$q.notify({
-            type: 'positive',
-            message: 'User registered successfully!',
-          })
           // Optionally clear form
           this.resetForm()
           this.$router.go(-1)
