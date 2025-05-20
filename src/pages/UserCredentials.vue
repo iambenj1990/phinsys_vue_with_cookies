@@ -152,7 +152,7 @@
                     <q-checkbox v-model="Configurations.Configurations" label="Configurations " color="green" />
                   </div>
                   <div class="q-mt-xs justify-end">
-                    <q-checkbox v-model="Configurations.Update" label="Update" color="green" />
+                    <q-checkbox v-model="Configurations.Update" label="Edit" color="green" />
                   </div>
                 </div>
               </q-item-section>

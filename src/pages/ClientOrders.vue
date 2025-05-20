@@ -252,6 +252,7 @@
                 v-model="filter"
                 placeholder="Search"
                 class="full-width"
+                ref="searchInput"
               >
                 <template v-slot:append>
                   <q-icon name="search" />
@@ -340,6 +341,7 @@
             type="text"
             mask="#####"
             autofocus
+
           />
           <!-- <q-select
             v-model="transactionDetails.unit"
@@ -353,7 +355,11 @@
         </q-card-section>
         <q-separator />
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" color="grey" @click="showQuantity = false" />
+          <q-btn flat label="Cancel" color="grey" @click="()=>{showQuantity = false
+              filter = ''
+              this.$refs.searchInput?.focus()
+              this.transactionDetails.quantity = ''
+          }" />
           <q-btn flat label="Add" color="primary" @click="add_Order(this.transactionDetails)" />
         </q-card-actions>
       </q-card>
@@ -654,6 +660,10 @@ export default {
 
       this.getOrders(payload.transaction_id)
       this.transactionDetails.quantity = ''
+      this.filter = ''
+      this.$refs.searchInput?.focus()
+
+
       //  this.$q.notify({ type: 'positive', message: 'order added successful!' })
     },
 

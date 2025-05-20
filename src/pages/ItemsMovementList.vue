@@ -91,9 +91,9 @@
                     {{ props.row.dosage_form }}
                   </q-td>
                   <!-- <q-td key="Openning_quantity" style="font-size: 11px" align="left">
-                    {{ !props.row.Openning_quantity ? '0' : props.row.Openning_quantity }}
-                  </q-td>
-                  <q-td key="unit" style="font-size: 11px" align="left">
+                    {{ !props.row.quantity ? '0' : props.row.quantity }}
+                  </q-td> -->
+                  <!-- <q-td key="unit" style="font-size: 11px" align="left">
                     {{ props.row.unit }}
                       pcs
                   </q-td> -->
@@ -330,7 +330,7 @@ export default {
         //   required: true,
         //   label: 'Quantity',
         //   align: 'left',
-        //   field: 'Openning_quantity',
+        //   field: 'quantity',
         // },
 
         // {

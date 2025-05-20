@@ -87,7 +87,7 @@
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="timeline" class="q-ml-md q-mr-md" size="24px" />Stock
-                  Movements</q-item-label
+                  Inventory</q-item-label
                 >
               </q-item-section>
             </q-item>

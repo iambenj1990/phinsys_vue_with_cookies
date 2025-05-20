@@ -78,18 +78,20 @@
                   <q-td key="dosage_form" style="font-size: 11px" align="left">
                     {{ props.row.dosage_form }}
                   </q-td>
-                  <!-- <q-td key="Openning_quantity" style="font-size: 11px" align="left">
-                    {{
-                      !props.row.Openning_quantity ? 'Stock Closed' : props.row.Openning_quantity
-                    }}
-                  </q-td> -->
+
 
                   <q-td key="unit" style="font-size: 11px" align="left">
                     <!-- {{ props.row.unit }} -->
                     pcs
                   </q-td>
 
-                  <q-td key="Closing_quantity" style="font-size: 11px" align="left">
+                      <q-td key="quantity" style="font-size: 11px" align="left">
+                    {{
+                      !props.row.quantity ? 0 : props.row.quantity
+                    }}
+                  </q-td>
+
+                  <!-- <q-td key="Closing_quantity" style="font-size: 11px" align="left">
                     <q-badge
                       style="width: 100px"
                       :color="getStockColor(props.row.total_closing_quantity, props.row.quantity)"
@@ -98,6 +100,22 @@
                     >
                       {{ props.row.total_closing_quantity }}
                     </q-badge>
+                  </q-td> -->
+                       <q-td key="total_openning_quantity" style="font-size: 11px" align="left">
+
+                      {{ props.row.total_openning_quantity }}
+
+                  </q-td>
+                     <q-td key="Closing_quantity" style="font-size: 11px" align="left">
+
+                      {{ props.row.total_closing_quantity }}
+
+                  </q-td>
+
+                   <q-td key="quantity_out" style="font-size: 11px" align="left">
+                    {{ props.row.quantity_difference  }}
+
+                    <!-- {{ props.row.quantity_out }} -->
                   </q-td>
 
                   <q-td key="expiration_date" style="font-size: 11px" align="left">
@@ -199,7 +217,7 @@ export default {
       indicatorStore,
       pagination: {
         page: 1,
-        rowsPerPage: 15,
+        rowsPerPage: 5,
         sortBy: null,
         descending: false,
       },
@@ -242,13 +260,7 @@ export default {
           field: 'dosage_form',
           sortable: true,
         },
-        // {
-        //   name: 'Openning_quantity',
-        //   required: true,
-        //   label: 'Quantity',
-        //   align: 'left',
-        //   field: 'Openning_quantity',
-        // },
+
 
         {
           name: 'unit',
@@ -258,14 +270,36 @@ export default {
           field: 'unit',
           sortable: true,
         },
+          {
+          name: 'quantity',
+          required: true,
+          label: 'Beginning Quantity',
+          align: 'left',
+          field: 'quantity',
+        },
+             {
+          name: 'total_openning_quantity',
+          required: true,
+          label: 'Openning Quantity',
+          align: 'left',
+          field: 'total_openning_quantity',
+        },
         {
           name: 'Closing_quantity',
           required: true,
-          label: 'Remaining Quantity',
+          label: 'Ending Quantity',
           align: 'left',
           field: 'total_closing_quantity',
           format: (val) => (val ? val : 0), // If empty, set to 0
           sortable: true,
+        },
+
+        {
+          name: 'quantity_out',
+          required: true,
+          label: 'Quantity Out',
+          align: 'left',
+          field: 'quantity_out',
         },
 
         {
@@ -277,13 +311,7 @@ export default {
           sortable: true,
         },
 
-        //    {
-        //   name: 'status',
-        //   required: true,
-        //   label: 'Status',
-        //   align: 'left',
-        //   field: 'status',
-        // },
+
 
         {
           name: 'last_inventory_date',
