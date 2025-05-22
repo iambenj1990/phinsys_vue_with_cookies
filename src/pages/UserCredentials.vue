@@ -177,12 +177,14 @@ export default {
     return {
       // Add your data properties here
       Dashboard: {
+
         Dashboard: false,
         Expiry: false,
         Stocks: false,
         Dispensed: false,
       },
       Releasing: {
+        ModuleTitle: 'Releasing',
         Releasing: false,
         Add: false,
         Edit: false,
@@ -190,6 +192,7 @@ export default {
         Export: false,
       },
       CustomerHistory: {
+        ModuleTitle: 'Customer History',
         CustomerHistory: false,
         Add: false,
         Edit: false,
@@ -197,6 +200,7 @@ export default {
         Export: false,
       },
       Purchasing: {
+        ModuleTitle: 'Purchasing',
         Purchasing: false,
         Add: false,
         Edit: false,
@@ -204,6 +208,7 @@ export default {
         Export: false,
       },
       Adjustments: {
+        ModuleTitle: 'Adjustments',
         Adjustments: false,
         Add: false,
         Edit: false,
@@ -211,6 +216,7 @@ export default {
         Export: false,
       },
       Stocks: {
+        ModuleTitle: 'Stocks',
         Stocks: false,
         Expiry: false,
         LowStocks: false,
@@ -218,6 +224,7 @@ export default {
         Dispensed: false,
       },
       UserManagement: {
+        ModuleTitle: 'User Management',
         UserManagement: false,
         Add: false,
         Edit: false,
@@ -225,26 +232,20 @@ export default {
       },
 
       UserCredentials: {
+        ModuleTitle: 'User Credentials',
         UserCredentials: false,
         Add: false,
         Edit: false,
       },
       Libraries: {
+        ModuleTitle: 'Libraries',
         Libraries: false,
-      },
-      Units: {
-        Units: false,
-        Add: false,
-        Edit: false,
-        Delete: false,
-      },
-      DosageType: {
-        DosageType: false,
         Add: false,
         Edit: false,
         Delete: false,
       },
       Configurations: {
+        ModuleTitle: 'Configurations',
         Configurations: false,
         Update: false,
       },
