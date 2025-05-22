@@ -7,182 +7,202 @@
         </q-card-section>
         <q-separator></q-separator>
         <q-form @submit.prevent="handleSubmit" ref="formRef">
-        <q-card-section>
-          <div>
-            <q-checkbox v-model="useTemp" size="xs" label="Use Temporary ID" @update:model-value="get_temp_id" style="color: grey;"/>
-            <div class="col-12 col-md-2 q-pa-sm">
-              <q-input
-                dense
-                v-model="New_Po"
-                label="Purchase Order Number"
-                class="full-width"
-                lazy-rules
-                :rules="[(val) => !!val || 'Purchase Order Number is required']"
-              >
-                <template v-slot:label> </template>
-              </q-input>
-            </div>
-          </div>
-          <q-separator></q-separator>
-          <div class="row q-gutter-md">
-            <div class="col-12 col-md-2 q-pa-sm">
-              <q-input
-                dense
-                v-model="MedicineInfo.brand_name"
-                label="Brand Name"
-                class="full-width"
-                lazy-rules
-                :rules="[(val) => !!val || 'Brand Name is required']"
+          <q-card-section>
+            <div>
+              <q-checkbox
+                v-model="useTemp"
+                size="xs"
+                label="Use Temporary ID"
+                @update:model-value="get_temp_id"
+                style="color: grey"
               />
-            </div>
-            <div class="col-12 col-md-2 q-pa-sm">
-              <q-input
-                dense
-                v-model="MedicineInfo.generic_name"
-                label="Generic Name"
-                class="full-width"
-                lazy-rules
-                :rules="[(val) => !!val || 'Generic Name is required']"
-              />
-            </div>
-            <div class="col-12 col-md-1 q-pa-sm">
-              <q-input
-                dense
-                v-model="MedicineInfo.dosage"
-                label="Dosage"
-                class="full-width"
-                lazy-rules
-                :rules="[(val) => !!val || 'Dosage is required']"
-              />
-            </div>
-            <div class="col-12 col-md-2 q-pa-sm">
-              <q-select
-                dense
-                v-model="MedicineInfo.dosage_form"
-                :options="MedType"
-                label="Dosage form"
-                class="full-width"
-                lazy-rules
-                :rules="[(val) => !!val || 'Dosage form is required']"
-              />
-            </div>
-
-            <div class="col-12 col-md-2 q-pa-sm">
-              <q-select
-                dense
-                v-model="MedicineInfo.unit"
-                :options="sUnit"
-                label="Unit"
-                class="full-width"
-                style="width: 120px"
-                lazy-rules
-                :rules="[(val) => !!val || 'Unit quantity is required']"
-                @update:model-value="handleUnitChange"
-              />
-              <div v-if="MedicineInfo.unit == 'BOX'">
-                <div class="row">
-                  <q-input
-                    dense
-                    label="Box Quantity"
-                    style="width: 120px"
-                    class="full-width"
-                    lazy-rules
-                    :rules="[(val) => !!val || 'Box Quantity is required']"
-                    v-model="MedicineInfo.box_quantity"
-                    @update:model-value="computeTotalQuantity"
-                  />
-                  <q-input
-                    dense
-                    style="width: 100px"
-                    label="Quantity per Box"
-                    class="q-mx-md full-width"
-                    lazy-rules
-                    :rules="[(val) => !!val || 'Quantity per Box is required']"
-                    v-model="MedicineInfo.quantity_per_box"
-                    @update:model-value="computeTotalQuantity"
-                  />
-                </div>
+              <div class="col-12 col-md-2 q-pa-sm">
+                <q-input
+                  dense
+                  v-model="New_Po"
+                  label="Purchase Order Number"
+                  class="full-width"
+                  lazy-rules
+                  :rules="[(val) => !!val || 'Purchase Order Number is required']"
+                >
+                </q-input>
               </div>
             </div>
-            <div class="col-12 col-md-1 q-pa-sm">
-              <q-input
-                dense
-                v-model="MedicineInfo.quantity"
-                label="Quantity"
-                type="number"
-                inputmode="numeric"
-                lazy-rules
-                :rules="[(val) => !!val || 'Quantity is required']"
-              />
-            </div>
-            <div class="col-12 col-md-2 q-pa-sm">
-              <q-input
-                dense
-                v-model="MedicineInfo.expiration_date"
-                type="date"
-                label="Expiration Date"
-                class="full-width"
-                lazy-rules
-                :rules="[(val) => !!val || 'Expiration date is required']"
-              />
-            </div>
-            <div class="col-12 col-md-1 q-pa-sm">
-              <q-input
-                dense
-                v-model="MedicineInfo.price"
-                prefix="₱"
-                label="Total Price"
-                class="full-width"
-                type="number"
-                inputmode="numeric"
-                lazy-rules
-                :rules="[(val) => !!val || 'Price is required']"
-                @update:model-value="computePrice"
-              />
-            </div>
-            <div class="col-12 col-md-1 q-pa-sm">
-              <q-input
-                dense
-                v-model="MedicineInfo.price_per_pcs"
-                prefix="₱"
-                label="Price / pcs"
-                class="full-width"
-                type="number"
-                inputmode="numeric"
-                lazy-rules
-                :rules="[(val) => !!val || 'Price is required']"
-                readonly
-              />
-            </div>
-          </div>
-          <div align="right" v-if="toUpdate">
-            <q-btn
-              type="submit"
-              label="cancel"
-              class="q-mx-sm"
-              color="red"
-              style="width: 100px"
-              @click="viewReset()"
-            />
-            <q-btn
-              type="submit"
-              label="Update"
-              color="primary"
-              style="width: 100px"
+            <q-separator />
+            <div class="row q-gutter-md">
+              <div class="col-12 col-md-2 q-pa-sm relative-position">
+                <q-input
+                  @input="filterList()"
+                  @blur="hideListWithDelay"
+                  dense
+                  v-model="MedicineInfo.brand_name"
+                  label="Brand Name"
+                  class="full-width"
+                  lazy-rules
+                  :rules="[(val) => !!val || 'Brand Name is required']"
+                />
 
-            />
-          </div>
-          <div align="right" v-else-if="!toUpdate">
-            <q-btn
-              type="submit"
-              label="Add"
-              color="primary"
-              style="width: 100px"
+                <q-list class="q-pa-sm flex floating-list" v-if="this.filteredList.length > 0">
+                  <q-item
+                    v-for="item in this.filteredList"
+                    :key="item.id"
+                    clickable
+                    @click="
+                      () => {
+                        MedicineInfo.brand_name = item.brand_name
+                        MedicineInfo.generic_name = item.generic_name
+                        MedicineInfo.dosage = item.dosage
+                        MedicineInfo.dosage_form = item.dosage_form
 
-            />
-          </div>
-        </q-card-section>
-      </q-form>
+                        filteredList = []
+                      }
+                    "
+                  >
+                    <q-item-section>
+                      <q-item-label> {{ item.brand_name }} {{ item.generic_name }} </q-item-label>
+                      <q-item-label caption>
+                        Dosage: {{ item.dosage }} | Dosage Form: {{ item.dosage_form }}
+                      </q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </div>
+
+              <div class="col-12 col-md-2 q-pa-sm">
+                <q-input
+                  dense
+                  v-model="MedicineInfo.generic_name"
+                  label="Generic Name"
+                  class="full-width"
+                  lazy-rules
+                  :rules="[(val) => !!val || 'Generic Name is required']"
+                />
+              </div>
+              <div class="col-12 col-md-1 q-pa-sm">
+                <q-input
+                  dense
+                  v-model="MedicineInfo.dosage"
+                  label="Dosage"
+                  class="full-width"
+                  lazy-rules
+                  :rules="[(val) => !!val || 'Dosage is required']"
+                />
+              </div>
+              <div class="col-12 col-md-2 q-pa-sm">
+                <q-select
+                  dense
+                  v-model="MedicineInfo.dosage_form"
+                  :options="MedType"
+                  label="Dosage form"
+                  class="full-width"
+                  lazy-rules
+                  :rules="[(val) => !!val || 'Dosage form is required']"
+                />
+              </div>
+
+              <div class="col-12 col-md-2 q-pa-sm">
+                <q-select
+                  dense
+                  v-model="MedicineInfo.unit"
+                  :options="sUnit"
+                  label="Unit"
+                  class="full-width"
+                  style="width: 120px"
+                  lazy-rules
+                  :rules="[(val) => !!val || 'Unit quantity is required']"
+                  @update:model-value="handleUnitChange"
+                />
+                <div v-if="MedicineInfo.unit == 'BOX'">
+                  <div class="row">
+                    <q-input
+                      dense
+                      label="Box Quantity"
+                      style="width: 120px"
+                      class="full-width"
+                      lazy-rules
+                      :rules="[(val) => !!val || 'Box Quantity is required']"
+                      v-model="MedicineInfo.box_quantity"
+                      @update:model-value="computeTotalQuantity"
+                    />
+                    <q-input
+                      dense
+                      style="width: 100px"
+                      label="Quantity per Box"
+                      class="q-mx-md full-width"
+                      lazy-rules
+                      :rules="[(val) => !!val || 'Quantity per Box is required']"
+                      v-model="MedicineInfo.quantity_per_box"
+                      @update:model-value="computeTotalQuantity"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-1 q-pa-sm">
+                <q-input
+                  dense
+                  v-model="MedicineInfo.quantity"
+                  label="Quantity"
+                  type="number"
+                  inputmode="numeric"
+                  lazy-rules
+                  :rules="[(val) => !!val || 'Quantity is required']"
+                />
+              </div>
+              <div class="col-12 col-md-2 q-pa-sm">
+                <q-input
+                  dense
+                  v-model="MedicineInfo.expiration_date"
+                  type="date"
+                  label="Expiration Date"
+                  class="full-width"
+                  lazy-rules
+                  :rules="[(val) => !!val || 'Expiration date is required']"
+                />
+              </div>
+              <div class="col-12 col-md-1 q-pa-sm">
+                <q-input
+                  dense
+                  v-model="MedicineInfo.price"
+                  prefix="₱"
+                  label="Total Price"
+                  class="full-width"
+                  type="number"
+                  inputmode="numeric"
+                  lazy-rules
+                  :rules="[(val) => !!val || 'Price is required']"
+                  @update:model-value="computePrice"
+                />
+              </div>
+              <div class="col-12 col-md-1 q-pa-sm">
+                <q-input
+                  dense
+                  v-model="MedicineInfo.price_per_pcs"
+                  prefix="₱"
+                  label="Price / pcs"
+                  class="full-width"
+                  type="number"
+                  inputmode="numeric"
+                  lazy-rules
+                  :rules="[(val) => !!val || 'Price is required']"
+                  readonly
+                />
+              </div>
+            </div>
+            <div align="right" v-if="toUpdate">
+              <q-btn
+                label="cancel"
+                class="q-mx-sm"
+                color="red"
+                style="width: 100px"
+                @click="viewReset()"
+              />
+              <q-btn type="submit" label="Update" color="primary" style="width: 100px" />
+            </div>
+            <div align="right" v-else-if="!toUpdate">
+              <q-btn type="submit" label="Add" color="primary" style="width: 100px" />
+            </div>
+          </q-card-section>
+        </q-form>
         <q-separator />
         <q-card-section>
           <div>
@@ -236,11 +256,11 @@
         </q-card-actions>
       </q-card>
     </div>
-    <pre>{PO Number : {{ this.New_Po }}}</pre>
+    <!-- <pre>{PO Number : {{ this.New_Po }}}</pre>
     <pre>{Status : {{ this.toUpdate }}}</pre>
     <pre>{Price: {{ MedicineInfo.price }}}</pre>
     <pre>{Price: {{ MedicineInfo.box_quantity }}}</pre>
-    <pre>{Price: {{ MedicineInfo.quantity_per_box }}}</pre>
+    <pre>{Price: {{ MedicineInfo.quantity_per_box }}}</pre> -->
   </q-page>
 </template>
 
@@ -256,17 +276,22 @@ export default {
         console.log(newvalue)
       }
     },
-    // useTemp(newValue) {
-    //   console.log(newValue)
-    //   if (newValue === true) {
-    //     this.itemStore.getTempID()
-    //     console.log( this.New_Po)
-    //     this.New_Po = this.itemStore.temp_id
-    //   }
-    // },
+
+    'MedicineInfo.brand_name'(newValue) {
+      if (newValue) {
+        this.filteredList = this.medMiniInfo.filter((item) => {
+          const itemName = `${item.brand_name} ${item.generic_name}`.toLowerCase()
+          return itemName.includes(newValue.toLowerCase())
+        })
+      } else {
+        this.filteredList = []
+      }
+    },
   },
 
-  created() {},
+  created() {
+    this.fetch_Medicine_info()
+  },
 
   computed: {
     itemStore() {
@@ -384,6 +409,8 @@ export default {
   },
   data() {
     return {
+      filteredList: [],
+      medMiniInfo: [],
       useTemp: false,
       toUpdate: false,
       rows: [],
@@ -401,36 +428,43 @@ export default {
         box_quantity: 0,
         quantity_per_box: 0,
         price: 0,
-        price_per_pcs:0,
+        price_per_pcs: 0,
         expiration_date: '',
         user_id: 1,
       },
+      searchTerm: '',
     }
   },
 
   methods: {
+    filterList() {
+      if (!this.MedicineInfo.brand_name) {
+        this.filteredList = this.medMiniInfo
+      } else {
+        this.filteredList = this.medMiniInfo.filter((medicine) => {
+          const stockname = `${medicine.brand_name} ${medicine.generic_name}`.toLowerCase()
+          return stockname.includes(this.MedicineInfo.brand_name.toLowerCase())
+        })
+      }
+    },
 
     async handleSubmit() {
-    const valid = await this.$refs.formRef.validate();
-    if (!valid) {
-      this.$q.notify({ type: 'negative', message: 'Please complete all required fields.' });
-      return;
-    }
+      const valid = await this.$refs.formRef.validate()
+      if (!valid) {
+        this.$q.notify({ type: 'negative', message: 'Please complete all required fields.' })
+        return
+      }
 
-    if (this.toUpdate) {
-      this.updateItem(this.selected_id, this.MedicineInfo);
-    } else {
-      this.insertNewItem(this.MedicineInfo);
-    }
-  },
-
-
-
+      if (this.toUpdate) {
+        this.updateItem(this.selected_id, this.MedicineInfo)
+      } else {
+        this.insertNewItem(this.MedicineInfo)
+      }
+    },
 
     computePrice() {
-   this.MedicineInfo.price_per_pcs =
-        this.MedicineInfo.price / this.MedicineInfo.quantity
-        this.MedicineInfo.price_per_pcs = Math.round(this.MedicineInfo.price_per_pcs * 100) / 100
+      this.MedicineInfo.price_per_pcs = this.MedicineInfo.price / this.MedicineInfo.quantity
+      this.MedicineInfo.price_per_pcs = Math.round(this.MedicineInfo.price_per_pcs * 100) / 100
     },
     handleUnitChange() {
       //Reset values when unit change
@@ -448,7 +482,7 @@ export default {
     },
 
     viewReset() {
-      this.$refs.formRef.resetValidation();
+      this.$refs.formRef.resetValidation()
       this.toUpdate = false
       this.inputReset()
     },
@@ -475,6 +509,12 @@ export default {
         position: 'center',
         timeout: 1000,
       })
+    },
+
+    async fetch_Medicine_info() {
+      await this.itemStore.getStockMiniInfo()
+      this.medMiniInfo = this.itemStore.stockMiniInfo
+      console.log(this.medMiniInfo)
     },
 
     async fetchItem(id) {
@@ -508,20 +548,43 @@ export default {
       })
     },
 
-    async get_temp_id(){
+    async get_temp_id() {
       try {
-        if(this.useTemp == true){
+        if (this.useTemp == true) {
           await this.itemStore.getTempID()
           this.New_Po = this.itemStore.temp_id
-        }else{
-          this.New_Po=''
+        } else {
+          this.New_Po = ''
         }
       } catch (error) {
-console.log (error)
+        console.log(error)
       }
-    }
+    },
+
+    hideListWithDelay() {
+      // Add a slight delay to allow click to register before hiding
+      setTimeout(() => {
+        this.filteredList = []
+      }, 200)
+    },
   },
 }
 </script>
 
-<style></style>
+<style>
+.floating-list {
+  position: absolute;
+  background: white;
+  z-index: 10;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.relative-position {
+  position: relative;
+}
+</style>

@@ -12,7 +12,7 @@ export const useItemStore = defineStore('items', {
     expired: [],
     po_items: [],
     zero_stocks: [],
-
+    stockMiniInfo:[],
     temp_id: '',
     hasOpening: false,
   }),
@@ -49,6 +49,21 @@ export const useItemStore = defineStore('items', {
         })
       }
     },
+
+    async getStockMiniInfo() {
+      try {
+        const response = await api.get('/system/library/items')
+        this.stockMiniInfo = response.data.items
+      } catch (error) {
+        console.error(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
     async getItems() {
       try {
         const response = await api.get('/items')
@@ -63,6 +78,7 @@ export const useItemStore = defineStore('items', {
         })
       }
     },
+
 
     async getItem(id) {
       try {
