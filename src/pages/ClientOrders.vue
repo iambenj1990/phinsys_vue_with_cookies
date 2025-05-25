@@ -4,6 +4,7 @@
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
         <div>
           <q-input
+            ref="searchInput"
             v-model="searchTerm"
             label="Search by Name or Lastname"
             outlined
@@ -606,6 +607,7 @@ export default {
         timeout: 1200,
       })
 
+      this.$refs.searchInput.focus()
     },
     getStockStatus(row) {
       if (!row.Closing_quantity) {

@@ -5,7 +5,7 @@ const routes = [
     path: '/main',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/dashboard', component: () => import('pages/IndexPage.vue') }, //dashboard
+      { path: '/dashboard', component: () => import('pages/DashBoard.vue') }, //dashboard
       { path: '/customer', component: () => import('pages/NewClients.vue') }, //customers
       { path: '/customers', component: () => import('pages/ClientList.vue') }, //customers  list
       { path: '/customers/profile', component: () => import('pages/ClientProfile.vue') }, //customers  profile and order history

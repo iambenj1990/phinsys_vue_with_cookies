@@ -55,6 +55,7 @@
                         MedicineInfo.dosage_form = item.dosage_form
 
                         filteredList = []
+                        this.$refs.Units.focus()
                       }
                     "
                   >
@@ -103,6 +104,7 @@
               <div class="col-12 col-md-2 q-pa-sm">
                 <q-select
                   dense
+                  ref="Units"
                   v-model="MedicineInfo.unit"
                   :options="sUnit"
                   label="Unit"
@@ -139,6 +141,7 @@
               </div>
               <div class="col-12 col-md-1 q-pa-sm">
                 <q-input
+                  :readonly="MedicineInfo.unit == 'BOX'"
                   dense
                   v-model="MedicineInfo.quantity"
                   label="Quantity"
@@ -156,7 +159,17 @@
                   label="Expiration Date"
                   class="full-width"
                   lazy-rules
-                  :rules="[(val) => !!val || 'Expiration date is required']"
+                  :rules="[
+                    (val) => !!val || 'Expiration date is required',
+                    (val) => {
+                      if (!val) return true // Skip if empty (handled by previous rule)
+                      const today = new Date()
+                      today.setHours(0, 0, 0, 0)
+                      const inputDate = new Date(val)
+                      inputDate.setHours(0, 0, 0, 0)
+                      return inputDate >= today || 'Date must be today or later'
+                    },
+                  ]"
                 />
               </div>
               <div class="col-12 col-md-1 q-pa-sm">
@@ -568,6 +581,8 @@ export default {
       }, 200)
     },
   },
+
+
 }
 </script>
 
