@@ -28,7 +28,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="bg-grey-2" :width="240">
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="bg-grey-2" :width="240" style="position: fixed;">
       <q-scroll-area class="fit">
         <q-list>
           <q-item> </q-item>
@@ -137,7 +137,7 @@
         </q-list>
       </q-scroll-area>
     </q-drawer>
-    <q-page-container>
+    <q-page-container >
       <router-view />
     </q-page-container>
   </q-layout>
@@ -181,3 +181,9 @@ export default {
   },
 }
 </script>
+<style scoped>
+.fixed-drawer .q-scrollarea {
+  height: 100vh;
+  position: fixed;
+}
+</style>

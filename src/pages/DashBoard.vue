@@ -1,5 +1,6 @@
 <template>
-  <q-page class="q-pa-md flex flex-block">
+  <q-page class="q-pa-md flex flex-block overflow-auto">
+    <q-card scrolled class="q-pa-md" style="width: 100%; max-width: 1200px; margin: auto;">
     <div class="">
       <div class="text-h4 text-grey q-pa-md">Dashboard</div>
       <q-separator />
@@ -26,7 +27,7 @@
 
           <q-card class="q-ma-xs q-pa-md" style="width: 250px">
             <q-card-section>
-               <div class="text-subtitle1 text-weight-medium">
+              <div class="text-subtitle1 text-weight-medium">
                 <q-icon name="event_busy" color="green" size="50px" class="q-mr-sm" />
                 Expired
               </div>
@@ -36,7 +37,7 @@
 
           <q-card class="q-ma-xs q-pa-md" style="width: 250px">
             <q-card-section>
-               <div class="text-subtitle1 text-weight-medium">
+              <div class="text-subtitle1 text-weight-medium">
                 <q-icon
                   name="production_quantity_limits"
                   color="green"
@@ -58,7 +59,7 @@
       <div class="flex flex-wrap q-px-md q-mb-lg">
         <q-card class="q-ma-xs q-pa-md" style="width: 250px">
           <q-card-section>
-             <div class="text-subtitle1 text-weight-medium">
+            <div class="text-subtitle1 text-weight-medium">
               <q-icon name="people" color="green" size="50px" class="q-mr-sm" />
               Registered
             </div>
@@ -88,13 +89,20 @@
         <q-separator spaced label="Section Title" />
       </div>
 
-      <div class="q-pa-md">
+      <div class="q-pa-md flex flex-center" style="width: 800px;">
         <canvas id="myChart"></canvas>
       </div>
-      <div class="q-pa-md">
-        <canvas id="CustomerperClassification"></canvas>
+
+      <div class="q-pa-md flex">
+        <div class="q-pa-md" style="width: 500px;" >
+          <canvas id="CustomerperClassification"></canvas>
+        </div>
+        <div class="q-pa-md" >
+          <canvas id="GenderClassification"></canvas>
+        </div>
       </div>
     </div>
+    </q-card>
   </q-page>
 </template>
 
@@ -119,6 +127,7 @@ export default {
   data() {
     return {
       chart: null,
+      genders: ['Male', 'Female'],
       labels: [
         'January',
         'February',
@@ -162,6 +171,7 @@ export default {
       now_date: null,
       search: '',
       barData: [12, 19, 3, 5, 2, 3], // Example data for the bar chart
+      genderData: [100, 150],
     }
   },
   mounted() {
@@ -169,6 +179,7 @@ export default {
     this.now_date = new Date().toISOString().split('T')[0] // Set default date to today
     this.draw_Per_Brgy_Chart()
     this.draw_Per_CustomerClassification_Chart()
+    this.GenderCustomerClassification_Chart()
   },
   watch: {
     search(newValue) {
@@ -235,19 +246,53 @@ export default {
         },
         options: {
           plugins: {
+
             title: {
               display: true,
               text: 'Customer per Classification',
               position: 'bottom',
             },
           },
-          responsive: false,
-          maintainAspectRatio: false,
+          responsive: true,
+          maintainAspectRatio: true,
           scales: {
             y: {
               beginAtZero: true,
             },
           },
+        },
+      })
+    },
+
+    GenderCustomerClassification_Chart() {
+      const ctx = document.getElementById('GenderClassification').getContext('2d')
+
+      this.chart = new Chart(ctx, {
+        type: 'pie',
+
+        data: {
+          labels: this.genders,
+          datasets: [
+            {
+              label: 'Gender',
+              data: this.genderData,
+              backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)'],
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+
+          plugins: {
+            title: {
+              display: true,
+              text: 'Gender per Classification',
+              position: 'bottom',
+            },
+          },
+          responsive: true,
+          maintainAspectRatio: true,
         },
       })
     },
@@ -260,7 +305,7 @@ export default {
 
 <style scoped>
 canvas {
-  width: 50%;
+  width: 75%;
   max-width: 100%;
 }
 </style>
