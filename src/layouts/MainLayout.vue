@@ -28,7 +28,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="bg-grey-2" :width="240" style="position: fixed;">
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="bg-grey-2" :width="240" breakpoint="500" >
       <q-scroll-area class="fit">
         <q-list>
           <q-item> </q-item>
@@ -146,8 +146,6 @@
 <script>
 import { ref } from 'vue'
 
-
-
 export default {
   name: 'MyLayout',
   components:{
@@ -179,6 +177,10 @@ export default {
   methods: {
 
   },
+
+  watch: {
+
+  }
 }
 </script>
 <style scoped>
