@@ -1,61 +1,60 @@
 <template>
-  <q-page class="q-pa-md flex flex-block overflow-auto">
-    <q-card scrolled class="q-pa-md" style="width: 100%; max-width: 1200px; margin: auto">
-      <div class="">
-        <div class="text-h4 text-grey q-pa-md">Dashboard</div>
-        <q-separator />
-        <div class="q-my-sm flex flex-wrap q-px-md justify-end">
-          <!-- <q-input dense type="date" filled v-model="now_date" class="q-ma-xs" /> -->
-          <q-input v-model="rangeText" label="Select Date Range" dense readonly style="width: 250px;">
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date
-                    v-model="range"
-                    range
-                    mask="YYYY-MM-DD"
-                    @update:model-value="updateRangeText"
-                  />
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
-        </div>
+  <q-page class="q-pa-md">
+    <q-card class="q-pa-md">
+      <div class="text-h4 text-grey q-pa-md">Dashboard</div>
+      <q-separator />
+      <div class="q-my-sm flex flex-wrap q-px-md justify-end">
+        <!-- <q-input dense type="date" filled v-model="now_date" class="q-ma-xs" /> -->
+        <q-input v-model="rangeText" label="Select Date Range" dense readonly style="width: 250px">
+          <template v-slot:append>
+            <q-icon name="event" class="cursor-pointer">
+              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                <q-date
+                  v-model="range"
+                  range
+                  mask="YYYY-MM-DD"
+                  @update:model-value="updateRangeText"
+                />
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+        </q-input>
+      </div>
 
-        <div class="">
+      <div class="row q-gutter-md">
+        <div class="col col-lg-6">
           <div class="text-h6 q-ma-xs text-green">
             Medicines
             <q-separator spaced />
           </div>
-
           <div class="flex flex-wrap q-px-md q-mb-lg">
-            <q-card class="q-ma-xs q-pa-md" style="width: 250px">
+            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px">
               <q-card-section>
-                <div class="text-subtitle1 text-weight-medium">
-                  <q-icon name="inventory_2" color="green" size="50px" class="q-mr-sm" />
+                <div class="text-subtitle2 text-weight-medium">
+                  <q-icon name="inventory_2" color="green" size="30px" class="q-mr-sm" />
                   In Stock
                 </div>
                 <div class="text-h4" align="right">{{ inventoryCount }}</div>
               </q-card-section>
             </q-card>
 
-            <q-card class="q-ma-xs q-pa-md" style="width: 250px">
+            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px">
               <q-card-section>
-                <div class="text-subtitle1 text-weight-medium">
-                  <q-icon name="event_busy" color="green" size="50px" class="q-mr-sm" />
+                <div class="text-subtitle2 text-weight-medium">
+                  <q-icon name="event_busy" color="green" size="30px" class="q-mr-sm" />
                   Expired
                 </div>
                 <div class="text-h4" align="right">{{ expiredCount }}</div>
               </q-card-section>
             </q-card>
 
-            <q-card class="q-ma-xs q-pa-md" style="width: 250px">
+            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px">
               <q-card-section>
-                <div class="text-subtitle1 text-weight-medium">
+                <div class="text-subtitle2 text-weight-medium">
                   <q-icon
                     name="production_quantity_limits"
                     color="green"
-                    size="50px"
+                    size="30px"
                     class="q-mr-sm"
                   />
                   Out of Stock
@@ -64,10 +63,10 @@
               </q-card-section>
             </q-card>
 
-            <q-card class="q-ma-xs q-pa-md" style="width: 250px">
+            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px">
               <q-card-section>
-                <div class="text-subtitle1 text-weight-medium">
-                  <q-icon name="description" color="green" size="50px" class="q-mr-sm" />
+                <div class="text-subtitle2 text-weight-medium">
+                  <q-icon name="description" color="green" size="30px" class="q-mr-sm" />
                   Temporary PO #
                 </div>
                 <div class="text-h4" align="right">{{ expiredCount }}</div>
@@ -75,54 +74,105 @@
             </q-card>
           </div>
         </div>
-
-        <div class="text-h6 q-ma-xs q-p-md text-green">
-          Customers
-          <q-separator spaced label="Section Title" />
-        </div>
-        <div class="flex flex-wrap q-px-md q-mb-lg">
-          <q-card class="q-ma-xs q-pa-md" style="width: 250px">
-            <q-card-section>
-              <div class="text-subtitle1 text-weight-medium">
-                <q-icon name="people" color="green" size="50px" class="q-mr-sm" />
-                Registered
-              </div>
-              <div class="text-h4" align="right">{{ inventoryCount }}</div>
-            </q-card-section>
-          </q-card>
-
-          <q-card class="q-ma-xs q-pa-md" style="width: 250px">
-            <q-card-section>
-              <div class="text-subtitle1 text-weight-medium">
-                <q-icon name="medical_services" color="green" size="50px" class="q-mr-sm" />
-                Served
-              </div>
-              <div class="text-h4" align="right">{{ expiredCount }}</div>
-            </q-card-section>
-          </q-card>
-
-          <!-- <q-card class="q-ma-xs q-pa-md" style="width: 250px">
-          <q-card-section>
-            <div class="text-h6 text-weight-medium">Out of Stock</div>
-            <div class="text-h4" align="right">{{ outOfStockCount }}</div>
-          </q-card-section>
-        </q-card> -->
-        </div>
-        <div class="text-h6 q-ma-xs q-p-md text-green">
-          Demographics
-          <q-separator spaced label="Section Title" />
-        </div>
-
-        <div class="q-pa-md flex flex-center" style="width: 800px">
-          <canvas id="myChart"></canvas>
-        </div>
-
-        <div class="q-pa-md flex">
-          <div class="q-pa-md" style="width: 500px">
-            <canvas id="CustomerperClassification"></canvas>
+        <div class="col col-lg-5">
+          <div class="text-h6 q-ma-xs q-p-md text-green">
+            Customers
+            <q-separator spaced label="Section Title" />
           </div>
-          <div class="q-pa-md">
-            <canvas id="GenderClassification"></canvas>
+          <div class="flex flex-wrap q-px-md q-mb-lg">
+            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px">
+              <q-card-section>
+                <div class="text-subtitle2 text-weight-medium">
+                  <q-icon name="people" color="green" size="30px" class="q-mr-sm" />
+                  Registered
+                </div>
+                <div class="text-h4" align="right">{{ inventoryCount }}</div>
+              </q-card-section>
+            </q-card>
+
+            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px">
+              <q-card-section>
+                <div class="text-subtitle2 text-weight-medium">
+                  <q-icon name="medical_services" color="green" size="30px" class="q-mr-sm" />
+                  Served
+                </div>
+                <div class="text-h4" align="right">{{ expiredCount }}</div>
+              </q-card-section>
+            </q-card>
+          </div>
+        </div>
+      </div>
+
+      <div class="row q-pb-lg">
+        <div class="col col-lg-12 ">
+          <div class="text-h6 q-ma-xs text-green">
+            Top 10 Most Requested Medicines
+            <q-separator spaced label="Section Title" />
+          </div>
+          <q-table
+            flat
+
+            bordered
+            :columns="cols"
+            :rows="rows"
+            :data="[]"
+            :pagination="{
+              rowsPerPage: 10,
+            }"
+            :no-data-label="'No data available'"
+            :no-results-label="'No results found'"
+            :loading="false"
+            :filter="search"
+            :filter-method="
+              (row, filter) => {
+                return row.name.toLowerCase().includes(filter.toLowerCase())
+              }
+            "
+            :row-key="'name'"
+          />
+        </div>
+      </div>
+
+      <q-space />
+      <div class="text-h6 q-ma-xs  text-green">
+        Demographics
+         <q-space />
+        <q-separator spaced />
+      </div>
+
+      <div class="row-span-12 ">
+        <div class="col-9 ">
+          <q-card class="">
+            <q-card-section>
+              <div class="text-h6 text-green">Client Visitors per Barangay</div>
+            </q-card-section>
+            <q-card-section>
+              <canvas id="myChart" style="height: 400px; width: 100%;"></canvas>
+            </q-card-section>
+          </q-card>
+        </div>
+        <div class="row q-pt-md">
+          <div class="col-lg-6">
+            <q-card class="flex flex-center ">
+              <q-card-section class="text-h6 text-green">
+                Customer Visitor per Age Classification
+              </q-card-section>
+              <q-separator spaced />
+              <q-card-section>
+                <canvas id="CustomerperClassification" style="height: 200px; width: 500px"></canvas>
+              </q-card-section>
+            </q-card>
+          </div>
+          <div class="col-lg-6 q-pl-md" >
+            <q-card class="flex flex-center ">
+              <q-card-section class="text-h6 text-green">
+                Customer Visitor per Gender Classification
+              </q-card-section>
+              <q-separator spaced />
+              <q-card-section>
+                <canvas id="GenderClassification" style="height: 200px; width: 500px"></canvas>
+              </q-card-section>
+            </q-card>
           </div>
         </div>
       </div>
@@ -133,7 +183,7 @@
 <script>
 import { ref } from 'vue'
 import Chart from 'chart.js/auto'
-
+import { useTagumStore } from 'src/stores/TagumStore'
 export default {
   name: 'DashBoard',
   setup() {
@@ -141,16 +191,53 @@ export default {
     const inventoryCount = ref(120)
     const expiredCount = ref(8)
     const outOfStockCount = ref(15)
-
+    const tagumStore = useTagumStore()
+    // Fetch data from the store or API
     return {
+      tagumStore,
       inventoryCount,
       expiredCount,
       outOfStockCount,
+
+      cols:[
+         {
+          name: 'brand_name',
+          label: 'Brand Name',
+          field: 'brand_name',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2em',
+        },
+        {
+          name: 'generic_name',
+          label: 'Generic Name',
+          field: 'generic_name',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2em',
+        },
+        {
+          name: 'total_dispense',
+          label: 'Dispensed',
+          field: 'total_dispense',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2em',
+        },
+
+      ]
     }
   },
   data() {
     return {
-      chart: null,
+      rows:[],
+      genderChart: null,
+      brgyChart: null,
+      AgeChart: null,
+
       genders: ['Male', 'Female'],
       labels: [
         'January',
@@ -166,31 +253,7 @@ export default {
         'November',
         'December',
       ],
-      barangay: [
-        'Apokon',
-        'Bincungan',
-        'Busaon',
-        'Canocotan',
-        'Cuambogan',
-        'La Filipina',
-        'Liboganon',
-        'Madaum',
-        'Magdum',
-        'Magugpo East',
-        'Magugpo North',
-        'Magugpo Poblacion',
-        'Magugpo South',
-        'Magugpo West',
-        'Mankilam',
-        'New Balamban',
-        'Nueva Fuerza',
-        'Pagsabangan',
-        'Pandapan',
-        'San Agustin',
-        'San Isidro',
-        'San Miguel (Camp 4)',
-        'Visayan Village',
-      ],
+
       classification_person: ['Adult (18-59)', 'Children (0-17)', 'Senion Citizen (60+)'],
       now_date: null,
       search: '',
@@ -227,31 +290,62 @@ export default {
     draw_Per_Brgy_Chart() {
       const ctx = document.getElementById('myChart').getContext('2d')
 
-      this.chart = new Chart(ctx, {
+      this.brgyChart = new Chart(ctx, {
         type: 'bar',
-
         data: {
-          labels: this.barangay,
+          labels: this.tagumStore.barangay,
           datasets: [
             {
               label: 'Customer Visits per Barangay',
               data: this.barData,
-              backgroundColor: 'rgba(75, 192, 192, 0.6)',
-              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor:
+                [
+                  'rgb(75, 192, 192)',
+                  'rgb(255, 99, 132)',
+                  'rgb(54, 162, 235)',
+                  'rgb(255, 206, 86)',
+                  'rgb(153, 102, 255)',
+                  'rgb(255, 159, 64)',
+                  'rgb(199, 199, 199)',
+                  'rgb(83, 102, 255)',
+                  'rgb(255, 102, 255)',
+                  'rgb(102, 255, 204)',
+                  'rgb(204, 255, 102)',
+                  'rgb(255, 204, 102)',
+                  'rgb(102, 255, 102)',
+                  'rgb(255, 102, 102)',
+                  'rgb(102, 153, 255)',
+                  'rgb(255, 153, 204)',
+                  'rgb(153, 255, 255)',
+                  'rgb(204, 102, 255)',
+                  'rgb(102, 204, 255)',
+                  'rgb(255, 255, 102)',
+                  'rgb(153, 255, 153)',
+                  'rgb(255, 153, 153)',
+                  'rgb(192, 192, 75)',
+                ],
+
+              borderColor: 'rgb(255, 255, 255)',
               borderWidth: 1,
             },
           ],
         },
         options: {
           plugins: {
-            title: {
-              display: true,
-              text: 'Customer Visits per Barangay',
-              position: 'bottom',
+            legend: {
+              display: false,
             },
           },
           responsive: true,
+          maintainAspectRatio: false,
           scales: {
+            x: {
+              ticks: {
+                autoSkip: false,
+                maxRotation: 45,
+                minRotation: 45,
+              },
+            },
             y: {
               beginAtZero: true,
             },
@@ -263,32 +357,29 @@ export default {
     draw_Per_CustomerClassification_Chart() {
       const ctx = document.getElementById('CustomerperClassification').getContext('2d')
 
-      this.chart = new Chart(ctx, {
+      this.AgeChart = new Chart(ctx, {
         type: 'bar',
-
         data: {
           labels: this.classification_person,
           datasets: [
             {
               label: 'Customer per Classification',
               data: this.barData,
-              backgroundColor:  ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)'],
+              backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)'],
               borderColor: 'rgba(75, 192, 192, 1)',
               borderWidth: 1,
             },
-
           ],
         },
         options: {
           plugins: {
-            title: {
-              display: true,
-              text: 'Customer per Classification',
-              position: 'bottom',
+            legend: {
+              display: false,
+              position: 'top',
             },
           },
           responsive: true,
-          maintainAspectRatio: true,
+          maintainAspectRatio: false,
           scales: {
             y: {
               beginAtZero: true,
@@ -301,9 +392,8 @@ export default {
     GenderCustomerClassification_Chart() {
       const ctx = document.getElementById('GenderClassification').getContext('2d')
 
-      this.chart = new Chart(ctx, {
+      this.genderChart = new Chart(ctx, {
         type: 'pie',
-
         data: {
           labels: this.genders,
           datasets: [
@@ -311,21 +401,14 @@ export default {
               label: 'Gender',
               data: this.genderData,
               backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)'],
-              borderColor: 'rgba(75, 192, 192, 1)',
+              borderColor: 'rgb(75, 192, 192)',
               borderWidth: 1,
             },
           ],
         },
         options: {
-          plugins: {
-            title: {
-              display: true,
-              text: 'Gender per Classification',
-              position: 'bottom',
-            },
-          },
           responsive: true,
-          maintainAspectRatio: true,
+          maintainAspectRatio: false,
         },
       })
     },
