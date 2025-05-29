@@ -201,7 +201,7 @@
               <div class="q-py-sm" align="right">
                 <q-btn
                   color="primary"
-                  label="Submit"
+                  label="Release Order"
                   icon="check"
                   @click="clearData()"
                   :disabled="rows.length==0"
