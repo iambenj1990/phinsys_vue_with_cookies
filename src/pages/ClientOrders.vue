@@ -188,12 +188,7 @@
                         @click="remove_order(props.row.table_id_transactions)"
                         icon="remove_shopping_cart"
                       />
-                      <!-- <q-btn
-                    flat
-                    color="negative"
-                    @click="showDeletepage(props.row.id)"
-                    icon="delete"
-                  /> -->
+
                     </q-td>
                   </q-tr>
                 </template>
@@ -308,7 +303,10 @@
                     rounded
                     color="primary"
                     style="background-color: orange"
-                    @click="showData(props.row)"
+                    @click="()=>{
+                      showData(props.row)
+
+                    }"
                     icon="add_shopping_cart"
                     :disable="
                         !props.row.Closing_quantity
@@ -344,15 +342,7 @@
             autofocus
 
           />
-          <!-- <q-select
-            v-model="transactionDetails.unit"
-            :options="unit_per_piece"
-            label="Unit"
-            class="q-mt-sm"
-            style="width: 100%"
-            :disable="transactionDetails.quantity === 0"
-            :rules="[(val) => !!val || 'Unit is required']"
-          /> -->
+
         </q-card-section>
         <q-separator />
         <q-card-actions align="right">
@@ -445,14 +435,7 @@ export default {
       ],
 
       cartCols: [
-        // {
-        //   name: 'po_no',
-        //   required: true,
-        //   label: 'PO No',
-        //   align: 'left',
-        //   field: "po_no",
-        //   sortable: true
-        // },
+
 
         {
           name: 'generic_name',
@@ -486,14 +469,7 @@ export default {
           field: 'dosage_form',
           sortable: true,
         },
-        // {
-        //   name: 'quantity',
-        //   required: true,
-        //   label: 'remaining_quantity',
-        //   align: 'left',
-        //   field: "quantity",
-        //   sortable: true
-        // },
+
         {
           name: 'Closing_quantity',
           required: true,
@@ -547,6 +523,8 @@ export default {
       unit_per_piece: [
         'pcs','bottle','sachet','vial','ampule'
       ],
+      selectedMedicine:{},
+       selectedMedicineQty: 0,
       isEditable: false,
       selectedClient_id: 0,
       transaction_id: 0,
@@ -590,7 +568,7 @@ export default {
     }
   },
   mounted() {
-    // this.filteredList = this.peopleList
+
     this.get_clients()
   },
   methods: {
@@ -630,10 +608,15 @@ export default {
 
 
     showData(payload) {
+
       if (!payload.Openning_quantity && !payload.Closing_quantity) {
         this.$q.notify({ type: 'negative', message: 'Cannot add item Stocks still closed!' })
         return
       }
+
+      this.selectedMedicineQty = payload.Closing_quantity ? payload.Closing_quantity : 0
+
+      console.log('show quantity => ', this.selectedMedicineQty)
 
       this.transactionDetails.transaction_id = this.transaction_id
       this.transactionDetails.customer_id = this.selectedClient_id
@@ -641,8 +624,8 @@ export default {
       this.transactionDetails.item_id = payload.item_id
       this.transactionDetails.unit = payload.dosage_form
       this.transactionDetails.user_id = 1
-      console.log(payload)
-      console.log(this.transactionDetails)
+      // console.log(payload)
+      // console.log(this.transactionDetails)
       this.showQuantity = true
     },
 
@@ -652,10 +635,25 @@ export default {
     },
 
     async add_Order(payload) {
+
+
       console.log('add order => ',payload)
+
+
+
 
       payload.quantity = Number(payload.quantity)
       this.showQuantity = false
+
+
+      if (payload.quantity > this.selectedMedicineQty) {
+        this.$q.notify({
+          type: 'negative',
+          message: `Quantity cannot be greater than ${this.selectedMedicineQty}`,
+          position: 'center',
+        })
+        return
+      }
 
       await this.transactionStore.newTransaction(payload)
       this.getAvailableMedList()

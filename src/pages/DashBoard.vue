@@ -101,7 +101,7 @@
       <div class="row q-pb-lg">
         <div class="col col-lg-12">
           <div class="text-h6 q-ma-xs text-green">
-            Top 10 Most Requested Medicines
+            Top 10 Most Released Medicines
             <q-separator spaced label="Section Title" />
           </div>
           <q-table
