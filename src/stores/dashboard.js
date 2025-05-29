@@ -172,6 +172,7 @@ export const useDashboardStore = defineStore('dashboard', {
         if (response.status === 200) {
           const data = response.data.noStock
           this.noStock = data
+           console.log('Out of stock medicines:', this.noStock)
           // Assuming data contains the in-stock information you need
 
         } else {

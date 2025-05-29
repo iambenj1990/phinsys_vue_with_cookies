@@ -288,6 +288,8 @@ export default {
 
     this.get_medicine_expired()
     this.get_medicine_instock()
+    this.get_medicine_noStocks()
+    this.get_medicine_temporaryPO()
     this.get_medicine_top10()
   },
   watch: {
@@ -575,7 +577,8 @@ export default {
     async get_medicine_noStocks(){
       try {
         await this.dashboardStore.medicineNoStock()
-        this.nostock = this.dashboardStore.outOfStock // Assuming the API returns the count of out of stock medicines
+        this.nostock = this.dashboardStore.noStock // Assuming the API returns the count of out of stock medicines
+
       } catch (error) {
         console.error('Error fetching out of stock medicines:', error)
       }

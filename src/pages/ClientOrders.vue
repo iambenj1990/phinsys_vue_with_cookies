@@ -636,22 +636,18 @@ export default {
 
     async add_Order(payload) {
 
-
-      console.log('add order => ',payload)
-
-
-
-
       payload.quantity = Number(payload.quantity)
       this.showQuantity = false
-
-
+      
       if (payload.quantity > this.selectedMedicineQty) {
         this.$q.notify({
           type: 'negative',
           message: `Quantity cannot be greater than ${this.selectedMedicineQty}`,
           position: 'center',
         })
+        this.transactionDetails.quantity = ''
+        this.filter = ''
+        this.$refs.searchInput?.focus()
         return
       }
 
