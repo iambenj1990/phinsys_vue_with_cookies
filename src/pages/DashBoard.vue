@@ -169,11 +169,9 @@
 </template>
 
 <script>
-
 import Chart from 'chart.js/auto'
 import { useTagumStore } from 'src/stores/TagumStore'
 import { useDashboardStore } from 'src/stores/dashboard'
-
 
 function debounce(fn, delay) {
   let timeout
@@ -184,23 +182,27 @@ function debounce(fn, delay) {
 }
 
 function createChart(chartRef, canvasId, config) {
-  const ctx = document.getElementById(canvasId)?.getContext('2d')
-  if (!ctx) return
+  console.log('Creating chart for:', canvasId)
 
+  const ctx = document.getElementById(canvasId).getContext('2d')
+
+  if (!ctx) return
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height) // Clear the canvas before creating a new chart
   if (chartRef) {
     chartRef.destroy()
   }
   chartRef = new Chart(ctx, config)
 }
 
+   const today = new Date()
+   const start = new Date(today.getFullYear(), today.getMonth(), 1)
+   const end = new Date(today.getFullYear(), today.getMonth() + 1 ,0) // Set end date to 6 days later
+
 export default {
   name: 'DashBoard',
   setup() {
-    // Placeholder data, replace with API calls as needed
-
     const tagumStore = useTagumStore()
     const dashboardStore = useDashboardStore()
-
 
     // Fetch data from the store or API
     return {
@@ -209,7 +211,7 @@ export default {
       AgeChart: null,
       tagumStore,
       dashboardStore,
-      expiredCount : 0,
+      expiredCount: 0,
       outOfStockCount: 0,
       availableCount: 0,
 
@@ -246,7 +248,6 @@ export default {
   },
   data() {
     return {
-
       registered_customer: 0,
       served_customer: 0,
       customer_male: 0,
@@ -265,8 +266,8 @@ export default {
       },
       rangeText: '',
       expiredData: {},
-      instock:0,
-      nostock:0,
+      instock: 0,
+      nostock: 0,
       countTemporaryPO: 0,
       top10_medicine: [],
     }
@@ -276,15 +277,15 @@ export default {
   },
   mounted() {
     // Fetch data from API or perform any other setup tasks here
-    this.now_date = new Date().toISOString().split('T')[0] // Set default date to today
-    const today = new Date()
-    const start = new Date(today.getFullYear(), today.getMonth(), 1)
-    const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+    //this.now_date = new Date().toISOString().split('T')[0] // Set default date to today
+
 
     this.range = {
-      from: start.toISOString().slice(0, 10),
-      to: end.toISOString().slice(0, 10),
+      from: start.toISOString().split('T')[0],
+      to: end.toISOString().split('T')[0],
     }
+
+    console.log('Initial date range:', this.range)
 
     this.get_medicine_expired()
     this.get_medicine_instock()
@@ -292,6 +293,7 @@ export default {
     this.get_medicine_temporaryPO()
     this.get_medicine_top10()
   },
+
   watch: {
     search(newValue) {
       // Handle search input changes here
@@ -313,20 +315,19 @@ export default {
     },
   },
   methods: {
-
-    destroyCharts(){
-    if (this.brgyChart) {
-      this.brgyChartdestroy()
-      this.brgyChart = null
-    }
-    if (this.AgeChart) {
-      this.AgeChart.destroy()
-      this.AgeChart = null
-    }
-    if (this.genderChart) {
-      this.genderChart.destroy()
-      this.genderChart = null
-    }
+    destroyCharts() {
+      if (this.brgyChart) {
+        this.brgyChartdestroy()
+        this.brgyChart = null
+      }
+      if (this.AgeChart) {
+        this.AgeChart.destroy()
+        this.AgeChart = null
+      }
+      if (this.genderChart) {
+        this.genderChart.destroy()
+        this.genderChart = null
+      }
     },
     async get_Served_customers(payload) {
       try {
@@ -555,11 +556,10 @@ export default {
       createChart(this.genderChart, 'GenderClassification', config)
     },
 
-    async get_medicine_expired(){
+    async get_medicine_expired() {
       try {
-
         await this.dashboardStore.medicineExpiry()
-       this.expiredData = this.dashboardStore.expire// Assuming the API returns the count of expired medicines
+        this.expiredData = this.dashboardStore.expire // Assuming the API returns the count of expired medicines
       } catch (error) {
         console.error('Error fetching expired medicines:', error)
       }
@@ -574,17 +574,16 @@ export default {
       }
     },
 
-    async get_medicine_noStocks(){
+    async get_medicine_noStocks() {
       try {
         await this.dashboardStore.medicineNoStock()
         this.nostock = this.dashboardStore.noStock // Assuming the API returns the count of out of stock medicines
-
       } catch (error) {
         console.error('Error fetching out of stock medicines:', error)
       }
     },
 
-    async get_medicine_temporaryPO(){
+    async get_medicine_temporaryPO() {
       try {
         await this.dashboardStore.medicineTempPOno()
         this.countTemporaryPO = this.dashboardStore.countTemp // Assuming the API returns the count of out of stock medicines
@@ -593,7 +592,7 @@ export default {
       }
     },
 
-    async get_medicine_top10(){
+    async get_medicine_top10() {
       try {
         await this.dashboardStore.medicineTop10()
         this.top10_medicine = this.dashboardStore.top10 // Assuming the API returns the count of out of stock medicines
@@ -602,7 +601,7 @@ export default {
       } catch (error) {
         console.error('Error fetching top 10 medicines:', error)
       }
-    }
+    },
   },
   computed: {
     // Define any computed properties you need here
