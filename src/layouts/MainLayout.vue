@@ -20,9 +20,6 @@
         </div> -->
       </q-toolbar>
     </q-header>
-
-
-
         <q-drawer
           v-model="leftDrawerOpen"
           show-if-above
@@ -151,21 +148,12 @@
 </template>
 
 <script>
-
-
-
 export default {
   name: 'MyLayout',
   components: {},
 
   setup() {
-
-
-
     return {
-
-
-
     }
   },
   data() {

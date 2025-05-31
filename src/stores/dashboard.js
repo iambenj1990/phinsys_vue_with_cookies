@@ -14,10 +14,10 @@ export const useDashboardStore = defineStore('dashboard', {
       children: 0,
     },
 
-    barangayData:[],
-    expire:{},
-    inStock:0,
-    noStock:0,
+    barangayData: [],
+    expire: {},
+    inStock: 0,
+    noStock: 0,
     countTemp: 0,
 
     top10: [], // Assuming you will populate this with data later
@@ -30,6 +30,7 @@ export const useDashboardStore = defineStore('dashboard', {
   actions: {
     async customerBarangay(payload) {
       try {
+        this.barangayData = []
         const response = await api.get('/dashboard/customers/perbrgy', {
           params: payload,
         })
@@ -38,45 +39,43 @@ export const useDashboardStore = defineStore('dashboard', {
           const data = response.data.barangay
           this.barangayData = data
 
-           console.log('Barangay data:', data)
+          console.log('Barangay data:', data)
         } else {
-          console.error('Failed to fetch barangay data:', response.statusText)
+          console.log('No barangay data found for the given parameters.')
+          // console.error('Failed to fetch barangay data:', response.statusText)
         }
       } catch (error) {
         console.error('Error in customerBarangay action:', error)
       }
     },
 
-
-
     async customerAge(payload) {
-
       try {
+        this.ageData.senior = 0
+        this.ageData.adult = 0
+        this.ageData.children = 0
         const response = await api.get('/dashboard/customers/age', {
-        params: payload,
-      })
+          params: payload,
+        })
 
-      if (response.status === 200) {
-        const data = response.data
-        this.ageData.senior = data.seniors
-        this.ageData.adult = data.adults
-        this.ageData.children = data.children
-      }
-      else {
-        console.error('Failed to fetch customer age data:', response.statusText)
-      }
-
+        if (response.status === 200) {
+          const data = response.data
+          this.ageData.senior = data.seniors
+          this.ageData.adult = data.adults
+          this.ageData.children = data.children
+        } else {
+          console.error('Failed to fetch customer age data:', response.statusText)
+        }
       } catch (error) {
         console.error('Error in customerAge action:', error)
-
       }
-
-
     },
 
     async customerGenders(payload) {
       try {
         // console.log('Fetching registered customer count with payload:', payload)
+        this.male = 0
+        this.female = 0
         const response = await api.get('/dashboard/customers/gender', {
           params: payload,
         })
@@ -141,7 +140,6 @@ export const useDashboardStore = defineStore('dashboard', {
           const data = response.data
           this.expire = data
           // Assuming data contains the expiry information you need
-
         } else {
           console.error('Failed to fetch medicine expiry data:', response.statusText)
         }
@@ -150,14 +148,13 @@ export const useDashboardStore = defineStore('dashboard', {
       }
     },
 
-    async medicineInStock(){
+    async medicineInStock() {
       try {
         const response = await api.get('/dashboard/medicines/activeStocks')
         if (response.status === 200) {
           const data = response.data
           this.inStock = data
           // Assuming data contains the in-stock information you need
-
         } else {
           console.error('Failed to fetch medicine in stock data:', response.statusText)
         }
@@ -166,15 +163,14 @@ export const useDashboardStore = defineStore('dashboard', {
       }
     },
 
-     async medicineNoStock(){
+    async medicineNoStock() {
       try {
         const response = await api.get('/dashboard/medicines/noStocks')
         if (response.status === 200) {
           const data = response.data.noStock
           this.noStock = data
-           console.log('Out of stock medicines:', this.noStock)
+          console.log('Out of stock medicines:', this.noStock)
           // Assuming data contains the in-stock information you need
-
         } else {
           console.error('Failed to fetch medicine in stock data:', response.statusText)
         }
@@ -183,14 +179,13 @@ export const useDashboardStore = defineStore('dashboard', {
       }
     },
 
-     async medicineTempPOno(){
+    async medicineTempPOno() {
       try {
         const response = await api.get('/dashboard/medicines/temporary')
         if (response.status === 200) {
           const data = response.data.count
           this.countTemp = data
           // Assuming data contains the in-stock information you need
-
         } else {
           console.error('Failed to fetch medicine in stock data:', response.statusText)
         }
@@ -199,25 +194,20 @@ export const useDashboardStore = defineStore('dashboard', {
       }
     },
 
-    async medicineTop10(){
+    async medicineTop10() {
       try {
         const response = await api.get('/dashboard/medicines/ten')
         if (response.status === 200) {
           const data = response.data.top_ten_medicines
           this.top10 = data
           // Assuming data contains the top 10 medicine information you need
-
         } else {
           console.error('Failed to fetch top 10 medicines:', response.statusText)
         }
       } catch (error) {
         console.error('Error in medicineTop10 action:', error)
       }
-    }
-
-
-
-
+    },
   },
 })
 

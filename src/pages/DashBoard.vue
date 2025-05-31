@@ -130,35 +130,55 @@
 
       <div class="row-span-12">
         <div class="col-9">
-          <q-card class="">
+          <q-card class="flex flex-center">
             <q-card-section>
               <div class="text-h6 text-green">Patient Requests per Barangay</div>
             </q-card-section>
             <q-card-section>
-              <canvas id="BarangayClassification" style="height: 400px; width: 100%"></canvas>
+              <Bar
+                :data="BrgybarChartData"
+                :chart-options="chartOptions"
+                :key="JSON.stringify(BrgybarChartData.datasets[0].data)"
+                :style="{ height: '500px', width: '100%' }"
+              >
+                Chart couldn't be loaded.
+              </Bar>
             </q-card-section>
           </q-card>
         </div>
-        <div class="row q-pt-md">
+        <div class="row q-pt-md flex flex-center">
           <div class="col-lg-6">
             <q-card class="flex flex-center">
               <q-card-section class="text-h6 text-green">
                 Patients per Age Classification
               </q-card-section>
-              <q-separator spaced />
+
               <q-card-section>
-                <canvas id="CustomerperClassification" style="height: 200px; width: 500px"></canvas>
+                <Bar
+                  :data="barChartData"
+                  :options="chartOptions"
+                  :key="JSON.stringify(barChartData.datasets[0].data)"
+                  :style="{ height: '360px', width: '100%' }"
+                >
+                  Chart couldn't be loaded.
+                </Bar>
               </q-card-section>
             </q-card>
           </div>
-          <div class="col-lg-6 q-pl-md">
+          <div class="col-lg-5 q-ml-md">
             <q-card class="flex flex-center">
-              <q-card-section class="text-h6 text-green">
+              <q-card-section  class="text-h6 text-green">
                 Patients per Gender Classification
               </q-card-section>
-              <q-separator spaced />
-              <q-card-section>
-                <canvas id="GenderClassification" style="height: 200px; width: 500px"></canvas>
+              <q-card-section class="q-pa-md">
+                <Pie
+                  :data="pieChartData"
+                  :options="chartOptions"
+                  :key="JSON.stringify(pieChartData.datasets[0].data)"
+                  :style="{ height: '360px', width: '100%' }"
+                >
+                  Chart couldn't be loaded.
+                </Pie>
               </q-card-section>
             </q-card>
           </div>
@@ -169,9 +189,21 @@
 </template>
 
 <script>
-import Chart from 'chart.js/auto'
 import { useTagumStore } from 'src/stores/TagumStore'
 import { useDashboardStore } from 'src/stores/dashboard'
+import { Pie, Bar } from 'vue-chartjs'
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  ArcElement,
+  CategoryScale,
+  LinearScale,
+} from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale)
 
 function debounce(fn, delay) {
   let timeout
@@ -181,34 +213,23 @@ function debounce(fn, delay) {
   }
 }
 
-function createChart(chartRef, canvasId, config) {
-  console.log('Creating chart for:', canvasId)
-
-  const ctx = document.getElementById(canvasId).getContext('2d')
-
-  if (!ctx) return
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height) // Clear the canvas before creating a new chart
-  if (chartRef) {
-    chartRef.destroy()
-  }
-  chartRef = new Chart(ctx, config)
-}
-
-   const today = new Date()
-   const start = new Date(today.getFullYear(), today.getMonth(), 1)
-   const end = new Date(today.getFullYear(), today.getMonth() + 1 ,0) // Set end date to 6 days later
-
 export default {
   name: 'DashBoard',
+  components: {
+    Bar,
+    Pie,
+  },
   setup() {
     const tagumStore = useTagumStore()
     const dashboardStore = useDashboardStore()
 
+    const today = new Date()
+    const start = new Date(today.getFullYear(), today.getMonth(), 1)
+    const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
     // Fetch data from the store or API
     return {
-      brgyChart: null,
-      genderChart: null,
-      AgeChart: null,
+      start,
+      end,
       tagumStore,
       dashboardStore,
       expiredCount: 0,
@@ -256,7 +277,6 @@ export default {
       genders: ['Male', 'Female'],
       classification_person: ['Adult (18-59)', 'Children (0-17)', 'Senior Citizen (60+)'],
       now_date: null,
-      search: '',
       ageData: { children: 0, adult: 0, senior: 0 }, // Example data for the bar chart
       genderData: [],
       barangayData: [], // Example data for the bar chart
@@ -270,40 +290,107 @@ export default {
       nostock: 0,
       countTemporaryPO: 0,
       top10_medicine: [],
+      backgroundColor: [
+        'rgb(75, 192, 192)',
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 206, 86)',
+        'rgb(153, 102, 255)',
+        'rgb(255, 159, 64)',
+        'rgb(199, 199, 199)',
+        'rgb(83, 102, 255)',
+        'rgb(255, 102, 255)',
+        'rgb(102, 255, 204)',
+        'rgb(204, 255, 102)',
+        'rgb(255, 204, 102)',
+        'rgb(102, 255, 102)',
+        'rgb(255, 102, 102)',
+        'rgb(102, 153, 255)',
+        'rgb(255, 153, 204)',
+        'rgb(153, 255, 255)',
+        'rgb(204, 102, 255)',
+        'rgb(102, 204, 255)',
+        'rgb(255, 255, 102)',
+        'rgb(153, 255, 153)',
+        'rgb(255, 153, 153)',
+        'rgb(192, 192, 75)',
+      ],
+      BrgybarChartData: {
+        labels: [],
+        datasets: [
+          {
+            label: [],
+            backgroundColor: [],
+            data: [],
+          },
+        ],
+      },
+      barChartData: {
+        labels: [],
+        datasets: [
+          {
+            label: [],
+            backgroundColor: [],
+            data: [],
+          },
+        ],
+      },
+
+      pieChartData: {
+        labels: [],
+        datasets: [
+          {
+            label: [],
+            backgroundColor: ['#42A5F5', '#66BB6A'],
+            data: [],
+          },
+        ],
+      },
+      chartOptions: {
+        responsive: true,
+        maintainAspectRatio: true,
+        layout: {
+          padding: 20,
+        },
+        plugins: {
+          legend: { display: true, position: 'top' },
+        },
+      },
     }
   },
-  beforeUnmount() {
-    this.destroyCharts()
+  computed: {
+    // Computed properties can be added here if needed
+
   },
+
   mounted() {
     // Fetch data from API or perform any other setup tasks here
     //this.now_date = new Date().toISOString().split('T')[0] // Set default date to today
+    try {
+      this.range = {
+        from: this.start.toISOString().split('T')[0],
+        to: this.end.toISOString().split('T')[0],
+      }
 
+      console.log('Initial date range:', this.range)
 
-    this.range = {
-      from: start.toISOString().split('T')[0],
-      to: end.toISOString().split('T')[0],
+      this.get_medicine_expired()
+      this.get_medicine_instock()
+      this.get_medicine_noStocks()
+      this.get_medicine_temporaryPO()
+      this.get_medicine_top10()
+    } catch (error) {
+      console.error('Error in mounted hook:', error)
     }
-
-    console.log('Initial date range:', this.range)
-
-    this.get_medicine_expired()
-    this.get_medicine_instock()
-    this.get_medicine_noStocks()
-    this.get_medicine_temporaryPO()
-    this.get_medicine_top10()
   },
 
   watch: {
-    search(newValue) {
-      // Handle search input changes here
-      console.log('Search value changed:', newValue)
-    },
+
 
     range: {
       handler: debounce(function (newRange) {
         this.rangeText = `${newRange.from} to ${newRange.to}`
-        this.destroyCharts() // Destroy existing charts before creating new ones
+
         this.get_registered_customers(newRange)
         this.get_Served_customers(newRange)
         this.get_Gender_Classification(newRange)
@@ -314,21 +401,8 @@ export default {
       deep: true, // Watch for changes in the object properties
     },
   },
+
   methods: {
-    destroyCharts() {
-      if (this.brgyChart) {
-        this.brgyChartdestroy()
-        this.brgyChart = null
-      }
-      if (this.AgeChart) {
-        this.AgeChart.destroy()
-        this.AgeChart = null
-      }
-      if (this.genderChart) {
-        this.genderChart.destroy()
-        this.genderChart = null
-      }
-    },
     async get_Served_customers(payload) {
       try {
         const data = {
@@ -360,19 +434,6 @@ export default {
       }
     },
 
-    // Define any methods you need here
-    updateRangeText() {
-      this.rangeText = `${this.range.from} to ${this.range.to}`
-
-      this.get_registered_customers(this.range)
-      this.get_Served_customers(this.range)
-      this.get_Gender_Classification(this.range)
-      this.get_Age_Classification(this.range)
-      this.get_Barangay_Classification(this.range)
-
-      // console.log('Date range updated:', this.range)
-    },
-
     async get_Barangay_Classification(payload) {
       try {
         const data = {
@@ -380,7 +441,12 @@ export default {
           end_date: payload.to,
         }
 
+      
         await this.dashboardStore.customerBarangay(data)
+
+
+
+        console.log('Barangay data:', this.dashboardStore.barangayData)
         const rawBarangayData = this.dashboardStore.barangayData
         const brgy_labels = this.tagumStore.barangay // static label list
 
@@ -388,79 +454,21 @@ export default {
         const brgy_mapping = {}
         rawBarangayData.forEach((item) => {
           brgy_mapping[item.barangay] = item.count
+          console.log(`Mapping: ${item.barangay} -> ${item.count}`)
         })
 
         // Generate counts in correct order
         const counts = brgy_labels.map((brgy) => brgy_mapping[brgy] || 0)
-        this.draw_Per_Brgy_Chart(brgy_labels, counts) // Pass labels and counts to the chart drawing function
+        // Pass labels and counts to the chart drawing function
+
+        this.BrgybarChartData.labels = this.tagumStore.barangay // Assuming the API returns an array of barangay names
+        this.BrgybarChartData.datasets[0].label = 'Patients per Barangay'
+        this.BrgybarChartData.datasets[0].data = counts
+        this.BrgybarChartData.datasets[0].backgroundColor = this.backgroundColor
+        // Assuming the API returns an array of counts for each barangay
       } catch (error) {
         console.error('Error fetching barangay classification:', error)
       }
-    },
-
-    draw_Per_Brgy_Chart(labels, data) {
-      const config = {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'No. of Patients per Barangay',
-              data: data, // already aligned counts
-              backgroundColor: [
-                'rgb(75, 192, 192)',
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 206, 86)',
-                'rgb(153, 102, 255)',
-                'rgb(255, 159, 64)',
-                'rgb(199, 199, 199)',
-                'rgb(83, 102, 255)',
-                'rgb(255, 102, 255)',
-                'rgb(102, 255, 204)',
-                'rgb(204, 255, 102)',
-                'rgb(255, 204, 102)',
-                'rgb(102, 255, 102)',
-                'rgb(255, 102, 102)',
-                'rgb(102, 153, 255)',
-                'rgb(255, 153, 204)',
-                'rgb(153, 255, 255)',
-                'rgb(204, 102, 255)',
-                'rgb(102, 204, 255)',
-                'rgb(255, 255, 102)',
-                'rgb(153, 255, 153)',
-                'rgb(255, 153, 153)',
-                'rgb(192, 192, 75)',
-              ],
-              borderColor: 'rgb(255, 255, 255)',
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          plugins: {
-            legend: {
-              display: false,
-            },
-          },
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: {
-              ticks: {
-                autoSkip: false,
-                maxRotation: 45,
-                minRotation: 45,
-              },
-            },
-            y: {
-              beginAtZero: true,
-            },
-          },
-        },
-      }
-
-      createChart(this.brgyChart, 'BarangayClassification', config)
     },
 
     async get_Age_Classification(payload) {
@@ -476,44 +484,13 @@ export default {
 
         const ages = [this.ageData.adult, this.ageData.children, this.ageData.senior]
 
-        this.draw_Per_CustomerClassification_Chart(this.classification_person, ages)
+        this.barChartData.labels = this.classification_person
+        this.barChartData.datasets[0].label = 'Patients per Age Classification'
+        this.barChartData.datasets[0].data = ages
+        this.barChartData.datasets[0].backgroundColor = this.backgroundColor
       } catch (error) {
         console.error('Error fetching age classification:', error)
       }
-    },
-
-    draw_Per_CustomerClassification_Chart(labels, data) {
-      const config = {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'No. of Patients',
-              data: data, // already aligned counts,
-              backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)'],
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          plugins: {
-            legend: {
-              display: false,
-              position: 'top',
-            },
-          },
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-        },
-      }
-      createChart(this.AgeChart, 'CustomerperClassification', config)
     },
 
     async get_Gender_Classification(payload) {
@@ -528,32 +505,15 @@ export default {
 
         this.genderData = [this.customer_male, this.customer_female]
 
-        this.GenderCustomerClassification_Chart(this.genders, this.genderData) // draw chart if not created yet
+        // draw chart if not created yet
+        if (!this.pieChartData || !this.pieChartData.datasets) return
+
+        this.pieChartData.labels = this.genders
+        this.pieChartData.datasets[0].label = 'Patients per Gender'
+        this.pieChartData.datasets[0].data = this.genderData
       } catch (error) {
         console.error('Error fetching genders:', error)
       }
-    },
-
-    GenderCustomerClassification_Chart(labels, data) {
-      const config = {
-        type: 'pie',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'Gender Distribution',
-              data: data,
-              backgroundColor: ['#36A2EB', '#FF6384'],
-              hoverOffset: 4,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-        },
-      }
-      createChart(this.genderChart, 'GenderClassification', config)
     },
 
     async get_medicine_expired() {
@@ -603,15 +563,7 @@ export default {
       }
     },
   },
-  computed: {
-    // Define any computed properties you need here
-  },
 }
 </script>
 
-<style scoped>
-canvas {
-  width: 75%;
-  max-width: 100%;
-}
-</style>
+<style scoped></style>
