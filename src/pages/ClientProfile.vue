@@ -5,7 +5,7 @@
         <q-card-section>
           <div class="q-pa-sm flex justify-center">
             <q-card class="q-pa-sm" style="max-width: 1000px; width: 100%">
-              <div class="text-h6 text-blue text-weight-bolder">Customer Name</div>
+              <div class="text-h6 text-green text-weight-bolder">Patient Name</div>
               <q-separator></q-separator>
               <div class="row q-gutter-sm">
                 <div class="col-12 col-md-3 q-pa-sm">
@@ -82,7 +82,7 @@
 
           <div class="q-pa-sm flex justify-center">
             <q-card class="q-pa-sm" style="max-width: 1000px; width: 100%">
-              <div class="text-h6 text-blue text-weight-bolder">Order Dispense History</div>
+              <div class="text-h6 text-green text-weight-bolder">Order Dispense History</div>
               <!-- <div class="text-caption text-weight-regular" style="color:grey;">Transacation ID: {{ this.transaction_id }}</div> -->
               <q-separator />
               <q-table
@@ -96,6 +96,54 @@
                 <template v-slot:top-left>
                   <!-- <q-btn color="primary" label="Add Order" icon="add" flat @click="getAvailableMedList()"/> -->
                    <q-select :options="transactionIDList" label="Transaction ID" v-model="selectedTransactionID" @click="getOrders(selectedTransactionID)" style="width: 200px;"></q-select>
+                </template>
+                <template #body="props">
+                  <q-tr :v-bind="props">
+                    <q-td key="brand_name" style="font-size: 11px" align="left">
+                      {{ props.row.brand_name }}
+                    </q-td>
+                    <q-td key="generic_name" style="font-size: 11px" align="left">
+                      {{ props.row.generic_name }}
+                    </q-td>
+                    <q-td key="dosage" style="font-size: 11px" align="left">
+                      {{ props.row.dosage }}
+                    </q-td>
+                    <q-td key="quantity" style="font-size: 11px" align="left">
+                      {{ props.row.quantity }}
+                    </q-td>
+                    <q-td key="unit" style="font-size: 11px" align="left">
+                      <!-- {{ props.row.unit }} -->
+                        pcs
+                    </q-td>
+                  </q-tr>
+                </template>
+              </q-table>
+              <div class="q-pa-sm flex justify-end">
+              <q-btn
+                style="font-size: 13px"
+                color="red"
+                label="Close"
+                @click="$router.go(-1)"
+              />
+            </div>
+            </q-card>
+
+          </div>
+
+           <div class="q-pa-sm flex justify-center">
+            <q-card class="q-pa-sm" style="max-width: 1000px; width: 100%">
+              <div class="text-h6 text-green text-weight-bolder">Patient Dispense History</div>
+              <!-- <div class="text-caption text-weight-regular" style="color:grey;">Transacation ID: {{ this.transaction_id }}</div> -->
+              <q-separator />
+              <q-table
+                bordered
+                dense
+                :rows="rows"
+                :columns="cols"
+                row-key="id"
+                no-data-label="No data available"
+              >
+                <template v-slot:top-left>
                 </template>
                 <template #body="props">
                   <q-tr :v-bind="props">
@@ -147,7 +195,7 @@ export default {
       cols: [
         {
           name: 'brand_name',
-          label: 'Brandname',
+          label: 'Transaction ID',
           field: 'brand_name',
           sortable: true,
           align: 'left',
@@ -156,7 +204,7 @@ export default {
         },
         {
           name: 'generic_name',
-          label: 'Generic Name',
+          label: 'Transaction Date',
           field: 'generic_name',
           sortable: true,
           align: 'left',
@@ -165,7 +213,7 @@ export default {
         },
         {
           name: 'dosage',
-          label: 'Dosage',
+          label: 'Released Quantity',
           field: 'dosage',
           sortable: true,
           align: 'left',
@@ -174,7 +222,7 @@ export default {
         },
         {
           name: 'quantity',
-          label: 'Quantity',
+          label: 'Amount',
           field: 'quantity',
           sortable: true,
           align: 'left',
@@ -182,15 +230,7 @@ export default {
           headerStyle: 'font-size: 1.2 em',
         },
 
-        {
-          name: 'unit',
-          label: 'Unit',
-          field: 'unit',
-          sortable: true,
-          align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
-          headerStyle: 'font-size: 1.2 em',
-        },
+
 
       ],
 

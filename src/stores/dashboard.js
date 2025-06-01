@@ -39,13 +39,18 @@ export const useDashboardStore = defineStore('dashboard', {
           const data = response.data.barangay
           this.barangayData = data
 
-          console.log('Barangay data:', data)
+          //console.log('Barangay data:', data)
         } else {
           console.log('No barangay data found for the given parameters.')
           // console.error('Failed to fetch barangay data:', response.statusText)
         }
       } catch (error) {
-        console.error('Error in customerBarangay action:', error)
+
+        if (error.response && error.response.status === 404) {
+          console.error('Barangay data not found')
+        }
+
+
       }
     },
 
@@ -169,10 +174,10 @@ export const useDashboardStore = defineStore('dashboard', {
         if (response.status === 200) {
           const data = response.data.noStock
           this.noStock = data
-          console.log('Out of stock medicines:', this.noStock)
+          // console.log('Out of stock medicines:', this.noStock)
           // Assuming data contains the in-stock information you need
         } else {
-          console.error('Failed to fetch medicine in stock data:', response.statusText)
+          console.error('Failed to fetch medicine in stock data:')
         }
       } catch (error) {
         console.error('Error in medicineInStock action:', error)

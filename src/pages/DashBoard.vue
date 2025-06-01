@@ -108,6 +108,7 @@
             flat
             dense
             bordered
+
             :columns="cols"
             :rows="rows"
             :pagination="{
@@ -130,16 +131,14 @@
 
       <div class="row-span-12">
         <div class="col-9">
-          <q-card class="flex flex-center">
+          <q-card >
             <q-card-section>
               <div class="text-h6 text-green">Patient Requests per Barangay</div>
-            </q-card-section>
-            <q-card-section>
               <Bar
                 :data="BrgybarChartData"
                 :chart-options="chartOptions"
                 :key="JSON.stringify(BrgybarChartData.datasets[0].data)"
-                :style="{ height: '500px', width: '100%' }"
+                :style="{ height: '300px', width: '100%' }"
               >
                 Chart couldn't be loaded.
               </Bar>
@@ -243,8 +242,7 @@ export default {
           field: 'brand_name',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
-          headerStyle: 'font-size: 1.2 em',
+         headerClasses: 'bg-green-7 text-white text-subtitle1 text-weight-regular',
         },
         {
           name: 'generic_name',
@@ -252,8 +250,8 @@ export default {
           field: 'generic_name',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
-          headerStyle: 'font-size: 1.2 em',
+          headerClasses: 'bg-green-7 text-white text-subtitle1 text-weight-regular',
+
         },
         {
           name: 'total_quantity_out',
@@ -261,8 +259,8 @@ export default {
           field: 'total_quantity_out',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
-          headerStyle: 'font-size: 1.2 em',
+          headerClasses: 'bg-green-7 text-white text-subtitle1 text-weight-regular',
+
         },
       ],
     }
@@ -372,7 +370,7 @@ export default {
         to: this.end.toISOString().split('T')[0],
       }
 
-      console.log('Initial date range:', this.range)
+      // console.log('Initial date range:', this.range)
 
       this.get_medicine_expired()
       this.get_medicine_instock()
@@ -441,12 +439,12 @@ export default {
           end_date: payload.to,
         }
 
-      
+
         await this.dashboardStore.customerBarangay(data)
 
 
 
-        console.log('Barangay data:', this.dashboardStore.barangayData)
+        // console.log('Barangay data:', this.dashboardStore.barangayData)
         const rawBarangayData = this.dashboardStore.barangayData
         const brgy_labels = this.tagumStore.barangay // static label list
 
@@ -454,7 +452,7 @@ export default {
         const brgy_mapping = {}
         rawBarangayData.forEach((item) => {
           brgy_mapping[item.barangay] = item.count
-          console.log(`Mapping: ${item.barangay} -> ${item.count}`)
+          // console.log(`Mapping: ${item.barangay} -> ${item.count}`)
         })
 
         // Generate counts in correct order
@@ -462,7 +460,7 @@ export default {
         // Pass labels and counts to the chart drawing function
 
         this.BrgybarChartData.labels = this.tagumStore.barangay // Assuming the API returns an array of barangay names
-        this.BrgybarChartData.datasets[0].label = 'Patients per Barangay'
+        this.BrgybarChartData.datasets[0].label = 'Patients'
         this.BrgybarChartData.datasets[0].data = counts
         this.BrgybarChartData.datasets[0].backgroundColor = this.backgroundColor
         // Assuming the API returns an array of counts for each barangay
@@ -557,7 +555,7 @@ export default {
         await this.dashboardStore.medicineTop10()
         this.top10_medicine = this.dashboardStore.top10 // Assuming the API returns the count of out of stock medicines
         this.rows = this.top10_medicine // Assigning top 10 medicine data to rows for the table
-        console.log('Top 10 medicines:', this.rows)
+        // console.log('Top 10 medicines:', this.rows)
       } catch (error) {
         console.error('Error fetching top 10 medicines:', error)
       }
