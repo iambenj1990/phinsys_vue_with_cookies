@@ -4,7 +4,7 @@
       <div class="text-h4 text-grey q-pa-md">Dashboard</div>
       <q-separator />
       <div class="q-my-sm flex flex-wrap q-px-md justify-end">
-        <!-- <q-input dense type="date" filled v-model="now_date" class="q-ma-xs" /> -->
+      
         <q-input v-model="rangeText" label="Select Date Range" dense readonly style="width: 250px">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
@@ -58,6 +58,16 @@
               </q-card-section>
             </q-card>
 
+              <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px">
+              <q-card-section>
+                <div class="text-subtitle2 text-weight-medium">
+                  <q-icon name="description" color="green" size="30px" class="q-mr-sm" />
+                  Low Stocks
+                </div>
+                <div class="text-h4" align="right">{{ countTemporaryPO }}</div>
+              </q-card-section>
+            </q-card>
+
             <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px">
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
@@ -71,7 +81,7 @@
         </div>
         <div class="col col-lg-5">
           <div class="text-h6 q-ma-xs q-p-md text-green">
-            Customers
+            Patients
             <q-separator spaced label="Section Title" />
           </div>
           <div class="flex flex-wrap q-px-md q-mb-lg">
@@ -339,7 +349,7 @@ export default {
         datasets: [
           {
             label: [],
-            backgroundColor: ['#42A5F5', '#66BB6A'],
+            backgroundColor: ['#26C281', '#FAA945'],
             data: [],
           },
         ],

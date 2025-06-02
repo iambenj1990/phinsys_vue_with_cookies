@@ -79,58 +79,7 @@
         </q-card-section>
 
         <q-card-section>
-
           <div class="q-pa-sm flex justify-center">
-            <q-card class="q-pa-sm" style="max-width: 1000px; width: 100%">
-              <div class="text-h6 text-green text-weight-bolder">Order Dispense History</div>
-              <!-- <div class="text-caption text-weight-regular" style="color:grey;">Transacation ID: {{ this.transaction_id }}</div> -->
-              <q-separator />
-              <q-table
-                bordered
-                dense
-                :rows="rows"
-                :columns="cols"
-                row-key="id"
-                no-data-label="No data available"
-              >
-                <template v-slot:top-left>
-                  <!-- <q-btn color="primary" label="Add Order" icon="add" flat @click="getAvailableMedList()"/> -->
-                   <q-select :options="transactionIDList" label="Transaction ID" v-model="selectedTransactionID" @click="getOrders(selectedTransactionID)" style="width: 200px;"></q-select>
-                </template>
-                <template #body="props">
-                  <q-tr :v-bind="props">
-                    <q-td key="brand_name" style="font-size: 11px" align="left">
-                      {{ props.row.brand_name }}
-                    </q-td>
-                    <q-td key="generic_name" style="font-size: 11px" align="left">
-                      {{ props.row.generic_name }}
-                    </q-td>
-                    <q-td key="dosage" style="font-size: 11px" align="left">
-                      {{ props.row.dosage }}
-                    </q-td>
-                    <q-td key="quantity" style="font-size: 11px" align="left">
-                      {{ props.row.quantity }}
-                    </q-td>
-                    <q-td key="unit" style="font-size: 11px" align="left">
-                      <!-- {{ props.row.unit }} -->
-                        pcs
-                    </q-td>
-                  </q-tr>
-                </template>
-              </q-table>
-              <div class="q-pa-sm flex justify-end">
-              <q-btn
-                style="font-size: 13px"
-                color="red"
-                label="Close"
-                @click="$router.go(-1)"
-              />
-            </div>
-            </q-card>
-
-          </div>
-
-           <div class="q-pa-sm flex justify-center">
             <q-card class="q-pa-sm" style="max-width: 1000px; width: 100%">
               <div class="text-h6 text-green text-weight-bolder">Patient Dispense History</div>
               <!-- <div class="text-caption text-weight-regular" style="color:grey;">Transacation ID: {{ this.transaction_id }}</div> -->
@@ -138,54 +87,106 @@
               <q-table
                 bordered
                 dense
-                :rows="rows"
+                :rows="DispenseList"
                 :columns="cols"
                 row-key="id"
                 no-data-label="No data available"
+                hide-bottom
               >
-                <template v-slot:top-left>
-                </template>
+                <!-- Body slot -->
                 <template #body="props">
                   <q-tr :v-bind="props">
-                    <q-td key="brand_name" style="font-size: 11px" align="left">
-                      {{ props.row.brand_name }}
+                    <q-td key="transaction_id" style="font-size: 11px" align="left">
+                      {{ props.row.transaction_id }}
                     </q-td>
-                    <q-td key="generic_name" style="font-size: 11px" align="left">
-                      {{ props.row.generic_name }}
+                    <q-td key="transaction_date" style="font-size: 11px" align="left">
+                      {{ props.row.transaction_date }}
                     </q-td>
-                    <q-td key="dosage" style="font-size: 11px" align="left">
-                      {{ props.row.dosage }}
+                    <q-td key="total" style="font-size: 11px" align="left">
+                      {{ props.row.total }}
                     </q-td>
-                    <q-td key="quantity" style="font-size: 11px" align="left">
-                      {{ props.row.quantity }}
+                    <q-td key="actions" style="font-size: 11px" align="left">
+                      <q-btn
+                        icon="visibility"
+                        flat
+                        class="text-blue"
+                        @click="
+                          () => {
+                            get_transactions_exploded(
+                              props.row.customer_id,
+                              props.row.transaction_id,
+                            )
+                            dialog_open = true
+                          }
+                        "
+                      />
                     </q-td>
-                    <q-td key="unit" style="font-size: 11px" align="left">
-                      <!-- {{ props.row.unit }} -->
-                        pcs
-                    </q-td>
+                  </q-tr>
+                </template>
+
+                <!-- Bottom row slot placed correctly -->
+                <template #bottom-row>
+                  <q-tr class="bg-grey-3 text-weight-bold">
+                    <q-td colspan="2" align="right">Total:</q-td>
+                    <q-td>{{ totalPrice.toFixed(2) }}</q-td>
+                    <q-td></q-td>
                   </q-tr>
                 </template>
               </q-table>
               <div class="q-pa-sm flex justify-end">
-              <q-btn
-                style="font-size: 13px"
-                color="red"
-                label="Close"
-                @click="$router.go(-1)"
-              />
-            </div>
+                <q-btn style="font-size: 13px" color="red" label="Close" @click="$router.go(-1)" />
+              </div>
             </q-card>
-
           </div>
-
         </q-card-section>
       </q-card>
     </div>
+
+    <q-dialog v-model="dialog_open" style="width: 100%; max-width: 800px">
+      <q-card style="max-width: 1000px; width: 100%">
+        <q-card-section>
+          <div class="text-green text-subtitle1 text-weight-bold">Transaction Breakdown</div>
+          <q-separator />
+          <q-table
+            bordered
+            dense
+            :rows="DispenseListExploded"
+            :columns="cols_exploded"
+            row-key="id"
+            no-data-label="No data available"
+            style="height: 200px"
+            hide-bottom
+            class="q-mt-sm"
+          >
+            <template v-slot:top-left> </template>
+            <template #body="props">
+              <q-tr :v-bind="props">
+                <q-td key="brand_name" style="font-size: 11px" align="left">
+                  {{ props.row.brand_name }}
+                </q-td>
+                <q-td key="generic_name" style="font-size: 11px" align="left">
+                  {{ props.row.generic_name }}
+                </q-td>
+
+                <q-td key="quantity" style="font-size: 11px" align="left">
+                  {{ props.row.quantity }}
+                </q-td>
+                <q-td key="total" style="font-size: 11px" align="left">
+                  {{ props.row.amount }}
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Close" class="text-red" @click="dialog_open = false"></q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script>
-
 import { useCustomerStore } from 'src/stores/customersStore'
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
@@ -194,8 +195,45 @@ export default {
     return {
       cols: [
         {
-          name: 'brand_name',
+          name: 'transaction_id',
           label: 'Transaction ID',
+          field: 'transaction_id',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'transaction_date',
+          label: 'Transaction Date',
+          field: 'transaction_date',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'total',
+          label: 'Amount',
+          field: 'total',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'actions',
+          label: 'Actions',
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+      ],
+
+      cols_exploded: [
+        {
+          name: 'brand_name',
+          label: 'Brand Name',
           field: 'brand_name',
           sortable: true,
           align: 'left',
@@ -204,7 +242,7 @@ export default {
         },
         {
           name: 'generic_name',
-          label: 'Transaction Date',
+          label: 'Generic name',
           field: 'generic_name',
           sortable: true,
           align: 'left',
@@ -212,35 +250,33 @@ export default {
           headerStyle: 'font-size: 1.2 em',
         },
         {
-          name: 'dosage',
-          label: 'Released Quantity',
-          field: 'dosage',
-          sortable: true,
-          align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
-          headerStyle: 'font-size: 1.2 em',
-        },
-        {
           name: 'quantity',
-          label: 'Amount',
+          label: 'Quantity',
           field: 'quantity',
           sortable: true,
           align: 'left',
           headerClasses: 'bg-grey-7 text-white',
           headerStyle: 'font-size: 1.2 em',
         },
-
-
-
+        {
+          name: 'total',
+          label: 'Amount',
+          field: 'total',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
       ],
-
-
     }
   },
   data() {
     return {
-      selectedTransactionID:'',
-      transactionIDList:[],
+      dialog_open: false,
+      selectedTransactionID: '',
+      transactionIDList: [],
+      DispenseList: [],
+      DispenseListExploded: [],
       rows: [],
       costumer: {
         firstname: '',
@@ -263,37 +299,42 @@ export default {
         user_id: 0,
       },
 
-      transactionDetails:{
-        transaction_id:'',
-        customer_id:0,
-        transaction_date:0,
-        item_id:0,
-        quantity:0,
-        user_id:0,
-      }
-
-
+      transactionDetails: {
+        transaction_id: '',
+        customer_id: 0,
+        transaction_date: 0,
+        item_id: 0,
+        quantity: 0,
+        user_id: 0,
+      },
     }
   },
   mounted() {
     console.log(this.customerStore.customer_id)
     this.get_client(this.customerStore.customer_id)
-    this.getTransactionIds(this.customerStore.customer_id)
+    // this.getTransactionIds(this.customerStore.customer_id)
+    this.get_transactions(this.customerStore.customer_id)
   },
   methods: {
+    async get_transactions(id) {
+      await this.customerStore.get_transactions(id)
+      this.DispenseList = this.customerStore.customer_transactions_list
+    },
+    async get_transactions_exploded(id, transid) {
+      await this.customerStore.get_transactions_exploded(id, transid)
+      this.DispenseListExploded = this.customerStore.customer_transactions_list_exploded
+    },
 
-
-    async getTransactionIds(id){
+    async getTransactionIds(id) {
       await this.transactionStore.getTransactionID(id)
       // console.log( this.transactionStore.customerTransactionsIdList)
       this.transactionIDList = this.transactionStore.customerTransactionsIdList
     },
 
-    async getOrders(transaction_id){
+    async getOrders(transaction_id) {
       await this.transactionStore.getTransactionOrders(transaction_id)
       this.rows = this.transactionStore.customerTransactions
     },
-
 
     async get_client(id) {
       await this.customerStore.getCustomer(id)
@@ -310,27 +351,32 @@ export default {
       console.log(id)
       this.searchTerm = ''
     },
-
-
   },
 
   watch: {
-    'selectedTransactionID' (newvalue){
-    this.getOrders(newvalue)
-
-    }
-
+    selectedTransactionID(newvalue) {
+      this.getOrders(newvalue)
+    },
   },
   computed: {
     customerStore() {
       return useCustomerStore()
     },
-    itemStore(){
+
+    itemStore() {
       return useItemStore()
     },
-    transactionStore(){
+
+    transactionStore() {
       return useTransactionStore()
-    }
+    },
+
+    totalPrice() {
+      return this.DispenseList.reduce((sum, row) => {
+        const clean = (row.total || '0').toString().replace(/,/g, '')
+        return sum + parseFloat(clean)
+      }, 0)
+    },
   },
 }
 </script>

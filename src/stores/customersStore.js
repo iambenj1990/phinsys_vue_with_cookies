@@ -14,13 +14,34 @@ export const useCustomerStore = defineStore('customers', {
 
     isEdit: false,
     isSave:true,
-    closeNewCustomer:false
+    closeNewCustomer:false,
+
+    customer_transactions_list:[],
+    customer_transactions_list_exploded:[],
 
   }),
 
   actions: {
 
+    async get_transactions(id){
+      try {
+        this.customer_transactions_list = []
+        const response = await api.get('/customers/transactions/' + id )
+        this.customer_transactions_list = response.data.result
+      } catch (error) {
+        console.log(error)
+      }
+    },
 
+    async get_transactions_exploded(id,trans_id){
+      try {
+         this.customer_transactions_list_exploded = []
+        const response = await api.get('/customers/transactions/' + id + '/list/' + trans_id )
+        this.customer_transactions_list_exploded = response.data.result
+      } catch (error) {
+        console.log(error)
+      }
+    },
 
     async getCustomers() {
       try {
