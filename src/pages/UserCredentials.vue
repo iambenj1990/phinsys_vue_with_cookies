@@ -1,158 +1,40 @@
 <template>
   <q-page class="q-pa-md">
-    <q-card >
+    <q-card>
       <q-card-section>
         <div class="text-h6 text-green">User Credentials</div>
-
         <div class="text-subtitle2 text-weight-light">Manage your credentials</div>
+
         <div class="q-mt-md" style="width: 900px">
-          <q-list  class="q-ma-xs">
-            <q-item>
+          <q-list class="q-ma-xs">
+            <q-item v-for="module in modulePermissions" :key="module.key">
               <q-item-section>
-                <q-item-label class="text-h6 text-green">Dashboard</q-item-label>
-                <div class="q-ma-xs flex justify-between text-grey">
-                  <div class="q-mt-xs flex justify-start">
-                    <q-checkbox v-model="Dashboard.Dashboard" label="Dashboard" color="green" />
-                  </div>
-                </div>
-                <div class="q-ml-md q-mt-xs flex justify-start row text-grey">
-                  <div class="col-12">
-                    <q-checkbox v-model="Dashboard.Expiry" label="Expiry" color="green" />
-                  </div>
-                  <div class="col-12">
-                    <q-checkbox v-model="Dashboard.Stocks" label="No Stocks" color="green" />
-                  </div>
-                  <div class="col-12">
-                    <q-checkbox v-model="Dashboard.Dispensed" label="Dispensed" color="green" />
-                  </div>
-                </div>
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-item-label class="text-h6 text-green">Client Management</q-item-label>
-                <div class="q-ma-xs flex justify-between text-grey">
-                  <div class="q-mt-xs flex justify-start">
-                    <q-checkbox v-model="Releasing.Releasing" label="Releasing" color="green" />
-                  </div>
-                  <div class="q-mt-xs justify-end">
-                    <q-checkbox v-model="Releasing.Add" label="Add" color="green" />
-                    <q-checkbox v-model="Releasing.Edit" label="Edit" color="green" />
-                    <q-checkbox v-model="Releasing.Delete" label="Delete" color="green" />
-                    <q-checkbox v-model="Releasing.Export" label="Export" color="green" />
+                <q-item-label class="text-h6 text-green">{{ module.title }}</q-item-label>
+
+                <!-- Module permissions -->
+                <div v-if="module.permissions" class="q-ma-xs flex text-grey row">
+                  <div v-for="permission in module.permissions" :key="permission" class="q-mt-xs q-mr-md">
+                    <q-checkbox
+                      v-model="credentials[module.key][permission]"
+                      :label="permission"
+                      color="green"
+                    />
                   </div>
                 </div>
 
-                <div class="q-ma-xs flex justify-between text-grey">
-                  <div class="q-mt-xs flex justify-start">
-                    <q-checkbox v-model="CustomerHistory.CustomerHistory" label="Customer History" color="green" />
-                  </div>
-                  <div class="q-mt-xs justify-end">
-                    <q-checkbox v-model="CustomerHistory.Add" label="Add" color="green" />
-                    <q-checkbox v-model="CustomerHistory.Edit" label="Edit" color="green" />
-                    <q-checkbox v-model="CustomerHistory.Delete" label="Delete" color="green" />
-                    <q-checkbox v-model="CustomerHistory.Export" label="Export" color="green" />
-                  </div>
-                </div>
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-item-label class="text-h6 text-green">Stock Management</q-item-label>
-                <div class="q-ma-xs flex justify-between text-grey">
-                  <div class="q-mt-xs flex justify-start">
-                    <q-checkbox v-model="Purchasing.Purchasing" label="Purchasing" color="green" />
-                  </div>
-                  <div class="q-mt-xs justify-end">
-                    <q-checkbox v-model="Purchasing.Add" label="Add" color="green" />
-                    <q-checkbox v-model="Purchasing.Edit" label="Edit" color="green" />
-                    <q-checkbox v-model="Purchasing.Delete" label="Delete" color="green" />
-                    <q-checkbox v-model="Purchasing.Export" label="Export" color="green" />
-                  </div>
-                </div>
-                <div class="q-ma-xs flex justify-between text-grey">
-                  <div class="q-mt-xs flex justify-start">
-                    <q-checkbox v-model="Adjustments.Adjustments" label="Adjustments" color="green" />
-                  </div>
-                  <div class="q-mt-xs justify-end">
-                    <q-checkbox v-model="Adjustments.Add" label="Add" color="green" />
-                    <q-checkbox v-model="Adjustments.Edit" label="Edit" color="green" />
-                    <q-checkbox v-model="Adjustments.Delete" label="Delete" color="green" />
-                    <q-checkbox v-model="Adjustments.Export" label="Export" color="green" />
-                  </div>
-                </div>
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-item-label class="text-h6 text-green">Reports</q-item-label>
-                <div class="q-ma-xs flex justify-between text-grey">
-                  <div class="q-mt-xs flex justify-start">
-                    <q-checkbox v-model="Stocks.Stocks" label="Stocks" color="green" />
-                  </div>
-                  <div class="q-mt-xs justify-end">
-                    <q-checkbox v-model="Stocks.Expiry" label="Expiry" color="green" />
-                    <q-checkbox v-model="Stocks.LowStocks" label="No Stocks" color="green" />
-                    <q-checkbox v-model="Stocks.Inventory" label="Inventory" color="green" />
-                    <q-checkbox v-model="Stocks.Dispensed" label="Dispensed" color="green" />
-                  </div>
-                </div>
-              </q-item-section>
-            </q-item>
-
-            <q-item>
-              <q-item-section>
-                <q-item-label class="text-h6 text-green">Settings</q-item-label>
-                <div class="q-ma-xs flex justify-between text-grey">
-                  <div class="q-mt-xs flex justify-start">
-                    <q-checkbox v-model="UserManagement.UserManagement" label="User Management" color="green" />
-                  </div>
-                  <div class="q-mt-xs justify-end">
-                    <q-checkbox v-model="UserManagement.Add" label="Add" color="green" />
-                    <q-checkbox v-model="UserManagement.Edit" label="Edit" color="green" />
-                    <q-checkbox v-model="UserManagement.Deactivate" label="Deactivate" color="green" />
-                  </div>
-                </div>
-
-                <div class="q-ml-md q-mt-xs flex justify-between text-grey">
-                  <div class="flex justify-start">
-                    <q-checkbox v-model="UserCredentials.UserCredentials" label="User Credentials" color="green" />
-                  </div>
-                  <div class="q-mt-xs justify-end">
-                    <q-checkbox v-model="UserCredentials.Add" label="Add" color="green" />
-                    <q-checkbox v-model="UserCredentials.Edit" label="Edit" color="green" />
-                  </div>
-                </div>
-
-                <div class="q-ma-xs flex justify-between text-grey">
-                  <div class="q-mt-xs flex justify-start">
-                    <q-checkbox v-model="Libraries.Libraries" label="Libraries" color="green" />
-                  </div>
-                </div>
-                <div class="q-ml-md q-mt-xs flex justify-between text-grey">
-                  <div class="flex justify-start">
-                    <q-checkbox v-model="Units.Units" label="Units" color="green" />
-                  </div>
-                  <div class="q-mt-xs justify-end">
-                    <q-checkbox v-model="Units.Add" label="Add" color="green" />
-                    <q-checkbox v-model="Units.Edit" label="Edit" color="green" />
-                  </div>
-                </div>
-                <div class="q-ml-md q-mt-xs flex justify-between text-grey">
-                  <div class="flex justify-start">
-                    <q-checkbox v-model="DosageType.DosageType" label="Dosage Type" color="green" />
-                  </div>
-                  <div class="q-mt-xs justify-end">
-                    <q-checkbox v-model="DosageType.Add" label="Add" color="green" />
-                    <q-checkbox v-model="DosageType.Edit" label="Edit" color="green" />
-                  </div>
-                </div>
-                <div class="q-ma-xs flex justify-between text-grey">
-                  <div class="q-mt-xs flex justify-start">
-                    <q-checkbox v-model="Configurations.Configurations" label="Configurations " color="green" />
-                  </div>
-                  <div class="q-mt-xs justify-end">
-                    <q-checkbox v-model="Configurations.Update" label="Edit" color="green" />
+                <!-- Submodules -->
+                <div v-if="module.submodules" class="q-ml-md">
+                  <div v-for="sub in module.submodules" :key="sub.key" class="q-mt-sm">
+                    <q-item-label class="text-subtitle2 text-weight-medium">{{ sub.title }}</q-item-label>
+                    <div class="q-ma-xs flex text-grey row">
+                      <div v-for="permission in sub.permissions" :key="permission" class="q-mt-xs q-mr-md">
+                        <q-checkbox
+                          v-model="credentials[sub.key][permission]"
+                          :label="permission"
+                          color="green"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </q-item-section>
@@ -160,106 +42,139 @@
           </q-list>
         </div>
       </q-card-section>
+
       <q-card-actions>
-        <div class="q-gutter-md " align="right">
-          <q-btn label="Save" color="green" class="q-mt-md" />
-          <q-btn label="Cancel" color="grey" class="q-mt-md" />
-        </div>
+        <q-space />
+        <q-btn label="Save" color="green" class="q-mt-md" @click="saveCredentials" />
+        <q-btn label="Cancel" color="grey" class="q-mt-md" />
       </q-card-actions>
     </q-card>
   </q-page>
 </template>
 
 <script>
+import { useUserCredentialtore } from 'src/stores/userCredentialStore';
+
 export default {
   name: 'UserCredentials',
+
+  setup() {
+    const userCredentialStore = useUserCredentialtore();
+    return { userCredentialStore };
+  },
+
   data() {
     return {
-      // Add your data properties here
-      Dashboard: {
+      credentials: {},
+      modulePermissions: [
+        { key: 'Releasing', title: 'Releasing', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export'] },
+        { key: 'CustomerHistory', title: 'Customer History', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export'] },
+        { key: 'Purchasing', title: 'Purchasing', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export'] },
+        { key: 'Adjustments', title: 'Adjustments', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export'] },
+        {
+          key: 'Stocks',
+          title: 'Stocks',
+          submodules: [
+            { key: 'StocksView', title: 'Stocks', permissions:['View', 'Add', 'Edit', 'Delete', 'Export'] },
+            { key: 'Expiry', title: 'Expiry', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export'] },
+            { key: 'LowStocks', title: 'Low Stocks', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export'] },
+            { key: 'Inventory', title: 'Inventory', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export']},
+            { key: 'Dispensed', title: 'Dispensed', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export']}
+          ]
+        },
+        { key: 'UserManagement', title: 'User Management', permissions: ['View', 'Add', 'Edit', 'Delete','Export'] },
+        { key: 'UserCredentials', title: 'User Credentials', permissions: ['View', 'Add', 'Edit', 'Delete','Export'] },
+        { key: 'Libraries', title: 'Libraries', permissions: ['View', 'Add', 'Edit', 'Delete','Export'] },
+        { key: 'Units', title: 'Units', permissions: ['View', 'Add', 'Edit', 'Delete','Export'] },
+        { key: 'DosageType', title: 'Dosage Type', permissions: ['View', 'Add', 'Edit', 'Delete','Export'] },
+        { key: 'Configurations', title: 'Configurations', permissions: ['View', 'Add', 'Edit', 'Delete','Export'] }
+      ]
+    };
+  },
 
-        Dashboard: false,
-        Expiry: false,
-        Stocks: false,
-        Dispensed: false,
-      },
-      Releasing: {
-        ModuleTitle: 'Releasing',
-        Releasing: false,
-        Add: false,
-        Edit: false,
-        Delete: false,
-        Export: false,
-      },
-      CustomerHistory: {
-        ModuleTitle: 'Customer History',
-        CustomerHistory: false,
-        Add: false,
-        Edit: false,
-        Delete: false,
-        Export: false,
-      },
-      Purchasing: {
-        ModuleTitle: 'Purchasing',
-        Purchasing: false,
-        Add: false,
-        Edit: false,
-        Delete: false,
-        Export: false,
-      },
-      Adjustments: {
-        ModuleTitle: 'Adjustments',
-        Adjustments: false,
-        Add: false,
-        Edit: false,
-        Delete: false,
-        Export: false,
-      },
-      Stocks: {
-        ModuleTitle: 'Stocks',
-        Stocks: false,
-        Expiry: false,
-        LowStocks: false,
-        Inventory: false,
-        Dispensed: false,
-      },
-      UserManagement: {
-        ModuleTitle: 'User Management',
-        UserManagement: false,
-        Add: false,
-        Edit: false,
-        Deactivate: false,
-      },
+  created() {
+    this.initCredentials();
+    const userId = this.userCredentialStore.selected_id;
+    if (userId) this.loadCredentials(userId);
+  },
 
-      UserCredentials: {
-        ModuleTitle: 'User Credentials',
-        UserCredentials: false,
-        Add: false,
-        Edit: false,
-      },
-      Libraries: {
-        ModuleTitle: 'Libraries',
-        Libraries: false,
-        Add: false,
-        Edit: false,
-        Delete: false,
-      },
-      Configurations: {
-        ModuleTitle: 'Configurations',
-        Configurations: false,
-        Update: false,
-      },
+  watch: {
+    'userCredentialStore.selected_id'(newId) {
+      if (newId) this.loadCredentials(newId);
     }
   },
+
   methods: {
-    // Add your methods here
-  },
-  mounted() {
-    // Lifecycle hook
-  },
-}
+
+    initCredentials() {
+      this.credentials = {};
+      this.modulePermissions.forEach(module => {
+        if (module.permissions) {
+          this.credentials[module.key] = { user_id: 0, ModuleTitle: module.title };
+          module.permissions.forEach(permission => {
+            this.credentials[module.key][permission] = false;
+          });
+        }
+        if (module.submodules) {
+          module.submodules.forEach(sub => {
+            this.credentials[sub.key] = { user_id: 0, ModuleTitle: sub.title };
+            sub.permissions.forEach(permission => {
+              this.credentials[sub.key][permission] = false;
+            });
+          });
+        }
+      });
+    },
+
+    async saveCredentials() {
+      const user_id = this.userCredentialStore.selected_id;
+      const payload = Object.values(this.credentials).map(cred => ({
+        ...cred,
+        user_id
+      }));
+
+      try {
+
+        console.log (payload)
+        await this.$api.post('/user-credentials', payload);
+        this.$q.notify({ type: 'positive', message: 'Credentials saved successfully!' });
+      } catch (error) {
+        this.$q.notify({ type: 'negative', message: 'Failed to save credentials. ' + error });
+      }
+    },
+
+    async loadCredentials(userId) {
+      try {
+        const response = await this.$api.get(`/user-credentials/${userId}`);
+        const loadedData = response.data;
+
+        this.initCredentials();
+
+        loadedData.forEach(item => {
+          const allKeys = [...this.modulePermissions.flatMap(m => [m, ...(m.submodules || [])])];
+          const match = allKeys.find(mod => mod.title === item.ModuleTitle);
+          const key = match?.key;
+
+          if (key) {
+            this.credentials[key] = {
+              user_id: item.user_id,
+              ModuleTitle: item.ModuleTitle
+            };
+
+            (match.permissions || []).forEach(permission => {
+              this.credentials[key][permission] = !!item[permission];
+            });
+          }
+        });
+      } catch (error) {
+        console.error('Failed to load credentials:', error);
+        this.$q.notify({ type: 'negative', message: 'Unable to load user credentials.' });
+      }
+    }
+  }
+};
 </script>
 
 <style scoped>
-/* Add your styles here */
+/* Add your styles here if needed */
 </style>

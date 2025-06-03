@@ -4,8 +4,8 @@ import { Notify } from 'quasar'
 
 export const useUserCredentialtore = defineStore('userCredential', {
   state: () => ({
-    user: {},
-    users: [],
+    credential: {},
+    credentials: [],
     selected_id: null,
   }),
 
