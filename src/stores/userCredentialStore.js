@@ -2,7 +2,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 import { api } from 'src/boot/axios'
 import { Notify } from 'quasar'
 
-export const useUserCredentialtore = defineStore('userCredential', {
+export const useUserCredentialstore = defineStore('userCredential', {
   state: () => ({
     credential: {},
     credentials: [],
@@ -26,9 +26,10 @@ export const useUserCredentialtore = defineStore('userCredential', {
 
     async getUserCredential(id) {
       try {
-        const response = await api.get('/system/user/profile/' + id)
-        this.user = response.data.user[0]
-        // console.log(id)
+        const response = await api.get('/system/user/' + id + '/credentials/')
+        console.log(response.data.credential)
+        this.credentials = response.data.credential
+        console.log(this.credentials)
       } catch (error) {
         Notify.create({
           type: 'negative',
@@ -39,7 +40,7 @@ export const useUserCredentialtore = defineStore('userCredential', {
       }
     },
 
-     async getUserModuleCredential(id, module) {
+    async getUserModuleCredential(id, module) {
       try {
         const response = await api.get('/system/user/profile/' + id, module)
         this.user = response.data.user[0]
@@ -56,6 +57,7 @@ export const useUserCredentialtore = defineStore('userCredential', {
 
     async newUserCredential(payload) {
       try {
+        console.log(payload)
         const response = await api.post('/system/user/credentials', payload)
         // console.log(response.data.success)
         if (response.data.success) {
@@ -83,7 +85,6 @@ export const useUserCredentialtore = defineStore('userCredential', {
         // Add password_confirmation if password is being updated
         if (payload.password) {
           payload.password_confirmation = payload.confirm_password
-
         }
         // Remove confirm_password from payload before sending to API
 
@@ -134,7 +135,7 @@ export const useUserCredentialtore = defineStore('userCredential', {
         })
       }
     },
-   async deactivateUser(id){
+    async deactivateUser(id) {
       try {
         const response = await api.put('/system/user/profile-deactivate/' + id)
         // console.log(response.data.success)
@@ -154,9 +155,9 @@ export const useUserCredentialtore = defineStore('userCredential', {
           timeout: 5000,
         })
       }
-   },
+    },
 
-   async activateUser(id){
+    async activateUser(id) {
       try {
         const response = await api.put('/system/user/profile-activate/' + id)
         // console.log(response.data.success)
@@ -176,7 +177,7 @@ export const useUserCredentialtore = defineStore('userCredential', {
           timeout: 5000,
         })
       }
-   },
+    },
 
     async loginUser(payload) {
       try {
@@ -202,5 +203,5 @@ export const useUserCredentialtore = defineStore('userCredential', {
   },
 })
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useUserCredentialtore, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useUserCredentialstore, import.meta.hot))
 }

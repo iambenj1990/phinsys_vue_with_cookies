@@ -53,14 +53,20 @@
 </template>
 
 <script>
-import { useUserCredentialtore } from 'src/stores/userCredentialStore';
+import { useUserCredentialstore } from 'src/stores/userCredentialStore';
+import { useUserStore } from 'src/stores/userStore';
 
 export default {
   name: 'UserCredentials',
 
   setup() {
-    const userCredentialStore = useUserCredentialtore();
-    return { userCredentialStore };
+    const userCredentialStore = useUserCredentialstore();
+    const  userStore = useUserStore()
+    return {
+      userCredentialStore,
+      userStore
+
+     };
   },
 
   data() {
@@ -94,7 +100,7 @@ export default {
 
   created() {
     this.initCredentials();
-    const userId = this.userCredentialStore.selected_id;
+    const userId = this.userStore.selected_id;
     if (userId) this.loadCredentials(userId);
   },
 
@@ -110,14 +116,14 @@ export default {
       this.credentials = {};
       this.modulePermissions.forEach(module => {
         if (module.permissions) {
-          this.credentials[module.key] = { user_id: 0, ModuleTitle: module.title };
+          this.credentials[module.key] = { userid: 0, module: module.title };
           module.permissions.forEach(permission => {
             this.credentials[module.key][permission] = false;
           });
         }
         if (module.submodules) {
           module.submodules.forEach(sub => {
-            this.credentials[sub.key] = { user_id: 0, ModuleTitle: sub.title };
+            this.credentials[sub.key] = { userid: 0, module: sub.title };
             sub.permissions.forEach(permission => {
               this.credentials[sub.key][permission] = false;
             });
@@ -127,16 +133,17 @@ export default {
     },
 
     async saveCredentials() {
-      const user_id = this.userCredentialStore.selected_id;
+      const userid = this.userStore.selected_id;
       const payload = Object.values(this.credentials).map(cred => ({
         ...cred,
-        user_id
+        userid
       }));
 
       try {
 
         console.log (payload)
-        await this.$api.post('/user-credentials', payload);
+        // await this.$api.post('/user-credentials', payload);
+        await this.userCredentialStore.newUserCredential(payload)
         this.$q.notify({ type: 'positive', message: 'Credentials saved successfully!' });
       } catch (error) {
         this.$q.notify({ type: 'negative', message: 'Failed to save credentials. ' + error });
@@ -145,8 +152,8 @@ export default {
 
     async loadCredentials(userId) {
       try {
-        const response = await this.$api.get(`/user-credentials/${userId}`);
-        const loadedData = response.data;
+       await this.userCredentialStore.getUserCredential(userId)
+        const loadedData = this.userCredentialStore.credentials
 
         this.initCredentials();
 

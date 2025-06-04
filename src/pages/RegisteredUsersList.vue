@@ -177,13 +177,16 @@
 <script>
 
 import { useUserStore } from 'src/stores/userStore'
+import { useUserCredentialstore } from 'src/stores/userCredentialStore'
 export default {
   name: 'RegisteredUsersList',
   setup() {
     const userStore = useUserStore()
+    const UserCredentialstore = useUserCredentialstore()
     // You can use the Composition API here if needed
     return {
       userStore,
+      UserCredentialstore,
       // Define any reactive properties or methods
       columns: [
         // { name: 'id', label: 'ID', align: 'left', field: 'id' },
@@ -206,6 +209,7 @@ export default {
     // Define any methods you need for your component
     getUser(id) {
       this.userStore.selected_id = id
+      this.UserCredentialstore.selected_id=id
       console.log(id)
       console.log(this.userStore.selected_id)
     },
