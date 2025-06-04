@@ -73,27 +73,27 @@ export default {
     return {
       credentials: {},
       modulePermissions: [
-        { key: 'Releasing', title: 'Releasing', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export'] },
-        { key: 'CustomerHistory', title: 'Customer History', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export'] },
-        { key: 'Purchasing', title: 'Purchasing', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export'] },
-        { key: 'Adjustments', title: 'Adjustments', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export'] },
+        { key: 'Releasing', title: 'Releasing', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
+        { key: 'CustomerHistory', title: 'Customer History', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
+        { key: 'Purchasing', title: 'Purchasing', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
+        { key: 'Adjustments', title: 'Adjustments', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
         {
           key: 'Stocks',
           title: 'Stocks',
           submodules: [
-            { key: 'StocksView', title: 'Stocks', permissions:['View', 'Add', 'Edit', 'Delete', 'Export'] },
-            { key: 'Expiry', title: 'Expiry', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export'] },
-            { key: 'LowStocks', title: 'Low Stocks', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export'] },
-            { key: 'Inventory', title: 'Inventory', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export']},
-            { key: 'Dispensed', title: 'Dispensed', permissions: ['View', 'Add', 'Edit', 'Delete', 'Export']}
+            { key: 'StocksView', title: 'Stocks', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
+            { key: 'Expiry', title: 'Expiry', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
+            { key: 'LowStocks', title: 'Low Stocks', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
+            { key: 'Inventory', title: 'Inventory', permissions:  ['view', 'add', 'edit', 'delete', 'export']},
+            { key: 'Dispensed', title: 'Dispensed', permissions:  ['view', 'add', 'edit', 'delete', 'export']}
           ]
         },
-        { key: 'UserManagement', title: 'User Management', permissions: ['View', 'Add', 'Edit', 'Delete','Export'] },
-        { key: 'UserCredentials', title: 'User Credentials', permissions: ['View', 'Add', 'Edit', 'Delete','Export'] },
-        { key: 'Libraries', title: 'Libraries', permissions: ['View', 'Add', 'Edit', 'Delete','Export'] },
-        { key: 'Units', title: 'Units', permissions: ['View', 'Add', 'Edit', 'Delete','Export'] },
-        { key: 'DosageType', title: 'Dosage Type', permissions: ['View', 'Add', 'Edit', 'Delete','Export'] },
-        { key: 'Configurations', title: 'Configurations', permissions: ['View', 'Add', 'Edit', 'Delete','Export'] }
+        { key: 'UserManagement', title: 'User Management', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
+        { key: 'UserCredentials', title: 'User Credentials', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
+        { key: 'Libraries', title: 'Libraries', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
+        { key: 'Units', title: 'Units', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
+        { key: 'DosageType', title: 'Dosage Type', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
+        { key: 'Configurations', title: 'Configurations', permissions: ['view', 'add', 'edit', 'delete', 'export'] }
       ]
     };
   },
@@ -154,18 +154,19 @@ export default {
       try {
        await this.userCredentialStore.getUserCredential(userId)
         const loadedData = this.userCredentialStore.credentials
+        console.log('loaded data :', loadedData)
 
         this.initCredentials();
 
         loadedData.forEach(item => {
           const allKeys = [...this.modulePermissions.flatMap(m => [m, ...(m.submodules || [])])];
-          const match = allKeys.find(mod => mod.title === item.ModuleTitle);
+          const match = allKeys.find(mod => mod.title === item.module);
           const key = match?.key;
 
           if (key) {
             this.credentials[key] = {
               user_id: item.user_id,
-              ModuleTitle: item.ModuleTitle
+              ModuleTitle: item.module
             };
 
             (match.permissions || []).forEach(permission => {
