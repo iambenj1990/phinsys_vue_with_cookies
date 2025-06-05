@@ -25,7 +25,7 @@
             />
           </q-input>
 
-          <q-list class="q-pa-sm flex">
+          <q-list class="q-pa-sm flex" style="width: 400px;">
 
             <q-item
               v-for="item in filteredList"
@@ -60,7 +60,7 @@
                     dense
                     v-model="costumer.lastname"
                     label="Last name"
-                    class="full-width text-caption"
+                    class="full-width text-caption text-uppercase"
                     :readonly="isEditable"
                   />
                 </div>
@@ -69,7 +69,7 @@
                     dense
                     v-model="costumer.firstname"
                     label="First name"
-                    class="full-width text-caption"
+                    class="full-width text-caption text-uppercase"
                     :readonly="isEditable"
                   />
                 </div>
@@ -78,7 +78,7 @@
                     dense
                     v-model="costumer.middlename"
                     label="Middle name"
-                    class="full-width text-caption"
+                    class="full-width text-caption text-uppercase"
                     :readonly="isEditable"
                   />
                 </div>
@@ -87,7 +87,7 @@
                     dense
                     v-model="costumer.ext"
                     label="Ext"
-                    class="full-width text-caption"
+                    class="full-width text-caption text-uppercase"
                     :readonly="isEditable"
                   />
                 </div>
@@ -98,7 +98,7 @@
                     dense
                     v-model="costumer.gender"
                     label="Gender"
-                    class="full-width text-caption"
+                    class="full-width text-caption text-uppercase"
                     :readonly="isEditable"
                   />
                 </div>
@@ -128,7 +128,7 @@
                     dense
                     v-model="costumer.category"
                     label="Category"
-                    class="full-width text-caption"
+                    class="full-width text-caption text-uppercase"
                     readonly
                   />
                 </div>
@@ -638,7 +638,7 @@ export default {
 
       payload.quantity = Number(payload.quantity)
       this.showQuantity = false
-      
+
       if (payload.quantity > this.selectedMedicineQty) {
         this.$q.notify({
           type: 'negative',

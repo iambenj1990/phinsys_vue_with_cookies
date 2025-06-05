@@ -123,8 +123,8 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-
-    <pre>{{ this.Trans_Date }}</pre>
+<!-- 
+    <pre>{{ this.Trans_Date }}</pre> -->
   </q-page>
 </template>
 <script>

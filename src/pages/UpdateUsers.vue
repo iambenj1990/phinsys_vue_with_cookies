@@ -14,7 +14,7 @@
               v-model="form.first_name"
               label="First Name"
               :rules="[(val) => !!val || 'First name is required']"
-              class="q-mb-md"
+              class="q-mb-md text-uppercase"
             />
           </div>
           <div class="col-12 col-md-4 q-mx-sm">
@@ -23,7 +23,7 @@
               v-model="form.last_name"
               label="Last Name"
               :rules="[(val) => !!val || 'Last name is required']"
-              class="q-mb-md"
+              class="q-mb-md text-uppercase"
             />
           </div>
           <div class="col-12 col-md-3 q-mx-sm">
@@ -36,14 +36,14 @@
           v-model="form.position"
           label="Position"
           :rules="[(val) => !!val || 'Position is required']"
-          class="q-mb-md"
+          class="q-mb-md text-uppercase"
         />
         <q-input
           filled
           v-model="form.office"
           label="Office"
           :rules="[(val) => !!val || 'Office is required']"
-          class="q-mb-md"
+          class="q-mb-md text-uppercase"
         />
         <q-input
           filled

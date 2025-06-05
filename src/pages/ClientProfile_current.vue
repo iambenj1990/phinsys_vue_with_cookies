@@ -13,7 +13,7 @@
                     dense
                     v-model="costumer.lastname"
                     label="Last name"
-                    class="full-width text-caption"
+                    class="full-width text-caption text-uppercase"
                     readonly
                   />
                 </div>
@@ -22,7 +22,7 @@
                     dense
                     v-model="costumer.firstname"
                     label="First name"
-                    class="full-width text-caption"
+                    class="full-width text-caption text-uppercase"
                     readonly
                   />
                 </div>
@@ -31,7 +31,7 @@
                     dense
                     v-model="costumer.middlename"
                     label="Middle name"
-                    class="full-width text-caption"
+                    class="full-width text-caption text-uppercase"
                     readonly
                   />
                 </div>
@@ -40,7 +40,7 @@
                     dense
                     v-model="costumer.ext"
                     label="Ext"
-                    class="full-width text-caption"
+                    class="full-width text-caption text-uppercase"
                     readonly
                   />
                 </div>
@@ -51,16 +51,16 @@
                     dense
                     v-model="costumer.gender"
                     label="Gender"
-                    class="full-width text-caption"
+                    class="full-width text-caption text-uppercase"
                     readonly
                   />
                 </div>
-                <div class="col-12 col-md-1 q-pa-sm">
+                <div class="col-12 col-md-1 q-pa-sm ">
                   <q-input
                     dense
                     v-model="costumer.age"
                     label="Age"
-                    class="full-width text-caption"
+                    class="full-width text-caption text-uppercase"
                     readonly
                   />
                 </div>
@@ -69,7 +69,7 @@
                     dense
                     v-model="costumer.category"
                     label="Category"
-                    class="full-width text-caption"
+                    class="full-width text-caption text-uppercase"
                     readonly
                   />
                 </div>
@@ -121,7 +121,11 @@
             </q-card>
           </div>
         </q-card-section>
+        <div  align="right">
+        <q-btn color="grey" label="Back" @click="$router.go(-1)" />
+      </div>
       </q-card>
+
     </div>
   </q-page>
 </template>

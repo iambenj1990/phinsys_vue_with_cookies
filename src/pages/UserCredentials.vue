@@ -91,8 +91,8 @@ export default {
         { key: 'UserManagement', title: 'User Management', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
         { key: 'UserCredentials', title: 'User Credentials', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
         { key: 'Libraries', title: 'Libraries', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
-        { key: 'Units', title: 'Units', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
-        { key: 'DosageType', title: 'Dosage Type', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
+        // { key: 'Units', title: 'Units', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
+        // { key: 'DosageType', title: 'Dosage Type', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
         { key: 'Configurations', title: 'Configurations', permissions: ['view', 'add', 'edit', 'delete', 'export'] }
       ]
     };
@@ -165,8 +165,8 @@ export default {
 
           if (key) {
             this.credentials[key] = {
-              user_id: item.user_id,
-              ModuleTitle: item.module
+              userid: item.userid,
+              module: item.module
             };
 
             (match.permissions || []).forEach(permission => {

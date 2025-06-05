@@ -8,7 +8,7 @@
       </div>
       <q-separator />
       <q-form @submit.prevent="submitCustomerForm" ref="customerForm">
-      <div class="row q-gutter-md q-pt-lg">
+      <div class="row q-gutter-md q-pt-lg text-uppercase">
         <div class="col-12 col-md-3 q-pa-sm">
           <q-input
             dense
@@ -49,7 +49,7 @@
             v-model="CustomerInfo.gender"
             :options="GenSelection"
             label="Gender"
-            class="full-width text-caption"
+            class="full-width text-caption text-uppercase"
             lazy-rules
             :rules="[val => !!val || 'Gender is required']"
           />
@@ -89,12 +89,12 @@
       </div>
 
       <div class="row q-gutter-md">
-        <div class="col-12 col-md-3 q-pa-sm">
+        <div class="col-12 col-md-3 q-pa-sm ">
           <q-checkbox
             v-model="isChecked"
             label="Not From This City"
             @change="toggledCheckbox"
-            class="text-caption"
+            class="text-caption text-uppercase"
             :style="{ fontSize: '11px' }"
             @update:model-value="clearLocation"
           />
@@ -108,7 +108,7 @@
             v-model="CustomerInfo.barangay"
             :options="TagumBarangay.barangay"
             label="Barangay"
-            class="full-width text-caption"
+            class="full-width text-caption text-uppercase"
             lazy-rules
             :rules="[val => !!val || 'Barangay is required']"
           />
@@ -118,7 +118,7 @@
             dense
             v-model="CustomerInfo.purok"
             label="Purok"
-            class="full-width text-caption"
+            class="full-width text-caption text-uppercase"
             lazy-rules
             :rules="[val => !!val || 'Purok is required']"
           />
@@ -128,20 +128,20 @@
             dense
             v-model="CustomerInfo.street"
             label="Street"
-            class="full-width text-caption"
+            class="full-width text-caption text-uppercase"
             lazy-rules
             :rules="[val => !!val || 'street is required']"
           />
         </div>
         <div class="col-12 col-md-3 q-pa-sm">
-          <q-input dense v-model="CustomerInfo.city" label="City" class="full-width text-caption" />
+          <q-input dense v-model="CustomerInfo.city" label="City" class="full-width text-caption text-uppercase" />
         </div>
         <div class="col-12 col-md-3 q-pa-sm">
           <q-input
             dense
             v-model="CustomerInfo.province"
             label="Province"
-            class="full-width text-caption"
+            class="full-width text-caption text-uppercase"
           />
         </div>
       </div>

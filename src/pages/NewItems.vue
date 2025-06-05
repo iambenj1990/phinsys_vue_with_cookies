@@ -21,7 +21,7 @@
                   dense
                   v-model="New_Po"
                   label="Purchase Order Number"
-                  class="full-width"
+                  class="full-width text-uppercase"
                   lazy-rules
                   :rules="[(val) => !!val || 'Purchase Order Number is required']"
                 >
@@ -37,12 +37,12 @@
                   dense
                   v-model="MedicineInfo.brand_name"
                   label="Brand Name"
-                  class="full-width"
+                  class="full-width text-uppercase"
                   lazy-rules
                   :rules="[(val) => !!val || 'Brand Name is required']"
                 />
 
-                <q-list class="q-pa-sm flex floating-list" v-if="this.filteredList.length > 0">
+                <q-list class="q-pa-sm flex floating-list text-uppercase" v-if="this.filteredList.length > 0">
                   <q-item
                     v-for="item in this.filteredList"
                     :key="item.id"
@@ -74,7 +74,7 @@
                   dense
                   v-model="MedicineInfo.generic_name"
                   label="Generic Name"
-                  class="full-width"
+                  class="full-width text-uppercase"
                   lazy-rules
                   :rules="[(val) => !!val || 'Generic Name is required']"
                 />
@@ -95,7 +95,7 @@
                   v-model="MedicineInfo.dosage_form"
                   :options="MedType"
                   label="Dosage form"
-                  class="full-width"
+                  class="full-width text-uppercase"
                   lazy-rules
                   :rules="[(val) => !!val || 'Dosage form is required']"
                 />
@@ -108,7 +108,7 @@
                   v-model="MedicineInfo.unit"
                   :options="sUnit"
                   label="Unit"
-                  class="full-width"
+                  class="full-width text-uppercase"
                   style="width: 120px"
                   lazy-rules
                   :rules="[(val) => !!val || 'Unit quantity is required']"

@@ -4,7 +4,7 @@
       <div class="text-h4 text-grey q-pa-md">Dashboard</div>
       <q-separator />
       <div class="q-my-sm flex flex-wrap q-px-md justify-end">
-      
+
         <q-input v-model="rangeText" label="Select Date Range" dense readonly style="width: 250px">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
@@ -23,7 +23,7 @@
             <q-separator spaced />
           </div>
           <div class="flex flex-wrap q-px-md q-mb-lg">
-            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px">
+            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px" @click="()=>{ this.$router.push({ path: '/items/reports', query: { tab: 'Inventory' } }) }" >
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
                   <q-icon name="inventory_2" color="green" size="30px" class="q-mr-sm" />
@@ -33,7 +33,7 @@
               </q-card-section>
             </q-card>
 
-            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px">
+            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px" @click="()=>{this.$router.push({ path: '/items/reports', query: { tab: 'Expired' }})}">
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
                   <q-icon name="event_busy" color="green" size="30px" class="q-mr-sm" />
@@ -43,7 +43,7 @@
               </q-card-section>
             </q-card>
 
-            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px">
+            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px" @click="()=>{ this.$router.push({ path: '/items/reports', query: { tab: 'Low' }})}" >
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
                   <q-icon
@@ -58,7 +58,7 @@
               </q-card-section>
             </q-card>
 
-              <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px">
+              <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px" @click="()=>{ this.$router.push({ path: '/items/reports', query: { tab: 'Low' }})}">
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
                   <q-icon name="description" color="green" size="30px" class="q-mr-sm" />
@@ -85,7 +85,7 @@
             <q-separator spaced label="Section Title" />
           </div>
           <div class="flex flex-wrap q-px-md q-mb-lg">
-            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px">
+            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px" @click="()=>{ this.$router.push({ path: '/customers'})}">
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
                   <q-icon name="people" color="green" size="30px" class="q-mr-sm" />
@@ -95,7 +95,7 @@
               </q-card-section>
             </q-card>
 
-            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px">
+            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px" @click="()=>{ this.$router.push({ path: '/customer/orders'})}">
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
                   <q-icon name="medical_services" color="green" size="30px" class="q-mr-sm" />
@@ -118,7 +118,6 @@
             flat
             dense
             bordered
-
             :columns="cols"
             :rows="rows"
             :pagination="{
@@ -126,7 +125,6 @@
             }"
             :no-data-label="'No data available'"
             :no-results-label="'No results found'"
-            :loading="true"
             :loading-label="'Loading data...'"
           />
         </div>

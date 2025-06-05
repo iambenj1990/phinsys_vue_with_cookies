@@ -83,6 +83,12 @@ export default {
       console.log('Action triggered')
     },
   },
+  mounted(){
+    const tabFromQuery = this.$route.query.tab
+    if (tabFromQuery) {
+      this.tab = tabFromQuery
+    }
+  }
 }
 </script>
 
