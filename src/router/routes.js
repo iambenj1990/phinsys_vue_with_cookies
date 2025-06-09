@@ -37,7 +37,8 @@ const routes = [
 
        { path: '/libraries/units', component: () => import('src/pages/library/UnitsList.vue') }, // particular transaction order of a customer
        { path: '/libraries/list', component: () => import('src/pages/library/LibraryPage.vue') }, // particular transaction order of a customer
-    ]
+       { path: '/libraries/config', component: ()=> import('src/pages/SystemConfiguration.vue')},
+      ]
   },
   {
     path: '/',

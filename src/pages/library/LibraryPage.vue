@@ -35,13 +35,11 @@
              <DosageType />
             </q-tab-panel>
 
-            <!-- <q-tab-panel name="Dosage Form">
-
+            <q-tab-panel name="Configuration">
+              <config />
             </q-tab-panel>
 
-            <q-tab-panel name="Dispense">
 
-            </q-tab-panel> -->
           </q-tab-panels>
 
 
@@ -54,6 +52,7 @@
 <script>
 import units from 'src/pages/library/UnitsList.vue'
 import DosageType from 'src/pages/library/DosageTypeList.vue'
+import config from 'src/pages/SystemConfiguration.vue'
 // import low from 'pages/ItemsNoStockList.vue'
 // //import stock from './ItemsMovementList.vue'
 // import dispense from './ItemsMonthlyDispenseReport.vue'
@@ -63,7 +62,8 @@ export default {
   name: 'ItemReports',
   components: {
     units,
-    DosageType
+    DosageType,
+    config,
   },
   setup() {
     return {}
