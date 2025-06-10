@@ -4,16 +4,20 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 export const useConfigurationsStore = defineStore('configurations', {
   state: () => ({
     // Add your state properties here
-    set_items_low_notification : 0,
-    set_day_expire_notification: 0,
-    
-
+    selected_ID:'',
+    normal_color :0,
+    low_color: 0,
+    empty_color: '',
+    low_count: '',
+    days_toExpire: '',
   }),
   getters: {
     // Add your getters here
   },
   actions: {
     // Add your actions here
+
+
   }
 })
 
