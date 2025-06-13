@@ -5,7 +5,7 @@ import { api } from 'src/boot/axios'
 export const useConfigurationsStore = defineStore('configurations', {
   state: () => ({
     // Add your state properties here
-    selected_ID: '',
+    selected_ID: 1,
     normal_color: 0,
     low_color: 0,
     empty_color: '',
@@ -21,7 +21,8 @@ export const useConfigurationsStore = defineStore('configurations', {
     // Add your actions here
     async updateConfiguration(payload) {
       try {
-        const response = await api.put('/system/library/configuration/1', payload)
+
+        const response = await api.put('/system/configuration/'+ this.selected_ID +'/config', payload)
 
         if (response == null) {
           Notify.create({
@@ -46,7 +47,7 @@ export const useConfigurationsStore = defineStore('configurations', {
     },
     async getConfiguration() {
       try {
-        const response = await api.get('/system/library/configuration/1')
+        const response = await api.get('/system/configuration/'+ this.selected_ID)
         if (response == null) {
           Notify.create({
             type: 'negative',
@@ -70,7 +71,7 @@ export const useConfigurationsStore = defineStore('configurations', {
 
     async newConfig(payload) {
       try {
-        const response = await api.post('/system/library/configuration/', payload)
+        const response = await api.post('/system/configuration/', payload)
         this.configuration = response.data.configuration
 
         if (response.data.success) {

@@ -13,7 +13,7 @@
         <q-card-section>
           <q-input
             outlined
-            v-model="email"
+            v-model="userLogin.username"
             label="Username"
             type="text"
             lazy-rules
@@ -27,7 +27,7 @@
 
           <q-input
             outlined
-            v-model="password"
+            v-model="userLogin.password"
             label="Password"
             type="password"
             lazy-rules
@@ -62,18 +62,25 @@
 </template>
 
 <script>
-import { useLoginStore } from '../stores/loginSessionStore'
+import { useUserStore } from 'src/stores/userStore'
+import auth from 'src/services/auth'
 
 export default {
   setup() {
-    const loginSession = useLoginStore()
+    const loginStore = useUserStore()
+    const loginAuth = auth
 
     return {
-      loginSession,
+      loginStore,
+      loginAuth
     }
   },
   data() {
     return {
+      userLogin:{
+        username:'',
+        password:''
+      },
       email: '',
       password: '',
       loading: false,
@@ -81,24 +88,30 @@ export default {
   },
   methods: {
     async handleLogin() {
-      if (!this.email || !this.password) return
+      if (!this.userLogin.username || !this.userLogin.password) return
 
       this.loading = true
 
       try {
+
+        const response = await this.loginAuth.login(this.userLogin)
+        console.log('Show data => ',response)
+        //  this.loginStore.loginUser(this.userLogin)
+
         // Simulate an API call
-        this.loginSession.user_id = 1
-        console.log('Logging in with:', this.email, this.password, this.loginSession.user_id)
+
+
 
         // Replace with actual API request
-        await new Promise((resolve) => setTimeout(resolve, 1500))
+        // await new Promise((resolve) => setTimeout(resolve, 1500))
 
         this.$q.notify({ type: 'positive', message: 'Login successful!' })
 
         //localStorage.setItem('user_id', this.loginSession.user_id = 1)
 
+
         // Redirect or perform other actions on success
-        this.$router.push('/main')
+         this.$router.push('/main')
       } catch (error) {
         this.$q.notify({ type: 'negative', message: 'Login failed. Please try again.' + error })
       } finally {

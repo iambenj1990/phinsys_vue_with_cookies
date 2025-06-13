@@ -1,6 +1,6 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { api } from 'src/boot/axios'
-import { Notify } from 'quasar'
+import { Notify, LocalStorage } from 'quasar'
 
 export const useUserStore = defineStore('users', {
   state: () => ({
@@ -166,8 +166,20 @@ export const useUserStore = defineStore('users', {
 
     async loginUser(payload) {
       try {
-        await api.get('/sanctum/csrf-cookie') // Get CSRF cookie first
+        // await api.get('/sanctum/csrf-cookie') // Get CSRF cookie first
         const response = await api.post('/user/login', payload)
+        console.log(response.data)
+
+          if (response.data.success) {
+                // Store token in localStorage
+                LocalStorage.set('auth_token', response.data.data.token)
+                LocalStorage.set('user', response.data.data.user)
+
+                // Set default authorization header
+                this.setAuthHeader(response.data.data.token)
+
+                return response.data
+              }
         if (response.data.Login_Status) {
           Notify.create({
             type: 'positive',

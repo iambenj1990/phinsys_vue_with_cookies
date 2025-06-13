@@ -1,5 +1,6 @@
 import { defineRouter } from '#q-app/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
+import authSrvc from 'src/services/auth'
 import routes from './routes'
 
 
@@ -26,10 +27,20 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE)
 
-
-
-
   })
+
+  Router.beforeEach((to, from, next) => {
+
+
+  // Check all matched routes (including parent layout)
+  // const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+  if (to.meta.requiresAuth  && !authSrvc.isAuthenticated()) {
+    next('/')
+  } else {
+    next()
+  }
+})
 
 
 
