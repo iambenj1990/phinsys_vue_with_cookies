@@ -73,6 +73,7 @@ const routes = [
       { path: '/libraries/units', component: () => import('src/pages/library/UnitsList.vue'), meta: { requiresAuth: true } }, // particular transaction order of a customer
       { path: '/libraries/list', component: () => import('src/pages/library/LibraryPage.vue'), meta: { requiresAuth: true } }, // particular transaction order of a customer
       { path: '/libraries/config', component: () => import('src/pages/SystemConfiguration.vue'), meta: { requiresAuth: true } },
+      { path: '/libraries/catalog', component: () => import('src/pages/library/libItemsList.vue'), meta: { requiresAuth: true } },
     ],
   },
   {
