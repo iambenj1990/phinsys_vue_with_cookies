@@ -4,7 +4,8 @@ import { LocalStorage } from 'quasar'
 
 class AuthService {
   constructor() {
-    this.baseURL = 'http://192.168.8.11:8000/api'
+    // this.baseURL = 'http://192.168.8.11:8000/api'
+     this.baseURL = 'http://192.168.50.98:8000/api'
   }
 
   async login(credentials) {

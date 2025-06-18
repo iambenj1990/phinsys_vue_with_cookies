@@ -18,6 +18,7 @@
           >
             <q-tab name="Unit" label="Unit" />
             <q-tab name="Dosage" label="Dosage Type" />
+            <q-tab name="Catalog" label="Catalog" />
              <q-tab name="Configuration" label="Config" />
 
            <!---- <q-tab name="Dispense" label="Dispense" /> -->
@@ -38,6 +39,9 @@
             <q-tab-panel name="Configuration">
               <config />
             </q-tab-panel>
+            <q-tab-panel name="Catalog">
+              <catalog />
+            </q-tab-panel>
 
 
           </q-tab-panels>
@@ -53,10 +57,8 @@
 import units from 'src/pages/library/UnitsList.vue'
 import DosageType from 'src/pages/library/DosageTypeList.vue'
 import config from 'src/pages/SystemConfiguration.vue'
-// import low from 'pages/ItemsNoStockList.vue'
-// //import stock from './ItemsMovementList.vue'
-// import dispense from './ItemsMonthlyDispenseReport.vue'
-// import inventory from './ItemsInventory.vue'
+import catalog from 'src/pages/library/libItemsList.vue'
+
 
 export default {
   name: 'ItemReports',
@@ -64,6 +66,7 @@ export default {
     units,
     DosageType,
     config,
+    catalog
   },
   setup() {
     return {}
