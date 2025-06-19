@@ -13,6 +13,7 @@ export const useCatalogStore = defineStore('catalog', {
       try {
         const response = await api.get('/system/library/medlist')
         this.catalog_list = response.data.items
+        console.log('Catalog fetched successfully:', this.catalog_list)
 
       } catch (error) {
         console.error(error)
@@ -20,10 +21,32 @@ export const useCatalogStore = defineStore('catalog', {
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
-          timeout: 5000,
+          timeout: 3000,
         })
       }
     },
+
+    async newCatalog(payload) {
+      try {
+         this.catalog_list = [] // Clear the catalog list before adding new items
+        const response = await api.post('/system/library/medlist/new', payload)
+        this.catalog_list = response.data.items
+        Notify.create({
+          type: 'positive',
+          message: 'Catalog created successfully',
+          position: 'center',
+          timeout: 3000,
+        })
+      } catch (error) {
+        console.error(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 3000,
+        })
+      }
+    }
   },
 })
 

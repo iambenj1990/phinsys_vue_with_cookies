@@ -10,13 +10,13 @@
             <q-btn flat color="primary" label="Upload New Item" @click="upload = true" />
           </div>
 
-          <q-table  :rows="items" :columns="cols" />
+          <q-table :rows="items" :columns="cols" />
         </q-card-section>
       </q-card>
     </div>
 
     <q-dialog v-model="upload" persistent class="q-mx-auto">
-      <div style="max-width: 800px; width: 100%; height: 700px;">
+      <div style="max-width: 800px; width: 100%; height: 700px">
         <q-card>
           <q-card-section class="row items-center">
             <div class="text-h6 text-green">New Catalog</div>
@@ -35,15 +35,15 @@
               />
             </q-card-actions>
 
-                <q-table  :rows="upload_items" :columns="upload_cols"
-                virtual-scroll
-                :pagination="{
-                  rowsPerPage: 20,
-                  page: 1,
-                }"
-                 />
-
-
+            <q-table
+              :rows="medicines"
+              :columns="upload_cols"
+              virtual-scroll
+              :pagination="{
+                rowsPerPage: 20,
+                page: 1,
+              }"
+            />
           </q-card-section>
 
           <q-card-actions align="right" class="q-px-md">
@@ -59,7 +59,7 @@
                 }
               "
             />
-            <q-btn flat color="primary" label="Save" @click="saveNewItem" />
+            <q-btn flat color="primary" label="Save" @click="newCatalog({ medicines })" />
           </q-card-actions>
         </q-card>
       </div>
@@ -70,6 +70,10 @@
 <script>
 import { useCatalogStore } from 'src/stores/libItems'
 import * as XLSX from 'xlsx'
+
+
+
+
 
 export default {
   name: 'LibItemsList',
@@ -85,7 +89,7 @@ export default {
         { name: 'dosage_form', label: 'Dosage Form', field: 'dosage_form', align: 'left' },
       ],
 
-      upload_items: [],
+      medicines: [],
       upload_cols: [
         { name: 'generic_name', label: 'Generic Name', field: 'generic_name', align: 'left' },
         { name: 'brand_name', label: 'Brand Name', field: 'brand_name', align: 'left' },
@@ -96,6 +100,8 @@ export default {
     }
   },
   methods: {
+
+
     loadExcelFile(file) {
       if (!file) return
 
@@ -108,7 +114,7 @@ export default {
 
         const dataRows = rawData.slice(1)
 
-        this.upload_items = dataRows
+        this.medicines = dataRows
           .filter(
             (row) =>
               Array.isArray(row) &&
@@ -132,20 +138,33 @@ export default {
     async getCatalogItems() {
       try {
         this.catalogStore.getCatalog()
-        this.items = this.catalogStore.catalog_list()
+        this.items = this.catalogStore.catalog_list
       } catch (error) {
         console.error('Error fetching catalog items:', error)
       }
     },
 
-    // async saveNewCatalog() {
-    //   try {
-    //     const response = await fetch('/api/catalog-items')
-    //     this.upload_items = await response.json()
-    //   } catch (error) {
-    //     console.error('Error saving new catalog item:', error)
-    //   }
-    // },
+    async newCatalog(payload) {
+      try {
+      const unsanitized_object = localStorage.getItem('user')
+      const sanitized_object = unsanitized_object.replace('__q_objt|', '')
+      const user = JSON.parse(sanitized_object)
+      payload.medicines.forEach((item) => {
+        item.category = 'medicine'
+        item.user_id = user.id
+      })
+
+
+      console.log('Saving new catalog item:', payload)
+      this.catalogStore.newCatalog(payload)
+      this.getCatalogItems()
+
+      } catch (error) {
+        console.error('Error saving new catalog item:', error)
+      }
+    },
+
+
   },
   mounted() {
     // Lifecycle hook
