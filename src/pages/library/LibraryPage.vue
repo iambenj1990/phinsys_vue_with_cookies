@@ -19,7 +19,7 @@
             <q-tab name="Unit" label="Unit" />
             <q-tab name="Dosage" label="Dosage Type" />
             <q-tab name="Catalog" label="Catalog" />
-             <q-tab name="Configuration" label="Config" />
+            <q-tab name="Configuration" label="Config" />
 
            <!---- <q-tab name="Dispense" label="Dispense" /> -->
           </q-tabs>
@@ -39,6 +39,7 @@
             <q-tab-panel name="Configuration">
               <config />
             </q-tab-panel>
+            
             <q-tab-panel name="Catalog">
               <catalog />
             </q-tab-panel>

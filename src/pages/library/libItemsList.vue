@@ -55,7 +55,7 @@
                 () => {
                   upload = false
                   excelPathModel = null
-                  upload_items = []
+                  medicines = []
                 }
               "
             />
@@ -155,10 +155,11 @@ export default {
       })
 
 
-      console.log('Saving new catalog item:', payload)
+
       this.catalogStore.newCatalog(payload)
       this.getCatalogItems()
-
+      this.upload_items=[]
+      this.upload = false
       } catch (error) {
         console.error('Error saving new catalog item:', error)
       }
@@ -168,6 +169,8 @@ export default {
   },
   mounted() {
     // Lifecycle hook
+    this.items = []
+    this.medicines = []
     this.getCatalogItems()
   },
 

@@ -7,6 +7,7 @@ export const useUserStore = defineStore('users', {
     user: {},
     users: [],
     selected_id: null,
+    authenticatedUser:0,
   }),
 
   actions: {

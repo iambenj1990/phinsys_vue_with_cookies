@@ -11,13 +11,25 @@ import axios from 'axios'
 // for each client)
 const api = axios.create({
 
-              baseURL: 'http://192.168.8.11:8000/api', //office
+              baseURL: 'http://192.168.8.11:8000/api',
+              // baseURL: process.env.API_URL, //office
               // baseURL: 'http://192.168.50.98:8000/api', //Home
               withCredentials: false
             })
+// Set default headers
+api.defaults.headers.common['Content-Type'] = 'application/json'
+
+
+
 
 export default defineBoot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
+      const token = localStorage.getItem('auth_token')
+    // If token exists, set it in the default headers
+    if (token) {
+      const sanitized_object = token.replace('__q_objt|', '')
+      api.defaults.headers.common['Authorization'] = `Bearer ${sanitized_object}`
+    }
 
   app.config.globalProperties.$axios = axios
   // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)

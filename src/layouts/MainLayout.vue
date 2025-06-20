@@ -163,14 +163,17 @@
 
 <script>
 import auth from 'src/services/auth'
+import {useUserStore} from 'src/stores/userStore'
 export default {
   name: 'MyLayout',
   components: {},
 
   setup() {
     const ausSrvc = auth
+    const userStore = useUserStore()
     return {
       ausSrvc,
+      userStore
     }
   },
   data() {
@@ -191,6 +194,14 @@ export default {
       } catch (error) {
         console.log (error)
       }
+    },
+
+    GetUserID(){
+      const unsanitized_object = localStorage.getItem('user')
+      const sanitized_object = unsanitized_object.replace('__q_objt|', '')
+      const user = JSON.parse(sanitized_object)
+      this.userStore.authenticatedUser = user.id
+      console.log(user.id)
     }
   },
 
@@ -200,6 +211,7 @@ export default {
 
     if (this.ausSrvc.isAuthenticated()) {
       this.ausSrvc.initializeAuth()
+      this.GetUserID()
     }
   },
 }
