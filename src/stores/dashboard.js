@@ -28,6 +28,19 @@ export const useDashboardStore = defineStore('dashboard', {
   },
 
   actions: {
+
+    injectToken(){
+    const token = localStorage.getItem('auth_token')
+    // If token exists, set it in the default headers
+    if (token) {
+      const sanitized_object = token.replace('__q_strn|', '')
+      console.log('Sanitized token:', sanitized_object)
+      api.defaults.headers.common['Authorization'] = `Bearer ${sanitized_object}`
+    }
+    },
+
+
+
     async customerBarangay(payload) {
       try {
         this.barangayData = []

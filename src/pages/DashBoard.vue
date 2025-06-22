@@ -370,6 +370,7 @@ export default {
   },
 
   mounted() {
+     this.dashboardStore.injectToken() // Ensure the token is injected before making API calls
     // Fetch data from API or perform any other setup tasks here
     //this.now_date = new Date().toISOString().split('T')[0] // Set default date to today
     try {
@@ -409,6 +410,7 @@ export default {
   },
 
   methods: {
+
     async get_Served_customers(payload) {
       try {
         const data = {
