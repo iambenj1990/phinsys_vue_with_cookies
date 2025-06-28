@@ -281,6 +281,8 @@
 import { useItemStore } from 'src/stores/itemsStore'
 import { useLoginStore } from 'src/stores/loginSessionStore'
 
+
+
 export default {
   watch: {
     New_Po(newvalue) {
@@ -303,7 +305,11 @@ export default {
   },
 
   created() {
+    this.itemStore.injectToken() //should be always on top to inject token before any api call
     this.fetch_Medicine_info()
+    this.ShowDosageForm()
+
+
   },
 
   computed: {
@@ -315,7 +321,9 @@ export default {
     },
   },
   setup() {
+
     return {
+
       defaultValues: {
         po_no: '',
         brand_name: '',
@@ -416,7 +424,7 @@ export default {
         },
       ],
       sType: ['Medicine', 'Medical Gadget'],
-      MedType: ['Tablet', 'Capsule', 'Syrup', 'Powder'],
+      MedType: [],
       sUnit: ['PCS', 'BOX'],
     }
   },
@@ -446,10 +454,23 @@ export default {
         user_id: 1,
       },
       searchTerm: '',
+
     }
   },
 
   methods: {
+
+
+    async ShowDosageForm(){
+      try {
+        await this.itemStore.getDosageForm()
+        this.MedType = this.itemStore.dosageForm.map(item => item.type)
+        console.log('med type =>',this.MedType)
+      } catch (error) {
+        console.error('Error fetching dosage forms:', error)
+      }
+    },
+
     filterList() {
       if (!this.MedicineInfo.brand_name) {
         this.filteredList = this.medMiniInfo

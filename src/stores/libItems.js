@@ -9,12 +9,20 @@ export const useCatalogStore = defineStore('catalog', {
   }),
 
   actions: {
+    injectToken() {
+      const token = localStorage.getItem('auth_token')
+      // If token exists, set it in the default headers
+      if (token) {
+        const sanitized_object = token.replace('__q_strn|', '')
+        console.log('Sanitized token:', sanitized_object)
+        api.defaults.headers.common['Authorization'] = `Bearer ${sanitized_object}`
+      }
+    },
     async getCatalog() {
       try {
         const response = await api.get('/system/library/medlist')
         this.catalog_list = response.data.items
         console.log('Catalog fetched successfully:', this.catalog_list)
-
       } catch (error) {
         console.error(error)
         Notify.create({
@@ -28,7 +36,7 @@ export const useCatalogStore = defineStore('catalog', {
 
     async newCatalog(payload) {
       try {
-         this.catalog_list = [] // Clear the catalog list before adding new items
+        this.catalog_list = [] // Clear the catalog list before adding new items
         const response = await api.post('/system/library/medlist/new', payload)
         this.catalog_list = response.data.items
         Notify.create({
@@ -46,7 +54,7 @@ export const useCatalogStore = defineStore('catalog', {
           timeout: 3000,
         })
       }
-    }
+    },
   },
 })
 

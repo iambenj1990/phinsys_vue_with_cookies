@@ -12,12 +12,39 @@ export const useItemStore = defineStore('items', {
     expired: [],
     po_items: [],
     zero_stocks: [],
-    stockMiniInfo:[],
+    stockMiniInfo: [],
     temp_id: '',
     hasOpening: false,
+    dosageForm: [],
   }),
 
   actions: {
+    injectToken() {
+      const token = localStorage.getItem('auth_token')
+      // If token exists, set it in the default headers
+      if (token) {
+        const sanitized_object = token.replace('__q_strn|', '')
+        console.log('Sanitized token:', sanitized_object)
+        api.defaults.headers.common['Authorization'] = `Bearer ${sanitized_object}`
+      }
+    },
+
+    async getDosageForm() {
+      try {
+        const response = await api.get('/system/library/dosages')
+        this.dosageForm = response.data.dosagetypes
+        console.log(this.dosageForm)
+      } catch (error) {
+        console.error(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
     async openLookup() {
       try {
         const response = await api.get('/daily/inventoryOpen/today')
@@ -52,7 +79,7 @@ export const useItemStore = defineStore('items', {
 
     async getStockMiniInfo() {
       try {
-        const response = await api.get('/system/library/items')
+        const response = await api.get('/system/library/medlist')
         this.stockMiniInfo = response.data.items
       } catch (error) {
         console.error(error)
@@ -78,7 +105,6 @@ export const useItemStore = defineStore('items', {
         })
       }
     },
-
 
     async getItem(id) {
       try {
@@ -115,7 +141,6 @@ export const useItemStore = defineStore('items', {
         const response = await api.post('/items/new', payload)
         console.log(response.data.success)
         console.table(response.data.item)
-
       } catch (error) {
         console.log(error)
 

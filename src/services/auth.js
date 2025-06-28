@@ -93,6 +93,18 @@ class AuthService {
   getCurrentUser() {
     return LocalStorage.getItem('user')
   }
+
+
+  getCredentials(){
+    this.initializeAuth()
+    try {
+
+        console.error('getting credentials:')
+    } catch (error) {
+      console.error('Error getting credentials:', error)
+      return null
+    }
+  }
 }
 
 export default new AuthService()

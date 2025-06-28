@@ -11,9 +11,9 @@ import axios from 'axios'
 // for each client)
 const api = axios.create({
 
-              // baseURL: 'http://192.168.8.11:8000/api',
+              baseURL: 'http://192.168.8.11:8000/api',
               // baseURL: process.env.API_URL, //office
-              baseURL: 'http://192.168.50.98:8000/api', //Home
+              // baseURL: 'http://192.168.50.98:8000/api', //Home
               withCredentials: false
             })
 

@@ -3,9 +3,7 @@
     <div class="q-mx-auto">
       <q-card class="q-pa-lg q-mb-md">
         <q-card-section>
-          <div class="text-h6 q-mb-sm text-green">Medicine Catalog</div>
-        </q-card-section>
-        <q-card-section>
+             <div class="text-h6 q-mb-sm text-green">Medicine Catalog</div>
           <div class="q-my-sm" align="right">
             <q-btn flat color="primary" label="Upload New Item" @click="upload = true" />
           </div>
@@ -137,7 +135,7 @@ export default {
     },
     async getCatalogItems() {
       try {
-        this.catalogStore.getCatalog()
+       await this.catalogStore.getCatalog()
         this.items = this.catalogStore.catalog_list
       } catch (error) {
         console.error('Error fetching catalog items:', error)
@@ -168,6 +166,9 @@ export default {
 
   },
   mounted() {
+    // Inject token if needed
+     this.catalogStore.injectToken() // Uncomment if you have a method to inject token
+
     // Lifecycle hook
     this.items = []
     this.medicines = []
