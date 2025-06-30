@@ -305,7 +305,7 @@ export default {
   },
 
   created() {
-    this.itemStore.injectToken() //should be always on top to inject token before any api call
+    // this.itemStore.injectToken() //should be always on top to inject token before any api call
     this.fetch_Medicine_info()
     this.ShowDosageForm()
 
