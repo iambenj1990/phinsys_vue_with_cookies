@@ -27,7 +27,7 @@
             />
           </div>
           <div class="col-12 col-md-3 q-mx-sm">
-            <q-input filled v-model="form.middle_name" label="Middle Name" class="q-mb-md" />
+            <q-input filled v-model="form.middle_name" label="Middle Name" class="q-mb-md text-uppercase" />
           </div>
         </div>
 

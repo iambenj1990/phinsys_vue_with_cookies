@@ -94,8 +94,8 @@ export default {
 
       try {
 
-        const response = await this.loginAuth.login(this.userLogin)
-        console.log('Show data => ',response)
+        await this.loginAuth.login(this.userLogin)
+        // console.log('Show data => ',response)
         //  this.loginStore.loginUser(this.userLogin)
 
         // Simulate an API call
@@ -113,7 +113,7 @@ export default {
         // Redirect or perform other actions on success
          this.$router.push('/main')
       } catch (error) {
-        this.$q.notify({ type: 'negative', message: 'Login failed. Please try again.' + error })
+        this.$q.notify({ type: 'negative', message:  error.message })
       } finally {
         this.loading = false
       }

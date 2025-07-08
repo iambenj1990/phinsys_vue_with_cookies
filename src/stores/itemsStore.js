@@ -24,7 +24,7 @@ export const useItemStore = defineStore('items', {
       // If token exists, set it in the default headers
       if (token) {
         const sanitized_object = token.replace('__q_strn|', '')
-        console.log('Sanitized token:', sanitized_object)
+       // console.log('Sanitized token:', sanitized_object)
         api.defaults.headers.common['Authorization'] = `Bearer ${sanitized_object}`
       }
     },
@@ -49,7 +49,7 @@ export const useItemStore = defineStore('items', {
       try {
         const response = await api.get('/daily/inventoryOpen/today')
         this.hasOpening = response.data.status
-        console.log(this.hasOpening)
+       // console.log(this.hasOpening)
       } catch (error) {
         console.error(error)
         Notify.create({
@@ -65,7 +65,7 @@ export const useItemStore = defineStore('items', {
       try {
         const response = await api.get('/items/generate/tempno')
         this.temp_id = response.data
-        console.log(this.temp_id)
+        //console.log(this.temp_id)
       } catch (error) {
         console.error(error)
         Notify.create({
@@ -138,9 +138,8 @@ export const useItemStore = defineStore('items', {
 
     async postItem(payload) {
       try {
-        const response = await api.post('/items/new', payload)
-        console.log(response.data.success)
-        console.table(response.data.item)
+         await api.post('/items/new', payload)
+
       } catch (error) {
         console.log(error)
 
@@ -170,8 +169,8 @@ export const useItemStore = defineStore('items', {
 
     async deleteItem(id) {
       try {
-        const response = await api.delete('/items/' + id)
-        console.log(response.data.success, ' --- ', response.data.message)
+         await api.delete('/items/' + id)
+      //  console.log(response.data.success, ' --- ', response.data.message)
       } catch (error) {
         console.log(error)
         Notify.create({
@@ -185,8 +184,8 @@ export const useItemStore = defineStore('items', {
 
     async deletePOItems(po_no) {
       try {
-        const response = await api.delete('/items/po/' + po_no)
-        console.log(response.data.success, ' --- ', response.data.message)
+        await api.delete('/items/po/' + po_no)
+      //  console.log(response.data.success, ' --- ', response.data.message)
         Notify.create({
           type: 'positive',
           message: 'Items Deleted Successfully',
@@ -238,6 +237,14 @@ export const useItemStore = defineStore('items', {
     async closingStocks() {
       try {
         await api.post('/daily/inventory/close-latest')
+
+        Notify.create({
+          type: 'positive',
+          message: 'Successfully closed the latest inventory',
+          position: 'center',
+          timeout: 2000,
+        })
+
       } catch (error) {
         if (error.response && error.response.status === 404) {
           // Show notification for HTTP 409 error
@@ -265,7 +272,7 @@ export const useItemStore = defineStore('items', {
       try {
         const response = await api.get('/daily/inventory/get-list/' + date)
         this.items = response.data.list
-        console.log(this.items)
+     //   console.log(this.items)
       } catch (error) {
         console.log(error)
         Notify.create({
@@ -284,7 +291,7 @@ export const useItemStore = defineStore('items', {
           type: 'positive',
           message: 'Regenerated new stock list for today',
           position: 'center',
-          timeout: 5000,
+          timeout: 2000,
         })
       } catch (error) {
         if (error.response && error.response.status === 409) {

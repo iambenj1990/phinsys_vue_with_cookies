@@ -46,7 +46,7 @@
       <q-card-actions>
         <q-space />
         <q-btn label="Save" color="green" class="q-mt-md" @click="saveCredentials" />
-        <q-btn label="Cancel" color="grey" class="q-mt-md" />
+        <q-btn label="Cancel" color="grey" class="q-mt-md" @click="$router.back()" />
       </q-card-actions>
     </q-card>
   </q-page>

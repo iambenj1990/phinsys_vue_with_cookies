@@ -12,9 +12,10 @@ import axios from 'axios'
 const api = axios.create({
 
               baseURL: 'http://192.168.8.11:8000/api',
+              // baseURL: 'http://10.0.1.23:89/api',
               // baseURL: process.env.API_URL, //office
               // baseURL: 'http://192.168.50.98:8000/api', //Home
-              withCredentials: false
+              withCredentials: true
             })
 
 

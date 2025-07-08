@@ -115,8 +115,8 @@ export default {
       this.resetForm()
       this.$router.go(-1)
     },
-    onSubmit() {
-      this.$refs.registrationForm.validate().then((success) => {
+   async onSubmit() {
+     await this.$refs.registrationForm.validate().then((success) => {
         if (success) {
 
           this.insertNewUser(this.form)

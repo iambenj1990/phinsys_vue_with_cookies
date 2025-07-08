@@ -167,7 +167,7 @@ export default {
   },
   mounted() {
     // Inject token if needed
-     this.catalogStore.injectToken() // Uncomment if you have a method to inject token
+    //  this.catalogStore.injectToken() // Uncomment if you have a method to inject token
 
     // Lifecycle hook
     this.items = []

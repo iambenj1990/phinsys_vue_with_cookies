@@ -21,7 +21,7 @@
             <q-tooltip>Account</q-tooltip>
 
             <q-list style="min-width: 150px">
-              <q-item clickable v-close-popup @click="onItemClick('account')">
+              <q-item clickable v-close-popup @click=" $router.push('/users/user/')">
                 <q-item-section>
                   <q-item-label>
                     <q-icon name="account_circle"  size="20px"></q-icon>
