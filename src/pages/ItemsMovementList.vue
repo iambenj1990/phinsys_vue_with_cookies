@@ -26,25 +26,30 @@
               bordered
               class="q-mr-md"
               style="min-height: 500px; max-height: 1000px; height: 100%"
-              v-model:pagination="pagination"
             >
               <template v-slot:top-left>
                 <div class="q-gutter-sm flex">
                   <q-input
-                  borderless
-                  dense
-                  debounce="300"
-                  v-model="filter"
-                  placeholder="Search"
-                  filled
-                  style="width: 300px"
-                  class="q-mr-md"
-                >
-                  <template v-slot:append>
-                    <q-icon name="search" />
-                  </template>
-                </q-input>
-                <q-input filled dense type="date" v-model="dateRange" @update:model-value="showStocks(dateRange)"/>
+                    borderless
+                    dense
+                    debounce="300"
+                    v-model="filter"
+                    placeholder="Search"
+                    filled
+                    style="width: 300px"
+                    class="q-mr-md"
+                  >
+                    <template v-slot:append>
+                      <q-icon name="search" />
+                    </template>
+                  </q-input>
+                  <q-input
+                    filled
+                    dense
+                    type="date"
+                    v-model="dateRange"
+                    @update:model-value="showStocks(dateRange)"
+                  />
                   <!-- <q-input dense filled v-model="dateRange" mask="####-##-##" :rules="['date']">
                   <template v-slot:append>
                     <q-icon name="event" class="cursor-pointer">
@@ -59,18 +64,16 @@
                   </template>
                 </q-input> -->
 
-                <q-btn
-                  dense
-                  flat
-                  color="green"
-                  label="Export"
-                  icon="import_export"
-                  @click="exportToExcel"
-                  style="height: 40px; "
-
-                />
+                  <q-btn
+                    dense
+                    flat
+                    color="green"
+                    label="Export"
+                    icon="import_export"
+                    @click="exportToExcel"
+                    style="height: 40px"
+                  />
                 </div>
-
               </template>
 
               <template #body="props">
@@ -281,8 +284,7 @@ export default {
       today,
       indicatorStore,
       pagination: {
-        page: 1,
-        rowsPerPage: 15,
+        rowsPerPage: 10,
         sortBy: null,
         descending: false,
       },
@@ -437,7 +439,7 @@ export default {
   methods: {
     async showStocks(date) {
       try {
-        await this.itemStore.getStocksList( date)
+        await this.itemStore.getStocksList(date)
         this.rows = this.itemStore.items
       } catch (error) {
         console.log(error)
@@ -445,15 +447,18 @@ export default {
     },
 
     clearDates() {
-      this.dateRange=''
+      this.dateRange = ''
     },
 
     async exportToExcel() {
       const workbook = new ExcelJS.Workbook()
       const worksheet = workbook.addWorksheet('Stock Movements')
 
+      const excludedFields = ['actions']
+      const selectedColumns = this.cols.filter((col) => !excludedFields.includes(col.field))
+
       // Define columns
-      worksheet.columns = this.cols.map((col) => ({
+      worksheet.columns = selectedColumns.map((col) => ({
         header: col.label,
         key: col.field,
         width: 20,
