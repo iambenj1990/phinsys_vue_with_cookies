@@ -58,7 +58,7 @@ export const useConfigurationsStore = defineStore('configurations', {
         }
 
         this.configuration = response.data.configuration
-        console.log('response => ', response.data.configuration)
+       // console.log('response => ', response.data.configuration)
       } catch (error) {
         Notify.create({
           type: 'negative',

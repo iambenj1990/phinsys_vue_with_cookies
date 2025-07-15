@@ -407,6 +407,7 @@ export default {
       immediate: true, // Call the handler immediately with the initial value
       deep: true, // Watch for changes in the object properties
     },
+
   },
 
   methods: {

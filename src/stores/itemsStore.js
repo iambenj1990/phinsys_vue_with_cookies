@@ -12,6 +12,7 @@ export const useItemStore = defineStore('items', {
     expired: [],
     po_items: [],
     zero_stocks: [],
+    low_stocks: [],
     stockMiniInfo: [],
     temp_id: '',
     hasOpening: false,
@@ -316,10 +317,30 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async outOfStocks() {
+    async LowStocks(threshold) {
+
+      // console.log('Store Threshold:', threshold)
       try {
-        const response = await api.get('/daily/inventory/lowquantity')
-        this.zero_stocks = response.data.stocks
+        const response = await api.get('/daily/inventory/lowquantity/' + threshold)
+        this.low_stocks_stocks = response.data.stocks
+        console.log('Low Stocks:', this.low_stocks_stocks)
+
+      } catch (error) {
+
+        Notify.create({
+          type: 'negative',
+          message: error.response.data.message || 'An error occurred.',
+          position: 'center',
+          timeout: 5000,
+        })
+
+      }
+    },
+
+     async EmptyStocks() {
+      try {
+        const response = await api.get('/daily/inventory/emptyquantity')
+        this.low_stocks_stocks = response.data.stocks
 
         // Notify.create({
         //   type: 'positive',
