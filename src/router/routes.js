@@ -109,6 +109,14 @@ const routes = [
       }, //get all items
 
       {
+        path: '/inventory/stockcard',
+        component: () => import('pages/ItemsStockCard.vue'),
+        meta: { requiresAuth: true },
+      }, //get all items
+
+      
+
+      {
         path: '/reports/dispense/monthly',
         component: () => import('pages/ItemsMonthlyDispenseReport.vue'),
         meta: { requiresAuth: true },

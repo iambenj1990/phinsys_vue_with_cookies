@@ -142,18 +142,11 @@
                   <q-td key="actions" style="font-size: 11px" align="center">
                     <q-btn
                       flat
-                      color="primary"
-                      @click="GetAdjustItem(props.row)"
-                      icon="edit_document"
-                      :disable="
-                        !props.row.Closing_quantity
-                          ? true
-                          : new Date(props.row.expiration_date) <= new Date()
-                            ? true
-                            : false
-                      "
-                    >
-                      <q-tooltip> Adjustment </q-tooltip>
+                      color="warning"
+                      icon="style"
+                      to ="/inventory/stockcard"
+                      >
+                      <q-tooltip> Stock Card </q-tooltip>
                     </q-btn>
                     <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
                   </q-td>

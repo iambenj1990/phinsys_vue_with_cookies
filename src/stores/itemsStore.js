@@ -322,8 +322,8 @@ export const useItemStore = defineStore('items', {
       // console.log('Store Threshold:', threshold)
       try {
         const response = await api.get('/daily/inventory/lowquantity/' + threshold)
-        this.low_stocks_stocks = response.data.stocks
-        console.log('Low Stocks:', this.low_stocks_stocks)
+        this.low_stocks = response.data.stocks
+        console.log('Low Stocks:', this.low_stocks)
 
       } catch (error) {
 
@@ -340,7 +340,7 @@ export const useItemStore = defineStore('items', {
      async EmptyStocks() {
       try {
         const response = await api.get('/daily/inventory/emptyquantity')
-        this.low_stocks_stocks = response.data.stocks
+        this.zero_stocks = response.data.stocks
 
         // Notify.create({
         //   type: 'positive',

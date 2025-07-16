@@ -277,7 +277,7 @@ export default {
     async fetchAllStocks() {
       try {
         this.loading = true
-        await this.itemStore.outOfStocks()
+        await this.itemStore.EmptyStocks()
         this.rows = this.itemStore.zero_stocks
       } catch (error) {
         Notify.create({

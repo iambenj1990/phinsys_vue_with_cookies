@@ -16,7 +16,7 @@
             <q-table
               :rows="rows"
               :columns="cols"
-              row-key="id"
+              row-key="po_no"
               :filter="filter"
               flat
               bordered
@@ -281,6 +281,8 @@ export default {
         this.loading = true
         await this.itemStore.LowStocks(this.threshold)
         this.rows = this.itemStore.low_stocks
+        console.log('Low stocks fetched:', this.itemStore.low_stocks)
+        console.log('Low stocks fetched:', this.rows)
       } catch (error) {
         Notify.create({
           type: 'negative',

@@ -161,7 +161,7 @@ export default {
       try {
          await this.reportStore.MonthlyDispenseReports()
         const data = this.reportStore.monthly_dispense
-        console.table( data)
+        // console.table( data)
 
         const pivot = {}
 
@@ -185,7 +185,7 @@ export default {
         })
 
         this.rows =  Object.values(pivot)
-        console.table( this.rows)
+        // console.table( this.rows)
         this.loading = false
       } catch (error) {
         console.error('Error fetching monthly dispense report:', error)
