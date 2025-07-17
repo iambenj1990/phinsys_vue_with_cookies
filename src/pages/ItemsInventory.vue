@@ -22,7 +22,7 @@
               bordered
               class="q-mr-md"
               style="min-height: 500px; max-height: 1000px; height: 100%"
-              v-model:pagination="pagination"
+             
             >
               <template v-slot:top-left>
                 <q-input

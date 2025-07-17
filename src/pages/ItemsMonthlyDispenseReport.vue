@@ -14,9 +14,9 @@
               :filter="filter"
               flat
               bordered
-              class="q-mr-md"
+              class="q-mr-md q-table--grid"
               style="min-height: 500px; max-height: 1000px; height: 100%"
-              v-model:pagination="pagination"
+
               table-header-style="background-color: #f5f5f5"
             >
               <template v-slot:top-left>
@@ -106,7 +106,7 @@ export default {
       cols,
       months,
       pagination: {
-        page: 1,
+
         rowsPerPage: 15,
         sortBy: null,
         descending: false,

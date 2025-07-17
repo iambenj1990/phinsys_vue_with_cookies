@@ -623,7 +623,7 @@ export default {
       this.transactionDetails.transaction_date = new  Date().toLocaleDateString('en-CA')
       this.transactionDetails.item_id = payload.item_id
       this.transactionDetails.unit = payload.dosage_form
-      this.transactionDetails.user_id = 1
+      this.transactionDetails.user_id = this.GetUserID()
       // console.log(payload)
       // console.log(this.transactionDetails)
       this.showQuantity = true
@@ -728,6 +728,13 @@ export default {
         age--
       }
       return age
+    },
+
+     GetUserID(){
+      const unsanitized_object = localStorage.getItem('user')
+      const sanitized_object = unsanitized_object.replace('__q_objt|', '')
+      const user = JSON.parse(sanitized_object)
+      return user.id
     },
   },
 

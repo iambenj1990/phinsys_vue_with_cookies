@@ -28,7 +28,6 @@
           <div class="q-gutter-md row">
             <div class="text-h6 q-pt-md text-green col-md-12">
               Movement History
-
             </div>
             <div class="col-md-12">
              <q-table

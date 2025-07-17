@@ -451,7 +451,7 @@ export default {
         price: 0,
         price_per_pcs: 0,
         expiration_date: '',
-        user_id: 1,
+        user_id: 0,
       },
       searchTerm: '',
       MedType: [],
@@ -460,6 +460,13 @@ export default {
   },
 
   methods: {
+
+    GetUserID(){
+      const unsanitized_object = localStorage.getItem('user')
+      const sanitized_object = unsanitized_object.replace('__q_objt|', '')
+      const user = JSON.parse(sanitized_object)
+      return user.id
+    },
 
 
     async ShowDosageForm(){
@@ -532,8 +539,9 @@ export default {
     },
 
     async insertNewItem(payload) {
+      //console.log('payload =>', this.GetUserID())
       payload.po_no = this.New_Po
-      payload.user_id = 1
+      payload.user_id = this.GetUserID()
 
       await this.itemStore.postItem(payload)
       this.fetchItemsbyPO(this.New_Po)
