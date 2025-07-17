@@ -14,7 +14,7 @@
               outlined
               dense
               required
-              class="q-mt-md"
+              class="q-mt-md text-uppercase"
 
             />
             <div class="flex justify-end">
@@ -41,7 +41,7 @@
       <q-separator spaced />
 
       <q-card>
-        
+
         <q-card-section>
           <q-table :rows="rows" :columns="columns" row-key="id" flat bordered>
             <template #body="props">
@@ -49,18 +49,22 @@
                 <!-- <q-td key="id" style="font-size: 11px" align="left">
                 {{ props.row.id }}
               </q-td> -->
-                <q-td key="type" style="font-size: 11px" align="left">
+                <q-td key="type" style="font-size: 11px" align="left" class="text-uppercase">
                   {{ props.row.type }}
                 </q-td>
 
-                <q-td key="actions" style="font-size: 11px" align="left">
+                <q-td key="actions" style="font-size: 11px" align="center">
                   <q-btn
                     flat
                     icon="delete"
                     color="negative"
                     @click="open_deleteDialog(props.row.id)"
-                  />
-                  <q-btn flat icon="edit" color="amber" @click="getDosageType(props.row.id)" />
+                  >
+                  <q-tooltip>Delete</q-tooltip>
+                </q-btn>
+                  <q-btn flat icon="edit" color="amber" @click="getDosageType(props.row.id)" >
+                  <q-tooltip>Edit</q-tooltip>
+                  </q-btn>
                 </q-td>
               </q-tr>
             </template>

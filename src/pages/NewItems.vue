@@ -424,7 +424,7 @@ export default {
         },
       ],
       sType: ['Medicine', 'Medical Gadget'],
-      MedType: [],
+
       sUnit: ['PCS', 'BOX'],
     }
   },
@@ -454,6 +454,7 @@ export default {
         user_id: 1,
       },
       searchTerm: '',
+      MedType: [],
 
     }
   },

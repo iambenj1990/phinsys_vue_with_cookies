@@ -175,14 +175,21 @@ export default {
       }
     },
 
+     GetUserID(){
+      const unsanitized_object = localStorage.getItem('user')
+      const sanitized_object = unsanitized_object.replace('__q_objt|', '')
+      const user = JSON.parse(sanitized_object)
+      return user.id
+    }
+
 
 
   },
    mounted() {
     // Fetch data or perform any setup when the component is mounted
     // console.log('Selected ID:', this.userStore.selected_id)
-    if (this.userStore.selected_id) {
-      this.getUser(this.userStore.selected_id)
+    if (this.userStore.authenticatedUser) {
+      this.getUser(this.GetUserID())
     }
   },
 }

@@ -16,7 +16,7 @@
             indicator-color="primary"
             narrow-indicator
           >
-            <q-tab name="Unit" label="Unit" />
+            <!-- <q-tab name="Unit" label="Unit" /> -->
             <q-tab name="Dosage" label="Dosage Type" />
             <q-tab name="Catalog" label="Catalog" />
             <q-tab name="Configuration" label="Config" />
@@ -26,10 +26,10 @@
           <q-separator />
 
           <q-tab-panels v-model="tab" animated>
-            <q-tab-panel name="Unit">
-              <!-- <div class="text-h6">Mails</div> -->
+            <!-- <q-tab-panel name="Unit">
+               <div class="text-h6">Mails</div>
               <units />
-            </q-tab-panel>
+            </q-tab-panel> -->
 
             <q-tab-panel name="Dosage">
               <!-- <div class="text-h6">Alarms</div> -->
@@ -39,7 +39,7 @@
             <q-tab-panel name="Configuration">
               <config />
             </q-tab-panel>
-            
+
             <q-tab-panel name="Catalog">
               <catalog />
             </q-tab-panel>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import units from 'src/pages/library/UnitsList.vue'
+// import units from 'src/pages/library/UnitsList.vue'
 import DosageType from 'src/pages/library/DosageTypeList.vue'
 import config from 'src/pages/SystemConfiguration.vue'
 import catalog from 'src/pages/library/libItemsList.vue'
@@ -64,7 +64,7 @@ import catalog from 'src/pages/library/libItemsList.vue'
 export default {
   name: 'ItemReports',
   components: {
-    units,
+    // units,
     DosageType,
     config,
     catalog
@@ -75,7 +75,7 @@ export default {
   data() {
     return {
       // Add your component data here
-      tab: 'Unit', // Default tab
+      tab: 'Dosage', // Default tab
     }
   },
   methods: {
