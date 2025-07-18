@@ -4,7 +4,6 @@
       <div class="text-h4 text-grey q-pa-md">Dashboard</div>
       <q-separator />
       <div class="q-my-sm flex flex-wrap q-px-md justify-end">
-
         <q-input v-model="rangeText" label="Select Date Range" dense readonly style="width: 250px">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
@@ -23,7 +22,15 @@
             <q-separator spaced />
           </div>
           <div class="flex flex-wrap q-px-md q-mb-lg">
-            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px" @click="()=>{ this.$router.push({ path: '/items/reports', query: { tab: 'Inventory' } }) }" >
+            <q-card
+              class="q-ma-xs q-pa-md"
+              style="width: 220px; height: 110px"
+              @click="
+                () => {
+                  this.$router.push({ path: '/items/reports', query: { tab: 'Inventory' } })
+                }
+              "
+            >
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
                   <q-icon name="inventory_2" color="green" size="30px" class="q-mr-sm" />
@@ -33,7 +40,15 @@
               </q-card-section>
             </q-card>
 
-            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px" @click="()=>{this.$router.push({ path: '/items/reports', query: { tab: 'Expired' }})}">
+            <q-card
+              class="q-ma-xs q-pa-md"
+              style="width: 220px; height: 110px"
+              @click="
+                () => {
+                  this.$router.push({ path: '/items/reports', query: { tab: 'Expired' } })
+                }
+              "
+            >
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
                   <q-icon name="event_busy" color="green" size="30px" class="q-mr-sm" />
@@ -43,7 +58,15 @@
               </q-card-section>
             </q-card>
 
-            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px" @click="()=>{ this.$router.push({ path: '/items/reports', query: { tab: 'Low' }})}" >
+            <q-card
+              class="q-ma-xs q-pa-md"
+              style="width: 220px; height: 110px"
+              @click="
+                () => {
+                  this.$router.push({ path: '/items/reports', query: { tab: 'Low' } })
+                }
+              "
+            >
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
                   <q-icon
@@ -58,13 +81,21 @@
               </q-card-section>
             </q-card>
 
-              <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px" @click="()=>{ this.$router.push({ path: '/items/reports', query: { tab: 'Low' }})}">
+            <q-card
+              class="q-ma-xs q-pa-md"
+              style="width: 220px; height: 110px"
+              @click="
+                () => {
+                  this.$router.push({ path: '/items/reports', query: { tab: 'Low' } })
+                }
+              "
+            >
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
                   <q-icon name="description" color="green" size="30px" class="q-mr-sm" />
                   Low Stocks
                 </div>
-                <div class="text-h4" align="right">{{ countTemporaryPO }}</div>
+                <div class="text-h4" align="right">{{ lowstock }}</div>
               </q-card-section>
             </q-card>
 
@@ -85,7 +116,15 @@
             <q-separator spaced label="Section Title" />
           </div>
           <div class="flex flex-wrap q-px-md q-mb-lg">
-            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px" @click="()=>{ this.$router.push({ path: '/customers'})}">
+            <q-card
+              class="q-ma-xs q-pa-md"
+              style="width: 220px; height: 110px"
+              @click="
+                () => {
+                  this.$router.push({ path: '/customers' })
+                }
+              "
+            >
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
                   <q-icon name="people" color="green" size="30px" class="q-mr-sm" />
@@ -95,7 +134,15 @@
               </q-card-section>
             </q-card>
 
-            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px" @click="()=>{ this.$router.push({ path: '/customer/orders'})}">
+            <q-card
+              class="q-ma-xs q-pa-md"
+              style="width: 220px; height: 110px"
+              @click="
+                () => {
+                  this.$router.push({ path: '/customer/orders' })
+                }
+              "
+            >
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
                   <q-icon name="medical_services" color="green" size="30px" class="q-mr-sm" />
@@ -139,7 +186,7 @@
 
       <div class="row-span-12">
         <div class="col-9">
-          <q-card >
+          <q-card>
             <q-card-section>
               <div class="text-h6 text-green">Patient Requests per Barangay</div>
               <Bar
@@ -174,7 +221,7 @@
           </div>
           <div class="col-lg-5 q-ml-md">
             <q-card class="flex flex-center">
-              <q-card-section  class="text-h6 text-green">
+              <q-card-section class="text-h6 text-green">
                 Patients per Gender Classification
               </q-card-section>
               <q-card-section class="q-pa-md">
@@ -196,6 +243,8 @@
 </template>
 
 <script>
+import { useConfigurationsStore } from 'src/stores/configurations'
+import { Notify } from 'quasar'
 import { useTagumStore } from 'src/stores/TagumStore'
 import { useDashboardStore } from 'src/stores/dashboard'
 import { Pie, Bar } from 'vue-chartjs'
@@ -229,6 +278,7 @@ export default {
   setup() {
     const tagumStore = useTagumStore()
     const dashboardStore = useDashboardStore()
+    const configurationsStore = useConfigurationsStore()
 
     const today = new Date()
     const start = new Date(today.getFullYear(), today.getMonth(), 1)
@@ -239,6 +289,7 @@ export default {
       end,
       tagumStore,
       dashboardStore,
+      configurationsStore,
       expiredCount: 0,
       outOfStockCount: 0,
       availableCount: 0,
@@ -250,7 +301,7 @@ export default {
           field: 'brand_name',
           sortable: true,
           align: 'left',
-         headerClasses: 'bg-green-7 text-white text-subtitle1 text-weight-regular',
+          headerClasses: 'bg-green-7 text-white text-subtitle1 text-weight-regular',
         },
         {
           name: 'generic_name',
@@ -259,7 +310,6 @@ export default {
           sortable: true,
           align: 'left',
           headerClasses: 'bg-green-7 text-white text-subtitle1 text-weight-regular',
-
         },
         {
           name: 'total_quantity_out',
@@ -268,7 +318,6 @@ export default {
           sortable: true,
           align: 'left',
           headerClasses: 'bg-green-7 text-white text-subtitle1 text-weight-regular',
-
         },
       ],
     }
@@ -294,6 +343,7 @@ export default {
       expiredData: {},
       instock: 0,
       nostock: 0,
+      lowstock: 0,
       countTemporaryPO: 0,
       top10_medicine: [],
       backgroundColor: [
@@ -366,7 +416,6 @@ export default {
   },
   computed: {
     // Computed properties can be added here if needed
-
   },
 
   mounted() {
@@ -384,6 +433,7 @@ export default {
       this.get_medicine_expired()
       this.get_medicine_instock()
       this.get_medicine_noStocks()
+      this.get_medicine_lowStock()
       this.get_medicine_temporaryPO()
       this.get_medicine_top10()
     } catch (error) {
@@ -392,8 +442,6 @@ export default {
   },
 
   watch: {
-
-
     range: {
       handler: debounce(function (newRange) {
         this.rangeText = `${newRange.from} to ${newRange.to}`
@@ -407,11 +455,9 @@ export default {
       immediate: true, // Call the handler immediately with the initial value
       deep: true, // Watch for changes in the object properties
     },
-
   },
 
   methods: {
-
     async get_Served_customers(payload) {
       try {
         const data = {
@@ -450,10 +496,7 @@ export default {
           end_date: payload.to,
         }
 
-
         await this.dashboardStore.customerBarangay(data)
-
-
 
         // console.log('Barangay data:', this.dashboardStore.barangayData)
         const rawBarangayData = this.dashboardStore.barangayData
@@ -552,6 +595,16 @@ export default {
       }
     },
 
+    async get_medicine_lowStock() {
+      try {
+        const threshold = await this.get_threshold()
+        await this.dashboardStore.medicineLowStock(threshold)
+        this.lowstock = this.dashboardStore.lowStock // Assuming the API returns the count of out of stock medicines
+      } catch (error) {
+        console.error('Error fetching out of stock medicines:', error)
+      }
+    },
+
     async get_medicine_temporaryPO() {
       try {
         await this.dashboardStore.medicineTempPOno()
@@ -570,6 +623,23 @@ export default {
       } catch (error) {
         console.error('Error fetching top 10 medicines:', error)
       }
+    },
+
+    async get_threshold() {
+       try {
+        await this.configurationsStore.getConfiguration()
+        return  this.configurationsStore.configuration.low_count
+        // console.log('Threshold:', this.threshold)
+      } catch (error) {
+        Notify.create({
+          type: 'negative',
+          message:
+            error.response.data.message || 'An error occurred while fetching configurations.',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+      return 5 // Example threshold value
     },
   },
 }

@@ -201,7 +201,7 @@ export default {
       const sanitized_object = unsanitized_object.replace('__q_objt|', '')
       const user = JSON.parse(sanitized_object)
       this.userStore.authenticatedUser = user.id
-      console.log(user.id)
+     // console.log(user.id)
     }
   },
 

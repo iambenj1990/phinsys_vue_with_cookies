@@ -23,7 +23,7 @@ const api = axios.create({
       // If token exists, set it in the default headers
       if (token) {
         const sanitized_object = token.replace('__q_strn|', '')
-        console.log('Sanitized token:', sanitized_object)
+       // console.log('Sanitized token:', sanitized_object)
         api.defaults.headers.common['Authorization'] = `Bearer ${sanitized_object}`
       }
 

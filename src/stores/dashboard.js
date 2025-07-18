@@ -18,6 +18,7 @@ export const useDashboardStore = defineStore('dashboard', {
     expire: {},
     inStock: 0,
     noStock: 0,
+    lowStock: 0, // Assuming you will populate this with data later
     countTemp: 0,
 
     top10: [], // Assuming you will populate this with data later
@@ -187,6 +188,23 @@ export const useDashboardStore = defineStore('dashboard', {
         if (response.status === 200) {
           const data = response.data.noStock
           this.noStock = data
+          // console.log('Out of stock medicines:', this.noStock)
+          // Assuming data contains the in-stock information you need
+        } else {
+          console.error('Failed to fetch medicine in stock data:')
+        }
+      } catch (error) {
+        console.error('Error in medicineInStock action:', error)
+      }
+    },
+
+       async medicineLowStock(threshold) {
+      try {
+        const response = await api.get('/dashboard/medicines/LowStocks/' + threshold)
+        if (response.status === 200) {
+          const data = response.data.stocks
+          console.log('Low stock medicines:', data)
+          this.lowStock = data ? data : 0
           // console.log('Out of stock medicines:', this.noStock)
           // Assuming data contains the in-stock information you need
         } else {
