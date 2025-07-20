@@ -99,7 +99,11 @@
               </q-card-section>
             </q-card>
 
-            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px">
+            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px" @click="
+              () => {
+                this.$router.push({ path: '/items/temporary-po' })
+              }
+            ">
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
                   <q-icon name="description" color="green" size="30px" class="q-mr-sm" />
@@ -110,6 +114,9 @@
             </q-card>
           </div>
         </div>
+
+        <!-- CUSTOMER SIDE -->
+
         <div class="col col-lg-5">
           <div class="text-h6 q-ma-xs q-p-md text-green">
             Patients
@@ -132,7 +139,9 @@
                 </div>
                 <div class="text-h4" align="right">{{ registered_customer }}</div>
               </q-card-section>
+
             </q-card>
+
 
             <q-card
               class="q-ma-xs q-pa-md"
@@ -626,9 +635,9 @@ export default {
     },
 
     async get_threshold() {
-       try {
+      try {
         await this.configurationsStore.getConfiguration()
-        return  this.configurationsStore.configuration.low_count
+        return this.configurationsStore.configuration.low_count
         // console.log('Threshold:', this.threshold)
       } catch (error) {
         Notify.create({

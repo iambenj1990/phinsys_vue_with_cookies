@@ -4,7 +4,7 @@
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%;">
       <div class="row q-gutter-md">
         <div class="col-12">
-          <div align="left" class="text-h6 text-primary">
+          <div align="left" class="text-h6 text-primary q-pa-md">
             Supplies Information
           </div>
         </div>
@@ -14,7 +14,7 @@
         <q-circular-progress indeterminate size="90px" color="primary" />
       </div>
       <div v-else class="row q-gutter-md">
-        <div class="col-12 col-md-12 q-pa-sm">
+        <div class="col-12 col-md-12 q-pt-md">
           <q-table :rows="rows" :columns="cols" row-key="id" :visible-columns="[
             'po_no',
             'generic_name',
@@ -25,7 +25,7 @@
             'quantity',
             'expiration_date',
           ]" :filter="filter" flat bordered class="q-mr-md"
-            style=" min-height: 500px; max-height: 500px; height: 100%;">
+            style=" max-height: 700px; height: 100%;">
             <template v-slot:top-left>
               <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
                 <template v-slot:append>
@@ -34,6 +34,16 @@
               </q-input>
             </template>
             <template v-slot:top-right>
+               <q-btn
+                flat
+                label="Update P.O. #"
+                class="text-subtitle2"
+                color="primary"
+                icon="source"
+                @click=" () => {
+                    this.$router.push('/items/temporary-po');
+                  }"
+              />
               <q-btn flat type="button" label="Add Purchases" class="q-mr-md q-ml-md" color="primary"
                  icon="add" to="/items/new" />
             </template>
@@ -64,10 +74,7 @@
                 <q-td key="expiration_date" style="font-size: 11px" align="left">
                   {{ props.row.expiration_date }}
                 </q-td>
-
-
               </q-tr>
-
             </template>
           </q-table>
         </div>

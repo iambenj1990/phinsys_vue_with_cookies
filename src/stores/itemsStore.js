@@ -11,6 +11,7 @@ export const useItemStore = defineStore('items', {
     expiring: [],
     expired: [],
     po_items: [],
+    po_temp:[],
     zero_stocks: [],
     low_stocks: [],
     stockMiniInfo: [],
@@ -111,6 +112,42 @@ export const useItemStore = defineStore('items', {
       try {
         const response = await api.get('/items/' + id)
         this.item = response.data.items[0]
+      } catch (error) {
+        console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+  async getTempPO() {
+      try {
+        const response = await api.get('/items/temp/po')
+        this.po_temp = response.data.list
+      } catch (error) {
+        console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
+    async UpdateTempPO(id,request ) {
+      try {
+        console.log('temp => ', id, 'new po => ', request)
+        const response = await api.put('/items/temp/po/' + id, {'po_no': request})
+          Notify.create({
+          type: 'positive',
+          message: response.data.message,
+          position: 'center',
+          timeout: 2000,
+        })
+        this.po_temp = response.data.list
       } catch (error) {
         console.log(error)
         Notify.create({

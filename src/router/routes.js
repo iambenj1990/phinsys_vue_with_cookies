@@ -92,6 +92,12 @@ const routes = [
         component: () => import('pages/ItemsInventory.vue'),
         meta: { requiresAuth: true },
       }, // particular transaction order of a customer
+
+      {
+        path: '/items/temporary-po',
+        component: () => import('pages/ItemsTemporaryPO.vue'),
+        meta: { requiresAuth: true },
+      },
       {
         path: '/inventory/open',
         component: () => import('pages/ClientList.vue'),
@@ -114,7 +120,7 @@ const routes = [
         meta: { requiresAuth: true },
       }, //get all items
 
-      
+
 
       {
         path: '/reports/dispense/monthly',

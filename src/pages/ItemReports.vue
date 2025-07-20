@@ -21,6 +21,7 @@
             <q-tab name="Low" label="Low Stocks" />
             <q-tab name="Empty" label="Zero Stocks" />
             <q-tab name="Dispense" label="Dispense" />
+            <q-tab name="Temporary" label="Temporary P.O. #" />
           </q-tabs>
           <q-separator />
 
@@ -47,6 +48,11 @@
 
 
             <q-tab-panel name="Dispense">
+              <!-- <div class="text-h6">Movies</div> -->
+              <dispense />
+            </q-tab-panel>
+
+             <q-tab-panel name="Temporary">
               <!-- <div class="text-h6">Movies</div> -->
               <dispense />
             </q-tab-panel>
