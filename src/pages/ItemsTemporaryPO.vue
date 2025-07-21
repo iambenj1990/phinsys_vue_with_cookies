@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <div class="flex flex-center q-ma-sm">
+    <div class="flex flex-center q-ma-sm" >
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
         <div v-if="loading" class="flex flex-center justify-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
@@ -44,19 +44,37 @@
                   <q-td key="created_at" align="left">
                     {{ props.row.created_at.slice(0, 10) }}
                   </q-td>
-                  <q-td key="actions" align="left">
+                  <q-td key="actions" align="center">
+
                     <q-btn
                       flat
-                      color="primary"
+                      color="green"
                       icon="edit"
-                      class="q-mr-sm"
                       @click="
                         () => {
-                          ShowUpdate = true
+
                           editItem(props.row.po_no)
+                           ShowUpdate = true
                         }
                       "
-                    />
+                    >
+                    <q-tooltip>Edit P.O.</q-tooltip>
+                  </q-btn>
+                     <q-btn
+                      flat
+                      color="green"
+                      icon="visibility"
+
+                      @click="
+                        () => {
+                          getItemsByTempPO(props.row.po_no)
+                          show_list = true
+
+                        }
+                      "
+                    >
+                    <q-tooltip>View</q-tooltip>
+                  </q-btn>
                   </q-td>
                 </q-tr>
               </template>
@@ -95,6 +113,37 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <q-dialog v-model="show_list" persistent>
+      <q-card style="width: 400px;">
+        <q-card-section class="text-h6">
+          <div class="text-h6 q-pa-md text-green"> Item Details</div>
+          <q-table
+            :rows="med_rows"
+            :columns="med_cols"
+            row-key="id"
+            flat
+            dense
+            class="q-mr-md"
+            :style="{ height: '400px', width: '100%' }"
+          >
+          <template #body="props">
+             <q-tr :v-bind="props" class="text-subtitle1">
+               <q-td key="generic_name" align="left">
+                 {{ props.row.generic_name }}
+               </q-td>
+               <q-td key="brand_name" align="left">
+                 {{ props.row.brand_name }}
+               </q-td>
+             </q-tr>
+          </template>
+          </q-table>
+        </q-card-section>
+        <q-card-actions>
+          <q-btn flat color="green" label="Close" @click="show_list = false" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -114,6 +163,23 @@ export default {
   },
   setup() {
     return {
+      med_cols:[
+        {
+          name: 'generic_name',
+          required: true,
+          label: 'Generic Name',
+          align: 'left',
+          field: 'generic_name',
+        },
+       {
+          name: 'brand_name',
+          required: true,
+          label: 'Brand Name',
+          align: 'left',
+          field: 'brand_name',
+        },
+
+      ],
       cols: [
         {
           name: 'po_no',
@@ -136,16 +202,18 @@ export default {
           name: 'actions',
           required: true,
           label: 'Actions',
-          align: 'left',
+          align: 'center',
         },
       ],
     }
   },
   data() {
     return {
+      show_list:false,
       ShowUpdate: false,
       color: '',
       rows: [],
+      med_rows: [],
       filter: '',
       loading: false,
       selected_tempPO: null,
@@ -251,6 +319,23 @@ export default {
         this.loading = false
       }
     },
+
+    async getItemsByTempPO(po_no) {
+      this.med_rows = []
+      try{
+
+        await this.itemStore.getItemsByPO(po_no)
+        this.med_rows = this.itemStore.po_items
+
+      }catch(error){
+          Notify.create({
+            type: 'negative',
+            message: error.response.data.message || 'An error occurred while fetching items.',
+            position: 'center',
+            timeout: 5000,
+          })
+        }    },
+
   },
 
   mounted() {
