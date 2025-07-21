@@ -56,6 +56,14 @@ const routes = [
         component: () => import('pages/NewItems.vue'),
         meta: { requiresAuth: true },
       }, //get all items
+
+      {
+        path: '/items/new/batch',
+        component: () => import('pages/NewItemsBatchUpload.vue'),
+        meta: { requiresAuth: true },
+      }, //get all items
+
+
       {
         path: '/items/po',
         component: () => import('pages/ClientList.vue'),

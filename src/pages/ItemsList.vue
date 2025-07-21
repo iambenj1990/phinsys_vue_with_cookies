@@ -124,7 +124,7 @@
             icon="format_list_numbered"
             @click="
               () => {
-                this.$router.push('/items/temporary-po')
+                this.$router.push('/items/new/batch')
               }
             "
           />

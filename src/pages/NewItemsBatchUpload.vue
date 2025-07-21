@@ -1,24 +1,45 @@
 <template>
   <q-page>
+    <q-card class="my-card q-ma-md">
+      <q-card-section class="text-h6">
+        <q-table
+          :rows="rows"
+          :columns="columns"
+          row-key="id"
+          flat
+          class="q-my-md"
+          :rows-per-page-options="[0]"
+          style="height: 600px"
+        >
+          <template v-slot:top>
+            <div class="q-my-sm" align="right">
+              <q-file
+                dense
+                v-model="excelPathModel"
+                label="Load excel file"
+                @update:model-value="loadExcelFile"
+              />
+            </div>
+          </template>
 
+          <template v-slot:bottom>
+            <q-card-actions align="right"> </q-card-actions>
+          </template>
+        </q-table>
+      </q-card-section>
+    </q-card>
   </q-page>
 </template>
 
 <script>
 import { useItemStore } from 'src/stores/itemsStore'
 import { useLoginStore } from 'src/stores/loginSessionStore'
-
-
+import * as XLSX from 'xlsx'
 
 export default {
-  watch: {
+  watch: {},
 
-  },
-
-  created() {
-
-
-  },
+  created() {},
 
   computed: {
     itemStore() {
@@ -29,9 +50,7 @@ export default {
     },
   },
   setup() {
-
     return {
-
       defaultValues: {
         po_no: '',
         brand_name: '',
@@ -48,14 +67,12 @@ export default {
         user_id: 0,
       },
       columns: [
-
-
         {
-          name: 'generic_name',
-          required: true,
-          label: 'Generic Name',
+          name: 'po_no',
+          required: false,
+          label: 'PO No',
           align: 'left',
-          field: 'generic_name',
+          field: 'po_no',
           sortable: true,
         },
         {
@@ -67,6 +84,22 @@ export default {
           sortable: true,
         },
         {
+          name: 'generic_name',
+          required: true,
+          label: 'Generic Name',
+          align: 'left',
+          field: 'generic_name',
+          sortable: true,
+        },
+        {
+          name: 'dosage_form',
+          required: true,
+          label: 'Dosage Form',
+          align: 'left',
+          field: 'dosage_form',
+          sortable: true,
+        },
+        {
           name: 'dosage',
           required: true,
           label: 'Dosage',
@@ -75,24 +108,16 @@ export default {
           sortable: true,
         },
         {
-          name: 'dosage_form',
-          required: true,
-          label: 'Type',
+          name: 'category',
+          required: false,
+          label: 'Category',
           align: 'left',
-          field: 'dosage_form',
-          sortable: true,
-        },
-        {
-          name: 'quantity',
-          required: true,
-          label: 'Quantity',
-          align: 'left',
-          field: 'quantity',
+          field: 'category',
           sortable: true,
         },
         {
           name: 'unit',
-          required: true,
+          required: false,
           label: 'Unit',
           align: 'left',
           field: 'unit',
@@ -100,27 +125,50 @@ export default {
         },
         {
           name: 'price',
-          required: true,
+          required: false,
           label: 'Price',
           align: 'left',
           field: 'price',
           sortable: true,
         },
-
         {
-          name: 'expiration_date',
-          required: true,
-          label: 'Expiration Date',
+          name: 'price_per_pcs',
+          required: false,
+          label: 'Price per Piece',
           align: 'left',
-          field: 'expiration_date',
+          field: 'price_per_pcs',
           sortable: true,
         },
         {
-          name: 'actions',
-          required: true,
-          label: 'Actions',
+          name: 'quantity',
+          required: false,
+          label: 'Quantity',
           align: 'left',
-          field: 'actions',
+          field: 'quantity',
+          sortable: true,
+        },
+        {
+          name: 'box_quantity',
+          required: false,
+          label: 'Box Quantity',
+          align: 'left',
+          field: 'box_quantity',
+          sortable: true,
+        },
+        {
+          name: 'quantity_per_box',
+          required: false,
+          label: 'Qty per Box',
+          align: 'left',
+          field: 'quantity_per_box',
+          sortable: true,
+        },
+        {
+          name: 'expiration_date',
+          required: false,
+          label: 'Expiration Date',
+          align: 'left',
+          field: 'expiration_date',
           sortable: true,
         },
       ],
@@ -128,6 +176,8 @@ export default {
   },
   data() {
     return {
+      rows: [],
+      excelPathModel: null,
 
       MedicineInfo: {
         po_no: '',
@@ -145,28 +195,101 @@ export default {
         expiration_date: '',
         user_id: 0,
       },
-
-
     }
   },
 
   methods: {
+    openUploadDialog() {
+      this.upload = true
+    },
 
-    GetUserID(){
+    loadExcelFile(file) {
+      if (!file) return
+
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const data = new Uint8Array(e.target.result)
+        const workbook = XLSX.read(data, { type: 'array' })
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]]
+        const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1 })
+
+        const dataRows = rawData.slice(1)
+
+        this.rows = dataRows
+          .filter(
+            (row) =>
+              Array.isArray(row) &&
+              row.length > 0 &&
+              row.some((cell) => String(cell || '').trim() !== ''),
+          )
+          .map((row) => ({
+            po_no: row[0] ?? '',
+            brand_name: row[1] ?? '',
+            generic_name: row[2] ?? '',
+            dosage: row[3] ?? '',
+            dosage_form: row[4] ?? '',
+            category: row[5] ?? '',
+            unit: row[6] ?? '',
+            price: parseFloat(row[7]) || 0,
+            price_per_pcs: parseFloat(row[8]) || 0,
+            quantity: parseInt(row[9]) || 0,
+            box_quantity: parseInt(row[10]) || 0,
+            quantity_per_box: parseInt(row[11]) || 0,
+            expiration_date: row[12] && !isNaN(new Date(row[12])) ? new Date(row[12]) : new Date('1970-01-01'),
+            user_id: this.currentUserId || 1,
+          }))
+      }
+      reader.readAsArrayBuffer(file)
+    },
+
+    GetUserID() {
       const unsanitized_object = localStorage.getItem('user')
       const sanitized_object = unsanitized_object.replace('__q_objt|', '')
       const user = JSON.parse(sanitized_object)
       return user.id
     },
 
+    async batchNewItems(payload) {
+      try {
+        payload.medicines.forEach((item) => {
+          item.category = 'medicine'
+          item.user_id = this.GetUserID()
+        })
 
-
+        await this.itemStore.newItems(payload)
+        this.$q.notify({
+          type: 'positive',
+          message: 'Items successfully added to the catalog.',
+        })
+      } catch (error) {
+        console.error('Error adding items:', error)
+        this.$q.notify({
+          type: 'negative',
+          message: 'Failed to add items. Please try again.',
+        })
+      }
+    },
   },
-
-
 }
 </script>
 
-<style>
+<style scoped>
+.scrollable-body {
+  display: block;
+  max-height: 400px;
+  overflow-y: auto;
+}
 
+.scrollable-body tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+thead tr {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 2;
+}
 </style>
