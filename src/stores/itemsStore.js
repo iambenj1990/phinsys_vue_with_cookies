@@ -190,6 +190,26 @@ export const useItemStore = defineStore('items', {
       }
     },
 
+    async batchInsert(payload){
+      try {
+        const response = await api.post('/items/batch/new', payload)
+        Notify.create({
+          type: 'positive',
+          message: response.data.message ,
+          position: 'center',
+          timeout: 2000,
+        })
+      } catch (error) {
+        console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
     async updateItem(id, payload) {
       try {
         const response = await api.put('/items/' + id, payload)

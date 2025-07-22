@@ -8,6 +8,8 @@
           row-key="id"
           flat
           class="q-my-md"
+          table-header-class="text-h6 text-green"
+          table-body-class="text-subtitle1 text-green"
           :rows-per-page-options="[0]"
           style="height: 600px"
         >
@@ -22,10 +24,27 @@
             </div>
           </template>
 
-          <template v-slot:bottom>
-            <q-card-actions align="right"> </q-card-actions>
+          <template v-slot:body="props">
+            <q-tr :props="props" class="text-subtitle1 text-weight-regular text-grey-9">
+              <q-td v-for="col in props.cols" :key="col.name" :props="props">
+                {{ props.row[col.field] }}
+              </q-td>
+            </q-tr>
           </template>
         </q-table>
+      </q-card-section>
+      <q-card-section>
+        <q-card-actions>
+           <q-btn
+              class="text-white text-subtitle2 text-weight-regular"
+                icon="save"
+                color="green"
+                label="Save"
+                @click="batchNewItems({ medicines: rows })"
+                :disable="rows.length === 0"
+                style="width: 120px;"
+              />
+        </q-card-actions>
       </q-card-section>
     </q-card>
   </q-page>
@@ -89,6 +108,8 @@ export default {
           label: 'Generic Name',
           align: 'left',
           field: 'generic_name',
+          classes: 'text-wrap',
+          style: 'white-space: normal',
           sortable: true,
         },
         {
@@ -235,11 +256,24 @@ export default {
             quantity: parseInt(row[9]) || 0,
             box_quantity: parseInt(row[10]) || 0,
             quantity_per_box: parseInt(row[11]) || 0,
-            expiration_date: row[12] && !isNaN(new Date(row[12])) ? new Date(row[12]) : new Date('1970-01-01'),
-            user_id: this.currentUserId || 1,
+            expiration_date: isNaN(row[12]) ? '' : this.ExeldataToJSDate(Number(row[12])),
+            user_id: this.GetUserID,
           }))
       }
       reader.readAsArrayBuffer(file)
+    },
+
+    ExeldataToJSDate(ExcelDate) {
+      const utc_days = Math.floor(ExcelDate - 25569)
+      const utc_value = utc_days * 86400
+      const date = new Date(utc_value * 1000)
+
+      // Format to YYYY-MM-DD
+      const year = date.getUTCFullYear()
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0') // Month is 0-based
+      const day = String(date.getUTCDate()).padStart(2, '0')
+
+      return `${year}-${month}-${day}`
     },
 
     GetUserID() {
@@ -252,15 +286,17 @@ export default {
     async batchNewItems(payload) {
       try {
         payload.medicines.forEach((item) => {
-          item.category = 'medicine'
+          item.category = 'N/A'
           item.user_id = this.GetUserID()
         })
 
-        await this.itemStore.newItems(payload)
+          console.log('Batch insert payload:', payload)
+         await this.itemStore.batchInsert(payload)
         this.$q.notify({
           type: 'positive',
           message: 'Items successfully added to the catalog.',
         })
+        this.rows = [] // Clear the rows after successful upload
       } catch (error) {
         console.error('Error adding items:', error)
         this.$q.notify({
