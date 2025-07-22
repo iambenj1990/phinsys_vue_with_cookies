@@ -342,9 +342,9 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async openingStocks() {
+    async openingStocks(payload) {
       try {
-        await api.post('/daily/inventory/open-latest')
+        await api.post('/daily/inventory/open-latest/' + payload)
         Notify.create({
           type: 'positive',
           message: 'Regenerated new stock list for today',

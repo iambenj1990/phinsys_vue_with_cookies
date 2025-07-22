@@ -22,7 +22,7 @@
               bordered
               class="q-mr-md"
               style="min-height: 500px; max-height: 1000px; height: 100%"
-             
+
             >
               <template v-slot:top-left>
                 <q-input
@@ -66,7 +66,7 @@
                   <q-td key="po_no" style="font-size: 11px" align="left">
                     {{ props.row.po_no }}
                   </q-td>
-                  <q-td key="generic_name" style="font-size: 11px" align="left">
+                  <q-td key="generic_name" style="font-size: 11px; white-space: normal; word-break: break-word; max-width: 250px;" align="left" class="text-wrap">
                     {{ props.row.generic_name }}
                   </q-td>
                   <q-td key="brand_name" style="font-size: 11px" align="left">

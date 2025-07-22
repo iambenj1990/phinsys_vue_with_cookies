@@ -54,7 +54,7 @@
 
              <q-tab-panel name="Temporary">
               <!-- <div class="text-h6">Movies</div> -->
-              <dispense />
+              <tempPO />
             </q-tab-panel>
           </q-tab-panels>
         </q-card-section>
@@ -70,10 +70,12 @@ import Empty from 'src/pages/ItemsEmptyStocksList.vue'
 //import stock from './ItemsMovementList.vue'
 import dispense from './ItemsMonthlyDispenseReport.vue'
 import inventory from './ItemsInventory.vue'
+import tempPO from './ItemsTemporaryPO.vue'
 
 export default {
   name: 'ItemReports',
   components: {
+    tempPO,
     Empty,
     inventory,
     dispense,

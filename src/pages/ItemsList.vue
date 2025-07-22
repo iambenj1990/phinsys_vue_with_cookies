@@ -31,7 +31,9 @@
               flat
               bordered
               class="q-mr-md"
-              style="max-height: 700px; height: 100%"
+              style="max-height: 600px; height: 100%"
+              :rows-per-page-options="[0]"
+
             >
               <template v-slot:top-left>
                 <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
@@ -66,10 +68,10 @@
               </template>
               <template #body="props">
                 <q-tr :v-bind="props">
-                  <q-td key="po_no" style="font-size: 11px" align="left">
+                  <q-td key="po_no" style="font-size: 11px;" align="left">
                     {{ props.row.po_no }}
                   </q-td>
-                  <q-td key="generic_name" style="font-size: 11px" align="left">
+                  <q-td key="generic_name" style="font-size: 11px;white-space: normal; word-break: break-word; max-width: 200px;" align="left" class="text-wrap">
                     {{ props.row.generic_name }}
                   </q-td>
                   <q-td key="brand_name" style="font-size: 11px" align="left">
@@ -252,3 +254,23 @@ export default {
   },
 }
 </script>
+<style  scoped>
+.scrollable-body {
+  display: block;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.scrollable-body tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+thead tr {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 2;
+}
+</style>

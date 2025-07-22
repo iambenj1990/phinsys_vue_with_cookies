@@ -245,12 +245,12 @@ export default {
           )
           .map((row) => ({
             po_no: row[0] ?? '',
-            brand_name: row[1] ?? '',
-            generic_name: row[2] ?? '',
-            dosage: row[3] ?? '',
-            dosage_form: row[4] ?? '',
-            category: row[5] ?? '',
-            unit: row[6] ?? '',
+            brand_name: row[1] ?? 'GENERIC',
+            generic_name: row[2] ?? 'N/A',
+            dosage: row[3] ?? 'N/A',
+            dosage_form: row[4] ?? 'N/A',
+            category: row[5] ?? 'N/A',
+            unit: row[6] ?? 'N/A',
             price: parseFloat(row[7]) || 0,
             price_per_pcs: parseFloat(row[8]) || 0,
             quantity: parseInt(row[9]) || 0,
@@ -297,6 +297,7 @@ export default {
           message: 'Items successfully added to the catalog.',
         })
         this.rows = [] // Clear the rows after successful upload
+        this.excelPathModel = null // Reset the file input
       } catch (error) {
         console.error('Error adding items:', error)
         this.$q.notify({

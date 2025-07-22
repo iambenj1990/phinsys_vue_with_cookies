@@ -10,7 +10,9 @@
         <!-- <q-separator /> -->
         <div class="q-my-sm q-mx-sm" align="right">
           <q-btn flat label="Close Stocks" color="grey" @click="closeStock()" />
-          <q-btn flat label="Open Stocks" class="q-mx-sm" color="green" @click="openStock()" />
+          <q-btn flat label="Open Stocks" class="q-mx-sm" color="green" @click="()=>{
+            openStock(GetUserID())
+          }" />
         </div>
         <div v-if="loading" class="flex flex-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
@@ -81,7 +83,7 @@
                   <q-td key="po_no" style="font-size: 11px" align="left">
                     {{ props.row.po_no }}
                   </q-td>
-                  <q-td key="generic_name" style="font-size: 11px" align="left">
+                  <q-td key="generic_name" style="font-size: 11px; white-space: normal; word-break: break-word; max-width: 200px;" align="left" class="text-wrap">
                     {{ props.row.generic_name }}
                   </q-td>
                   <q-td key="brand_name" style="font-size: 11px" align="left">
@@ -430,6 +432,13 @@ export default {
   },
 
   methods: {
+
+      GetUserID(){
+      const unsanitized_object = localStorage.getItem('user')
+      const sanitized_object = unsanitized_object.replace('__q_objt|', '')
+      const user = JSON.parse(sanitized_object)
+      return user.id
+    },
     async showStocks(date) {
       try {
         await this.itemStore.getStocksList(date)
@@ -507,9 +516,9 @@ export default {
       this.rows = this.itemStore.items
     },
 
-    async openStock() {
+    async openStock(payload) {
       try {
-        await this.itemStore.openingStocks()
+        await this.itemStore.openingStocks(payload)
         // await this.fetchAllStocks()
         await this.showStocks(this.today)
       } catch (error) {

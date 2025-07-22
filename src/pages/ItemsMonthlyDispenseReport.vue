@@ -94,6 +94,8 @@ export default {
         field: 'item',
         align: 'left',
         sortable: true,
+        class: 'text-wrap',
+        style: 'white-space: normal; word-break: break-word; max-width: 300px;',
       },
       { name: 'quantity', label: 'Quantity', field: 'quantity', align: 'right', sortable: true },
       { name: 'balance', label: 'Balance', field: 'balance', align: 'right', sortable: true },

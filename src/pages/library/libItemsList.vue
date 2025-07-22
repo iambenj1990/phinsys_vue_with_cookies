@@ -121,8 +121,8 @@ export default {
           )
           .map((row) => ({
             generic_name: row[2] ?? '',
-            brand_name: row[1] ?? '',
-            dosage: row[3] ?? '',
+            brand_name: row[1] ?? 'GENERIC',
+            dosage: row[3] ?? 'N/A',
             dosage_form: row[4] ?? '',
           }))
       }
