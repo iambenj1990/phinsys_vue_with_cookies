@@ -11,7 +11,6 @@ export const useDosageStore = defineStore('dosage', {
   }),
 
   actions: {
-
     async getDosagesTypes() {
       try {
         const response = await api.get('/system/library/dosages')
@@ -28,7 +27,7 @@ export const useDosageStore = defineStore('dosage', {
     },
     async getDosageType(id) {
       try {
-        const response = await api.get('/system/library/dosages/'+ id)
+        const response = await api.get('/system/library/dosages/' + id)
         this.dosageInfo = response.data.dosagetype.type
       } catch (error) {
         console.error(error)
@@ -62,9 +61,9 @@ export const useDosageStore = defineStore('dosage', {
       }
     },
 
-    async updateDosageType(id,payload) {
+    async updateDosageType(id, payload) {
       try {
-        await api.put('/system/library/dosages/'+ id, payload)
+        await api.put('/system/library/dosages/' + id, payload)
         this.getDosagesTypes()
         Notify.create({
           type: 'positive',
@@ -84,28 +83,26 @@ export const useDosageStore = defineStore('dosage', {
     },
 
     async removeDosageType(id) {
-    try {
-      await api.delete('/system/library/dosages/'+ id)
-      this.getDosagesTypes()
-      Notify.create({
-        type: 'positive',
-        message: 'Unit deleted successfully',
-        position: 'center',
-        timeout: 2000,
-      })
-    } catch (error) {
-      console.error(error)
-      Notify.create({
-        type: 'negative',
-        message: error.response?.data?.message || error.message || 'An unexpected error occurred',
-        position: 'center',
-        timeout: 2000,
-      })
-    }
-  }
-
+      try {
+        await api.post('/system/library/dosages/remove',  { id } )
+        this.getDosagesTypes()
+        Notify.create({
+          type: 'positive',
+          message: 'Unit deleted successfully',
+          position: 'center',
+          timeout: 2000,
+        })
+      } catch (error) {
+        console.error(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 2000,
+        })
+      }
+    },
   },
-
 })
 
 if (import.meta.hot) {
