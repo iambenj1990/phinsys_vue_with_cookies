@@ -277,6 +277,20 @@ export const useItemStore = defineStore('items', {
       }
     },
 
+     async getJoinedTable_DailyInventor_Items_filtered() {
+      try {
+        const response = await api.get('/items/stock/filteredlist')
+        this.items = response.data
+      } catch (error) {
+        console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
     async getJoinedTable_DailyInventor_Items() {
       try {
         const response = await api.get('/items/stock/list')
@@ -292,9 +306,9 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async closingStocks() {
+    async closingStocks($id) {
       try {
-        await api.post('/daily/inventory/close-latest')
+        await api.post('/daily/inventory/close-latest/' + $id)
 
         Notify.create({
           type: 'positive',

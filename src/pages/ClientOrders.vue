@@ -214,7 +214,9 @@
     <q-dialog v-model="cartPrompt" persistent style="max-width: 1280px; width: 100%">
       <q-card style="max-width: 1280px; width: 100%">
         <div class="row q-gutter-md q-mb-md q-pa-md flex flex-center">
+
           <q-table
+           :rows-per-page-options="[0]"
             :rows="availableMedsRow"
             :columns="cartCols"
             row-key="id"
@@ -247,7 +249,8 @@
                 debounce="300"
                 v-model="filter"
                 placeholder="Search"
-                class="full-width"
+                class="full-width q-px-md"
+               style="background-color: lightgrey;"
                 ref="searchInput"
               >
                 <template v-slot:append>
@@ -261,7 +264,7 @@
                 <!-- <q-td key="po_no" style="font-size: 11px" align="center">
                 {{ props.row.po_no }}
               </q-td> -->
-                <q-td key="generic_name" style="font-size: 11px" align="left">
+                <q-td key="generic_name" style="font-size: 11px;white-space: normal; word-break: break-word; max-width: 300px;" align="left" class="text-wrap" >
                   {{ props.row.generic_name }}
                 </q-td>
                 <q-td key="brand_name" style="font-size: 11px" align="left">
@@ -670,7 +673,7 @@ export default {
 
     async getAvailableMedList() {
       this.cartPrompt = true
-      await this.itemStore.getJoinedTable_DailyInventor_Items()
+      await this.itemStore.getJoinedTable_DailyInventor_Items_filtered()
 
       this.availableMedsRow = this.itemStore.items
     },

@@ -528,7 +528,7 @@ export default {
 
     async closeStock() {
       try {
-        await this.itemStore.closingStocks()
+        await this.itemStore.closingStocks(this.GetUserID())
         // await this.fetchAllStocks()
         await this.showStocks(this.today)
       } catch (error) {
