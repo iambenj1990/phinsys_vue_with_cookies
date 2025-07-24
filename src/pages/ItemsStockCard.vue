@@ -35,7 +35,36 @@
                 :columns="cols"
                 row-key="id"
                 class=""
+                style="height: 500px;"
+                :rows-per-page-options="[0]"
               >
+             <template #body="props">
+              <q-tr :v-bind="props">
+                <q-td key="date" style="font-size: 11px;" align="left">
+                    {{ props.row.date }}
+                  </q-td>
+                  <q-td key="po_no" style="font-size: 11px;" align="left">
+
+                    <!-- {{ props.row.po_no }} -->
+                      {{ props.row.transaction_type === 'IN'? props.row.po_no : '' }}
+                  </q-td>
+                  <q-td key="quantity_in" style="font-size: 11px;" align="left">
+                    {{ props.row.quantity_in }}
+                  </q-td>
+                  <q-td key="quantity_out" style="font-size: 11px;" align="left">
+                    {{ props.row.quantity_out}}
+                  </q-td>
+                  <q-td key="Openning_quantity" style="font-size: 11px;" align="left">
+                    {{ props.row.Openning_quantity }}
+                  </q-td>
+                  <q-td key="Closing_quantity" style="font-size: 11px;" align="left">
+                    {{ props.row.Closing_quantity }}
+                  </q-td>
+                  <q-td key="running_balance" style="font-size: 11px;" align="left">
+                    {{ props.row.running_balance }}
+                  </q-td>
+              </q-tr>
+             </template>
               </q-table>
             </div>
           </div>
@@ -46,46 +75,74 @@
 </template>
 
 <script>
+import { useItemStore } from 'src/stores/itemsStore'
 export default {
   name: 'StockCard',
 
   setup() {
+    const itemsStore = useItemStore()
     return {
+      itemsStore,
        cols: [
 
         {
-        name: 'generic_name',
+        name: 'date',
         required: true,
         label: 'Date',
         align: 'left',
-        field: "generic_name",
+        field: "date",
+        sortable: true
+      },
+
+        {
+        name: 'po_no',
+        required: true,
+        label: 'P.O No.',
+        align: 'left',
+        field: "po_no",
         sortable: true
       },
 
       {
-        name: 'generic_name',
+        name: 'quantity_in',
+        required: true,
+        label: 'IN',
+        align: 'left',
+        field: "quantity_in",
+        sortable: true
+      },
+       {
+        name: 'quantity_out',
+        required: true,
+        label: 'OUT',
+        align: 'left',
+        field: "quantity_out",
+        sortable: true
+      },
+       {
+        name: 'Openning_quantity',
         required: true,
         label: 'Opening Quantity',
         align: 'left',
-        field: "generic_name",
+        field: "Openning_quantity",
         sortable: true
       },
       {
-        name: 'brand_name',
+        name: 'Closing_quantity',
         required: true,
         label: 'Closing Quantity',
         align: 'left',
-        field: "brand_name",
+        field: "Closing_quantity",
         sortable: true
       },
-      {
-        name: 'dosage',
+       {
+        name: 'running_balance',
         required: true,
-        label: 'Consumed Quantity',
+        label: 'Running Balance',
         align: 'left',
-        field: "dosage",
+        field: "running_balance",
         sortable: true
-      },
+      }
 
        ],
     }
@@ -99,10 +156,28 @@ export default {
       brand_name: '',
       dosage: '',
       dosage_form: '',
+
     }
   },
-  mounted() {},
-  methods: {},
+  mounted() {
+
+    this.generic_name='Paracetamol'
+    this.brand_name='Biogesic'
+    this.getStockCard()
+  },
+  methods: {
+    async getStockCard(){
+
+      const payloadData = {
+        generic_name : this.generic_name,
+        brand_name : this.brand_name,
+      }
+
+      await this.itemsStore.getStockCard(payloadData)
+      this.row = this.itemsStore.stockCard
+
+    }
+  },
 }
 </script>
 
