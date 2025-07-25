@@ -5,11 +5,11 @@
         <q-card-section>
           <div class="text-h6 q-mb-md text-green">Item Stockcard</div>
 
-          <div class="q-gutter-md row q-pb-md">
+          <!-- <div class="q-gutter-md row q-pb-md">
             <div class="col-md-12 col-md-3">
               <q-input v-model="po_no" label="PO No" outlined dense required />
             </div>
-          </div>
+          </div> -->
 
           <div class="q-gutter-md row q-pb-md">
             <div class="col-md-3">
@@ -18,12 +18,12 @@
             <div class="col-md-3">
               <q-input v-model="brand_name" label="Brand Name" outlined dense required />
             </div>
-            <div class="col-md-3">
+            <!-- <div class="col-md-3">
               <q-input v-model="dosage" label="Dosage" outlined dense required />
             </div>
             <div class="col-md-2">
               <q-input v-model="dosage_form" label="Type" outlined dense required />
-            </div>
+            </div> -->
           </div>
           <div class="q-gutter-md row">
             <div class="text-h6 q-pt-md text-green col-md-12">
@@ -54,11 +54,11 @@
                   <q-td key="quantity_out" style="font-size: 11px;" align="left">
                     {{ props.row.quantity_out}}
                   </q-td>
-                  <q-td key="Openning_quantity" style="font-size: 11px;" align="left">
-                    {{ props.row.Openning_quantity }}
+                  <q-td key="openning" style="font-size: 11px;" align="left">
+                    {{ props.row.openning }}
                   </q-td>
-                  <q-td key="Closing_quantity" style="font-size: 11px;" align="left">
-                    {{ props.row.Closing_quantity }}
+                  <q-td key="closing" style="font-size: 11px;" align="left">
+                    {{ props.row.closing }}
                   </q-td>
                   <q-td key="running_balance" style="font-size: 11px;" align="left">
                     {{ props.row.running_balance }}
@@ -67,8 +67,13 @@
              </template>
               </q-table>
             </div>
+
           </div>
         </q-card-section>
+        <q-card-actions>
+
+          <q-btn flat color="secondary" label="Cancel" @click="$router.back()" />
+        </q-card-actions>
       </q-card>
     </q-form>
   </q-page>
@@ -77,6 +82,8 @@
 <script>
 import { useItemStore } from 'src/stores/itemsStore'
 export default {
+
+
   name: 'StockCard',
 
   setup() {
@@ -120,19 +127,19 @@ export default {
         sortable: true
       },
        {
-        name: 'Openning_quantity',
+        name: 'opening_quantity',
         required: true,
         label: 'Opening Quantity',
         align: 'left',
-        field: "Openning_quantity",
+        field: "opening",
         sortable: true
       },
       {
-        name: 'Closing_quantity',
+        name: 'closing_quantity',
         required: true,
         label: 'Closing Quantity',
         align: 'left',
-        field: "Closing_quantity",
+        field: "closing",
         sortable: true
       },
        {
@@ -160,17 +167,17 @@ export default {
     }
   },
   mounted() {
+    this.generic_name = this.itemsStore.selected_stockCard.generic_name
+    this.brand_name = this.itemsStore.selected_stockCard.brand_name
 
-    this.generic_name='Paracetamol'
-    this.brand_name='Biogesic'
     this.getStockCard()
   },
   methods: {
     async getStockCard(){
 
       const payloadData = {
-        generic_name : this.generic_name,
-        brand_name : this.brand_name,
+        generic_name : this.itemsStore.selected_stockCard.generic_name,
+        brand_name : this.itemsStore.selected_stockCard.brand_name,
       }
 
       await this.itemsStore.getStockCard(payloadData)

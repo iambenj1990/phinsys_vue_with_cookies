@@ -146,8 +146,12 @@
                       flat
                       color="warning"
                       icon="style"
-                      to ="/inventory/stockcard"
-                      >
+
+                      @click="() => {
+
+                        passStockCardData(props.row)
+
+                      }">
                       <q-tooltip> Stock Card </q-tooltip>
                     </q-btn>
                     <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
@@ -616,6 +620,12 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+
+    passStockCardData(data) {
+      this.itemStore.selected_stockCard.generic_name = data.generic_name
+      this.itemStore.selected_stockCard.brand_name = data.brand_name
+      this.$router.push('/inventory/stockcard')
     },
   },
 
