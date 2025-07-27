@@ -21,8 +21,8 @@
               flat
               bordered
               class="q-mr-md"
-              style="min-height: 500px; max-height: 1000px; height: 100%"
-              v-model:pagination="pagination"
+              style="height: 500px"
+              :rows-per-page-options="[0]"
             >
               <template v-slot:top-left>
                 <q-input

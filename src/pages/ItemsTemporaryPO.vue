@@ -18,6 +18,8 @@
               flat
               bordered
               class="q-mr-md"
+              :rows-per-page-options="[0]"
+              style="height: 500px"
 
             >
               <template v-slot:top-left>

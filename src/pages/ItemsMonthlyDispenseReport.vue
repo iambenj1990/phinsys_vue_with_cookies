@@ -15,7 +15,8 @@
               flat
               bordered
               class="q-mr-md q-table--grid"
-              style="min-height: 500px; max-height: 1000px; height: 100%"
+              style="height: 500px;"
+              :rows-per-page-options="[0]"
 
               table-header-style="background-color: #f5f5f5"
             >

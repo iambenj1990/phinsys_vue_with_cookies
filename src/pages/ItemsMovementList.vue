@@ -10,9 +10,17 @@
         <!-- <q-separator /> -->
         <div class="q-my-sm q-mx-sm" align="right">
           <q-btn flat label="Close Stocks" color="grey" @click="closeStock()" />
-          <q-btn flat label="Open Stocks" class="q-mx-sm" color="green" @click="()=>{
-            openStock(GetUserID())
-          }" />
+          <q-btn
+            flat
+            label="Open Stocks"
+            class="q-mx-sm"
+            color="green"
+            @click="
+              () => {
+                openStock(GetUserID())
+              }
+            "
+          />
         </div>
         <div v-if="loading" class="flex flex-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
@@ -27,7 +35,8 @@
               flat
               bordered
               class="q-mr-md"
-              style="min-height: 500px; max-height: 1000px; height: 100%"
+              style="height: 600px"
+              :rows-per-page-options="[0]"
             >
               <template v-slot:top-left>
                 <div class="q-gutter-sm flex">
@@ -83,7 +92,17 @@
                   <q-td key="po_no" style="font-size: 11px" align="left">
                     {{ props.row.po_no }}
                   </q-td>
-                  <q-td key="generic_name" style="font-size: 11px; white-space: normal; word-break: break-word; max-width: 200px;" align="left" class="text-wrap">
+                  <q-td
+                    key="generic_name"
+                    style="
+                      font-size: 11px;
+                      white-space: normal;
+                      word-break: break-word;
+                      max-width: 200px;
+                    "
+                    align="left"
+                    class="text-wrap"
+                  >
                     {{ props.row.generic_name }}
                   </q-td>
                   <q-td key="brand_name" style="font-size: 11px" align="left">
@@ -104,13 +123,20 @@
                   </q-td> -->
 
                   <q-td key="expiration_date" style="font-size: 11px" align="left">
-                    {{ props.row.expiration_date }}
+                    <q-badge
+                      :color="setExpirationColor(props.row.expiration_date)"
+                      text-color="white"
+                      class="flex flex-center q-pa-xs"
+                      style="width: 100px"
+                    >
+                      {{ props.row.expiration_date }}
+                    </q-badge>
                   </q-td>
 
                   <q-td key="Closing_quantity" style="font-size: 11px" align="left">
                     <q-badge
                       style="width: 100px"
-                      :color="getStockColor(props.row.Closing_quantity, props.row.quantity)"
+                      :color="getStockColor(props.row.total_closing_quantity, props.row.quantity)"
                       text-color="black"
                       class="flex flex-center q-pa-xs"
                     >
@@ -146,12 +172,12 @@
                       flat
                       color="warning"
                       icon="style"
-
-                      @click="() => {
-
-                        passStockCardData(props.row)
-
-                      }">
+                      @click="
+                        () => {
+                          passStockCardData(props.row)
+                        }
+                      "
+                    >
                       <q-tooltip> Stock Card </q-tooltip>
                     </q-btn>
                     <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
@@ -358,7 +384,7 @@ export default {
           label: 'Remaining Quantity',
           align: 'left',
           field: 'total_closing_quantity',
-          format: (val) => (val ? val : 0), // If empty, set to 0
+
           sortable: true,
         },
 
@@ -368,7 +394,7 @@ export default {
           label: 'Status',
           align: 'left',
           field: 'stock_status',
-          format: (val) => (val ? val : 0), // If empty, set to 0
+
         },
 
         {
@@ -377,7 +403,7 @@ export default {
           label: 'As of',
           align: 'left',
           field: 'transaction_date',
-          format: (val) => (val ? val : 0), // If empty, set to 0
+
         },
         {
           name: 'actions',
@@ -436,8 +462,7 @@ export default {
   },
 
   methods: {
-
-      GetUserID(){
+    GetUserID() {
       const unsanitized_object = localStorage.getItem('user')
       const sanitized_object = unsanitized_object.replace('__q_objt|', '')
       const user = JSON.parse(sanitized_object)
@@ -548,6 +573,7 @@ export default {
     getStockColor(remaining, total) {
       // console.log('remaining =>', remaining, ' total=> ', total)
       const percentage = this.getStockPercentage(remaining, total)
+      //console.log('percentage =>', percentage)
 
       if (percentage === 0) return 'red' // Out of stock (0%)
       if (percentage <= 10) return 'orange' // Critical (≤10%)
@@ -557,7 +583,7 @@ export default {
     },
 
     getStockStatus(row) {
-      if (!row.Closing_quantity) {
+      if (!row.total_closing_quantity) {
         return 'Out of Stock'
       }
       const expirationDate = new Date(row.expiration_date)
@@ -569,20 +595,27 @@ export default {
       return expirationDate <= today ? 'Expired' : 'In Stock'
     },
 
-    getStockStatusColor(row) {
-      if (!row.Closing_quantity) {
-        return 'red'
-      }
-      const expirationDate = new Date(row.expiration_date)
-      const today = new Date()
-      // Optional: reset time to 00:00:00 for date-only comparison
+    setExpirationColor(row) {
+      const expirationDate = new Date(row) // Convert to YYYY-MM-DD format
+      const today = new Date() // Get today's date in YYYY-MM-DD format
+
+      // Set both to midnight for consistent date-only comparison
       expirationDate.setHours(0, 0, 0, 0)
       today.setHours(0, 0, 0, 0)
 
-      if (expirationDate <= today) {
-        return 'red'
+      const timeDiff = expirationDate.getTime() - today.getTime()
+      const daysToExpire = Math.ceil(timeDiff / (1000 * 60 * 60 * 24))
+
+      console.log('Expiration Date:', expirationDate, 'Today:', today, 'Days to expire:', daysToExpire)
+      console.log('Days to expire:', daysToExpire)
+
+      if (daysToExpire < 0) {
+        return 'red' // Already expired
+      } else if (daysToExpire <= 30) {
+        return 'orange' // Expiring within 30 days
+      } else {
+        return 'green' // Still valid
       }
-      //return expirationDate <= today ? 'Expired' : 'Active';
     },
 
     async updateDailyInventory(id, payload) {
