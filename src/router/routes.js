@@ -41,6 +41,11 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
+        path: '/ris/orders/new',
+        component: () => import('pages/NewRIS.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
         path: '/customers/orders/transaction',
         component: () => import('pages/ClientList.vue'),
         meta: { requiresAuth: true },

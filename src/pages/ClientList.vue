@@ -24,6 +24,8 @@
             title="Client Logs/ History"
             title-class="text-bold text-subtitle1 text-primary"
             square
+            :rows-per-page-options="[0]"
+            style="height: 600px;"
           >
 
             <template v-slot:top-right>

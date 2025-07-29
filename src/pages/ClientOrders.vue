@@ -112,6 +112,7 @@
                     @change="calculateAge(costumer.birthdate)"
                     lazy-rules
                     :rules="[(val) => !!val || 'Birthdate is required']"
+                    :readonly="isEditable"
                   />
                 </div>
                 <div class="col-12 col-md-1 q-pa-sm">
@@ -372,7 +373,7 @@
 import { useCustomerStore } from 'src/stores/customersStore'
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
-import newClients from 'src/pages/NewClients.vue'
+import newClients from 'src/pages/NewClientsReleasing.vue'
 export default {
   components: {
     newClients,
@@ -528,7 +529,7 @@ export default {
       ],
       selectedMedicine:{},
        selectedMedicineQty: 0,
-      isEditable: false,
+      isEditable: true,
       selectedClient_id: 0,
       transaction_id: 0,
       filter: '',

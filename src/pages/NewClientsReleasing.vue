@@ -68,7 +68,7 @@
               class="full-width text-caption"
               @change="calculateAge(CustomerInfo.birthdate)"
               lazy-rules
-              :rules="[(val) => !!val || 'Birthdate is required']"
+              :rules="[(val) => !!val || 'Username is required']"
             />
           </div>
           <div class="col-12 col-md-1 q-pa-sm">
@@ -89,8 +89,9 @@
               inputmode="numeric"
 
             />
-             <!-- lazy-rules
-              :rules="[(val) => !!val || 'contact number is required']" -->
+              <!-- lazy-rules
+              :rules="[(val) => !!val || 'contact number is required']"
+               -->
           </div>
         </div>
 
@@ -127,7 +128,7 @@
               class="full-width text-caption text-uppercase"
 
             />
-                <!-- lazy-rules
+             <!-- lazy-rules
               :rules="[(val) => !!val || 'Purok is required']" -->
           </div>
           <div class="col-12 col-md-4 q-pa-sm">
@@ -138,7 +139,7 @@
               class="full-width text-caption text-uppercase"
 
             />
-              <!-- lazy-rules
+               <!-- lazy-rules
               :rules="[(val) => !!val || 'street is required']" -->
           </div>
           <div class="col-12 col-md-3 q-pa-sm">
@@ -178,7 +179,8 @@
               class="full-width text-caption"
 
             />
-               <!-- lazy-rules
+
+                 <!-- lazy-rules
               :rules="[(val) => !!val || 'purok is required']" -->
           </div>
           <div class="col-12 col-md-4 q-pa-sm">
@@ -189,7 +191,8 @@
               class="full-width text-caption"
 
             />
-                 <!-- lazy-rules
+<!--
+                 lazy-rules
               :rules="[(val) => !!val || 'street is required']" -->
           </div>
           <div class="col-12 col-md-2 q-pa-sm">
@@ -286,7 +289,7 @@
           label="Cancel"
           class="q-mr-md q-ml-md text-caption"
           color="red"
-          to="/customers"
+         
           @click="clearInputs()"
         />
         <!-- </div> -->
@@ -378,7 +381,6 @@ export default {
       pwd: false,
       solo: false,
       customer_id: 0,
-      selected_id: 0,
 
       CustomerInfo: {
         firstname: '',
@@ -403,7 +405,8 @@ export default {
     }
   },
   methods: {
-    GetUserID() {
+
+     GetUserID(){
       const unsanitized_object = localStorage.getItem('user')
       const sanitized_object = unsanitized_object.replace('__q_objt|', '')
       const user = JSON.parse(sanitized_object)
@@ -473,16 +476,11 @@ export default {
     async Insert_Customer(payload) {
       payload.user_id = this.GetUserID()
       try {
+        console.log (payload)
         this.errorMsg = []
-        this.us
         await this.Customer.newCustomer(payload)
-        this.$q.notify({
-          type: 'positive',
-          message: 'Customer registration successful!',
-          position: 'center',
-          timeout: 1200,
-        })
-        this.CustomerInfo = { ...this.CustomerInfoDefault }
+
+        this.CustomerInfo = []
         this.Customer.closeNewCustomer = false
       } catch (error) {
         if (error.response) {
@@ -548,21 +546,20 @@ export default {
   },
 
   mounted() {
-    this.CustomerInfo = JSON.parse(JSON.stringify(this.CustomerInfoDefault))
+    this.CustomerInfo.city ='TAGUM CITY'
+    this.CustomerInfo.province ='DAVAO DEL NORTE'
     this.user_id = this.GetUserID()
-    this.selected_id = this.Customer.customer_id
-    // this.Select_Customer(this.Customer.customer_id)
+
   },
   unmounted() {
     this.Customer.isEdit = false
     this.Customer.isSave = true
-    this.CustomerInfo = JSON.parse(JSON.stringify(this.CustomerInfoDefault))
+
   },
 
   watch: {
-    'selected_id'(has_id) {
-      this.Select_Customer(has_id)
-    },
+
+
     'CustomerInfo.birthdate'(newBirthdate) {
       this.CustomerInfo.age = this.calculateAge(newBirthdate)
     },
