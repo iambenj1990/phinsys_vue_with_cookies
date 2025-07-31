@@ -4,10 +4,18 @@
       <div class="text-green text-h6 q-mb-sm">Requisition and Issuance Slip</div>
       <q-separator />
       <q-card-section>
-        <q-form @submit.prevent="submitForm" class="q-gutter-md">
+        <q-form @submit.prevent="lookforOpen()" class="q-gutter-md">
           <div>
             <!-- <q-input filled label="RIS NO." v-model="ris_no" readonly class="q-mb-md" /> -->
-            <q-input filled label="Purpose" v-model="form.purpose" type="textarea" required class="q-mb-md" />
+            <q-input
+              filled
+              label="Purpose"
+              v-model="form.purpose"
+              type="textarea"
+              required
+              class="q-mb-md"
+              ref="purpose"
+            />
           </div>
           <div class="row justify-end">
             <q-btn type="submit" color="green" label="Proceed" />
@@ -28,12 +36,13 @@
               class="text-subtitle2 text-green"
               icon="shopping_cart"
               @click="getAvailableMedList()"
+              :disable="!hasRIS_ID"
             />
           </template>
           <template #body="props">
             <q-tr :v-bind="props">
               <q-td key="item_no" style="font-size: 11px" align="left">
-                {{ props.pageIndex + 1}}
+                {{ props.pageIndex + 1 }}
               </q-td>
               <q-td
                 key="unit"
@@ -49,12 +58,14 @@
                 {{ props.row.unit }}
               </q-td>
               <q-td key="description" style="font-size: 11px" align="left">
-                {{ props.row.brand_name + '-' +  props.row.generic_name  }}
+                {{ props.row.brand_name + '-' + props.row.generic_name }}
               </q-td>
 
               <q-td key="quantity" style="font-size: 11px" align="left">
                 {{ props.row.quantity }}
               </q-td>
+
+              <q-td key="actions" style="font-size: 11px" align="left"> </q-td>
             </q-tr>
           </template>
         </q-table>
@@ -67,6 +78,8 @@
             class="text-subtitle2 text-white q-pa-md q-mt-md"
             icon="save"
             style="width: 110px"
+            @click="clearData()"
+            :disable="isButtonDisabled"
           />
         </q-card-actions>
       </q-card-section>
@@ -276,7 +289,7 @@ export default {
           name: 'description',
           required: true,
           label: 'Description',
-          align: 'left'
+          align: 'left',
         },
         {
           name: 'quantity',
@@ -284,6 +297,12 @@ export default {
           label: 'Quantity',
           align: 'left',
           field: 'quantity',
+        },
+        {
+          name: 'actions',
+          required: true,
+          label: 'Actions',
+          align: 'center',
         },
       ],
       cartCols: [
@@ -369,8 +388,9 @@ export default {
   },
   data() {
     return {
+      hasOpentransaction: false,
       ris_no: '',
-      ris_id:0,
+      ris_id: 0,
       purpose: '',
       rows: [],
       availableMedsRow: [],
@@ -380,8 +400,8 @@ export default {
       filter: '',
       filteredList: [],
       transaction_id: '',
-      form:{
-        purpose:''
+      form: {
+        purpose: '',
       },
 
       transactionDetails: {
@@ -395,24 +415,38 @@ export default {
     }
   },
   methods: {
-
-
-   async submitForm() {
-
+    async lookforOpen() {
       try {
-        await this.risStore.newRIS(this.form)
-        this.ris_no = this.risStore.return_ris_id
-        this.ris_id = this.risStore.return_id
+        await this.itemStore.openLookup()
+        this.hasOpentransaction = this.itemStore.hasOpening
+
+        if (this.hasOpentransaction == false) {
+          // this.$router.push({ path: '/customers/orders/new' })
+
+          await this.risStore.newRIS(this.form)
+          this.ris_no = this.risStore.return_ris_id
+          this.ris_id = this.risStore.return_id
+          console.log('ris_no => ', this.ris_no, '    ris_id => ', this.ris_id)
+        } else {
+          this.$q.notify({
+            type: 'negative',
+            message:
+              'Unable to proceed, Please Coordinate with personnel incharge to Open Inventory!',
+            position: 'center',
+            timeout: 2500,
+          })
+          return
+        }
       } catch (error) {
         console.log(error)
       }
-
     },
 
     clearData() {
-      this.costumer = {}
-      this.transaction_id = 0
+      this.ris_id = ''
+      this.ris_no = 0
       this.rows = []
+      this.form.purpose = ''
 
       this.$q.notify({
         type: 'positive',
@@ -421,7 +455,7 @@ export default {
         timeout: 1200,
       })
 
-      this.$refs.searchInput.focus()
+      this.$refs.purpose.focus()
     },
 
     async remove_order(id) {
@@ -486,9 +520,10 @@ export default {
       this.selectedMedicineQty = payload.Closing_quantity ? payload.Closing_quantity : 0
 
       console.log('show quantity => ', this.selectedMedicineQty)
+      console.log('ris_no => ', this.ris_no, '    ris_id => ', this.ris_id)
 
       this.transactionDetails.transaction_id = this.ris_no
-      this.transactionDetails.customer_id = this.ris_id
+      this.transactionDetails.customer_id = parseInt(this.ris_id)
       this.transactionDetails.transaction_date = new Date().toLocaleDateString('en-CA')
       this.transactionDetails.item_id = payload.item_id
       this.transactionDetails.unit = payload.dosage_form
@@ -510,8 +545,15 @@ export default {
       return user.id
     },
   },
-  mounted() {
+  mounted() {},
 
+  computed: {
+    hasRIS_ID() {
+      return this.ris_no !== '' && this.ris_no !== null
+    },
+    isButtonDisabled() {
+      return this.rows.length === 0
+    },
   },
 }
 </script>

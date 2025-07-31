@@ -620,7 +620,7 @@ export default {
 
       this.selectedMedicineQty = payload.Closing_quantity ? payload.Closing_quantity : 0
 
-      console.log('show quantity => ', this.selectedMedicineQty)
+      // console.log('show quantity => ', this.selectedMedicineQty)
 
       this.transactionDetails.transaction_id = this.transaction_id
       this.transactionDetails.customer_id = this.selectedClient_id
