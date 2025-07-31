@@ -6,8 +6,8 @@
       <q-card-section>
         <q-form @submit.prevent="submitForm" class="q-gutter-md">
           <div>
-            <q-input filled label="RIS NO." v-model="ris_no" readonly class="q-mb-md" />
-            <q-input filled label="Purpose" v-model="purpose" type="textarea" class="q-mb-md" />
+            <!-- <q-input filled label="RIS NO." v-model="ris_no" readonly class="q-mb-md" /> -->
+            <q-input filled label="Purpose" v-model="form.purpose" type="textarea" required class="q-mb-md" />
           </div>
           <div class="row justify-end">
             <q-btn type="submit" color="green" label="Proceed" />
@@ -17,6 +17,9 @@
       <q-separator />
       <q-card-section>
         <q-table row-key="id" :rows="rows" :columns="cols" :rows-per-page-options="[0]">
+          <template #top-left>
+            <div class="text-green text-weight-bold text-subtitle1">CONTROL NO: {{ ris_no }}</div>
+          </template>
           <template #top-right>
             <q-btn
               flat
@@ -29,11 +32,11 @@
           </template>
           <template #body="props">
             <q-tr :v-bind="props">
-              <q-td key="po_no" style="font-size: 11px" align="left">
-                {{ props.row.po_no }}
+              <q-td key="item_no" style="font-size: 11px" align="left">
+                {{ props.pageIndex + 1}}
               </q-td>
               <q-td
-                key="generic_name"
+                key="unit"
                 style="
                   font-size: 11px;
                   white-space: normal;
@@ -43,16 +46,14 @@
                 align="left"
                 class="text-wrap"
               >
-                {{ props.row.generic_name }}
+                {{ props.row.unit }}
               </q-td>
-              <q-td key="brand_name" style="font-size: 11px" align="left">
-                {{ props.row.brand_name }}
+              <q-td key="description" style="font-size: 11px" align="left">
+                {{ props.row.brand_name + '-' +  props.row.generic_name  }}
               </q-td>
-              <q-td key="dosage" style="font-size: 11px" align="left">
-                {{ props.row.dosage }}
-              </q-td>
-              <q-td key="dosage" style="font-size: 11px" align="left">
-                {{ props.row.dosage }}
+
+              <q-td key="quantity" style="font-size: 11px" align="left">
+                {{ props.row.quantity }}
               </q-td>
             </q-tr>
           </template>
@@ -245,12 +246,15 @@
 <script>
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
+import { useRequisitionIssuanceSlip } from 'src/stores/RequisitionIssuanceSlip'
 
 export default {
   setup() {
+    const risStore = useRequisitionIssuanceSlip()
     const itemStore = useItemStore()
     const TransactionStore = useTransactionStore()
     return {
+      risStore,
       itemStore,
       TransactionStore,
       cols: [
@@ -262,18 +266,17 @@ export default {
         },
 
         {
-          name: 'units',
+          name: 'unit',
           required: true,
           label: 'Units',
           align: 'left',
-          field: 'units',
+          field: 'unit',
         },
         {
           name: 'description',
           required: true,
           label: 'Description',
-          align: 'left',
-          field: 'description',
+          align: 'left'
         },
         {
           name: 'quantity',
@@ -367,14 +370,19 @@ export default {
   data() {
     return {
       ris_no: '',
+      ris_id:0,
       purpose: '',
       rows: [],
       availableMedsRow: [],
       showQuantity: false,
       cartPrompt: false,
       searchTerm: '',
-       filter: '',
+      filter: '',
       filteredList: [],
+      transaction_id: '',
+      form:{
+        purpose:''
+      },
 
       transactionDetails: {
         transaction_id: '',
@@ -387,7 +395,19 @@ export default {
     }
   },
   methods: {
-    submitForm() {},
+
+
+   async submitForm() {
+
+      try {
+        await this.risStore.newRIS(this.form)
+        this.ris_no = this.risStore.return_ris_id
+        this.ris_id = this.risStore.return_id
+      } catch (error) {
+        console.log(error)
+      }
+
+    },
 
     clearData() {
       this.costumer = {}
@@ -405,7 +425,7 @@ export default {
     },
 
     async remove_order(id) {
-      await this.transactionStore.remove_order(id)
+      await this.TransactionStore.remove_order(id)
       this.getOrders(this.transaction_id)
       this.$q.notify({ type: 'positive', message: 'order removed successful!' })
     },
@@ -446,7 +466,7 @@ export default {
         return
       }
 
-      await this.transactionStore.newTransaction(payload)
+      await this.TransactionStore.newTransaction(payload)
       this.getAvailableMedList()
 
       this.getOrders(payload.transaction_id)
@@ -458,7 +478,6 @@ export default {
     },
 
     showData(payload) {
-
       if (!payload.Openning_quantity && !payload.Closing_quantity) {
         this.$q.notify({ type: 'negative', message: 'Cannot add item Stocks still closed!' })
         return
@@ -468,9 +487,9 @@ export default {
 
       console.log('show quantity => ', this.selectedMedicineQty)
 
-      this.transactionDetails.transaction_id = this.transaction_id
-      this.transactionDetails.customer_id = this.selectedClient_id
-      this.transactionDetails.transaction_date = new  Date().toLocaleDateString('en-CA')
+      this.transactionDetails.transaction_id = this.ris_no
+      this.transactionDetails.customer_id = this.ris_id
+      this.transactionDetails.transaction_date = new Date().toLocaleDateString('en-CA')
       this.transactionDetails.item_id = payload.item_id
       this.transactionDetails.unit = payload.dosage_form
       this.transactionDetails.user_id = this.GetUserID()
@@ -480,11 +499,11 @@ export default {
     },
 
     async getOrders(transaction_id) {
-      await this.transactionStore.getTransactionOrders(transaction_id)
-      this.rows = this.transactionStore.customerTransactions
+      await this.TransactionStore.getTransactionOrders(transaction_id)
+      this.rows = this.TransactionStore.customerTransactions
     },
 
-     GetUserID(){
+    GetUserID() {
       const unsanitized_object = localStorage.getItem('user')
       const sanitized_object = unsanitized_object.replace('__q_objt|', '')
       const user = JSON.parse(sanitized_object)
@@ -492,7 +511,7 @@ export default {
     },
   },
   mounted() {
-    this.ris_no = 'RIS-20250729-00001'
+
   },
 }
 </script>
