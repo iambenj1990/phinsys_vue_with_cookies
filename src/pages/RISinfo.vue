@@ -18,7 +18,7 @@
             />
           </div>
           <div class="row justify-end">
-            <q-btn type="submit" color="green" label="Proceed" />
+            <!-- <q-btn type="submit" color="green" label="Proceed" /> -->
           </div>
         </q-form>
       </q-card-section>
@@ -29,7 +29,7 @@
             <div class="text-green text-weight-bold text-subtitle1">CONTROL NO: {{ ris_no }}</div>
           </template>
           <template #top-right>
-            <q-btn
+            <!-- <q-btn
               flat
               type="button"
               label="Items"
@@ -37,7 +37,7 @@
               icon="shopping_cart"
               @click="getAvailableMedList()"
               :disable="!hasRIS_ID"
-            />
+            /> -->
           </template>
           <template #body="props">
             <q-tr :v-bind="props">
@@ -62,25 +62,24 @@
               </q-td>
 
               <q-td key="quantity" style="font-size: 11px" align="left">
-                {{ props.row.quantity }} pcs
-
+                {{ props.row.quantity }}
               </q-td>
 
-              <q-td key="actions" style="font-size: 11px" align="left"> </q-td>
+
             </q-tr>
           </template>
         </q-table>
 
         <q-card-actions align="right">
           <q-btn
-            color="green"
+            color="red"
             type="button"
-            label="Save"
+            label="close"
             class="text-subtitle2 text-white q-pa-md q-mt-md"
-            icon="save"
+            icon="close"
             style="width: 110px"
-            @click="clearData()"
-            :disable="isButtonDisabled"
+            @click="$router.back()"
+
           />
         </q-card-actions>
       </q-card-section>
@@ -299,12 +298,7 @@ export default {
           align: 'left',
           field: 'quantity',
         },
-        {
-          name: 'actions',
-          required: true,
-          label: 'Actions',
-          align: 'center',
-        },
+
       ],
       cartCols: [
         {
@@ -413,9 +407,25 @@ export default {
         quantity: 0,
         user_id: 0,
       },
+      ris_info:{}
     }
   },
   methods: {
+
+    async get_ris_information(payload){
+
+       await this.risStore.getRISinfo({ris_no : payload})
+      this.ris_info = this.risStore.ris_info
+      console.log('ris_info => ', this.ris_info)
+
+      this.ris_no = this.ris_info.ris_id
+      this.form.purpose = this.ris_info.purpose
+
+      await this.risStore.RIS_Transactions({ris_no:payload})
+      this.rows = this.risStore.ris_medicine_list
+    },
+
+
     async lookforOpen() {
       try {
         await this.itemStore.openLookup()
@@ -456,7 +466,7 @@ export default {
         timeout: 1200,
       })
 
-      this.$router.back()
+      this.$refs.purpose.focus()
     },
 
     async remove_order(id) {
@@ -546,7 +556,14 @@ export default {
       return user.id
     },
   },
-  mounted() {},
+  mounted() {
+
+  },
+  created() {
+    console.log('created => ',this.risStore.ris_no)
+  const ris_no = this.risStore.ris_no
+  this.get_ris_information(ris_no)
+},
 
   computed: {
     hasRIS_ID() {

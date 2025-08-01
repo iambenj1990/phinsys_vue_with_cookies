@@ -66,7 +66,7 @@
                 </q-item-label>
               </q-item-section>
             </q-item>
-              <q-item clickable v-ripple to="/ris/orders/new">
+              <q-item clickable v-ripple to="/ris/orders">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="receipt" class="q-ml-md q-mr-md" size="24px" />
