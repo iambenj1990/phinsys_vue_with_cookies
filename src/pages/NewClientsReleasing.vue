@@ -68,7 +68,7 @@
               class="full-width text-caption"
               @change="calculateAge(CustomerInfo.birthdate)"
               lazy-rules
-              :rules="[(val) => !!val || 'Username is required']"
+              :rules="[(val) => !!val || 'Birthdate is required']"
             />
           </div>
           <div class="col-12 col-md-1 q-pa-sm">
@@ -289,7 +289,7 @@
           label="Cancel"
           class="q-mr-md q-ml-md text-caption"
           color="red"
-         
+
           @click="clearInputs()"
         />
         <!-- </div> -->
@@ -434,6 +434,7 @@ export default {
       // this.CustomerInfo =JSON.parse(JSON.stringify(this.CustomerInfoDefault))
       this.CustomerInfo = JSON.parse(JSON.stringify(this.CustomerInfoDefault))
       this.Customer.closeNewCustomer = false
+      this.$router.back()
     },
     calculateAge(birthdate) {
       if (!birthdate) return 0
@@ -482,6 +483,8 @@ export default {
 
         this.CustomerInfo = []
         this.Customer.closeNewCustomer = false
+
+        this.$router.back()
       } catch (error) {
         if (error.response) {
           const { data } = error.response
@@ -554,6 +557,7 @@ export default {
   unmounted() {
     this.Customer.isEdit = false
     this.Customer.isSave = true
+ 
 
   },
 

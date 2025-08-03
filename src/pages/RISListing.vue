@@ -53,14 +53,14 @@
             :rows-per-page-options="[0]"
             style="height: 600px;"
           >
-            <template v-slot:top-right>
+            <!-- <template v-slot:top-right>
               <q-btn
               style="font-size: 12px"
               color="green"
               label="Export"
               icon="import_export"
             />
-            </template>
+            </template> -->
 
             <template #body="props">
               <q-tr :v-bind="props">

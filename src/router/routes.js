@@ -15,6 +15,13 @@ const routes = [
         component: () => import('pages/NewClients.vue'),
         meta: { requiresAuth: true },
       }, //customers
+
+         {
+        path: '/customer/releasing',
+        component: () => import('pages/NewClientsReleasing.vue'),
+        meta: { requiresAuth: true },
+      }, //customers
+
       {
         path: '/customers',
         component: () => import('pages/ClientList.vue'),

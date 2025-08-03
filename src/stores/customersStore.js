@@ -75,6 +75,14 @@ export const useCustomerStore = defineStore('customers', {
 
         // Set customer_id from response
         this.customer_id = response.data.customers.id
+
+         Notify.create({
+          type: 'positive',
+          message: 'Customer registration successful: ',
+          position: 'center',
+          timeout: 1200,
+        })
+
       } catch (error) {
         // Get a safe error message
         const message = error.response?.data?.message || error.message || 'Unknown error'

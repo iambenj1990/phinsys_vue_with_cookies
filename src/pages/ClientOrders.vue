@@ -21,7 +21,7 @@
               "
               label="Add Client"
               icon="add"
-              @click="customerStore.closeNewCustomer = true"
+              @click="$router.push({path: '/customer/releasing'})"
             />
           </q-input>
 

@@ -554,6 +554,7 @@ export default {
     // this.Select_Customer(this.Customer.customer_id)
   },
   unmounted() {
+    this.Customer.customer_id = 0
     this.Customer.isEdit = false
     this.Customer.isSave = true
     this.CustomerInfo = JSON.parse(JSON.stringify(this.CustomerInfoDefault))
