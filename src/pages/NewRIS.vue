@@ -63,10 +63,16 @@
 
               <q-td key="quantity" style="font-size: 11px" align="left">
                 {{ props.row.quantity }} pcs
-
               </q-td>
 
-              <q-td key="actions" style="font-size: 11px" align="left"> </q-td>
+              <q-td key="actions" style="font-size: 11px" align="left">
+                <q-btn
+                  flat
+                  color="negative"
+                  @click="getSelectedDataToDelete(props.row.table_id_transactions)"
+                  icon="delete"
+                />
+              </q-td>
             </q-tr>
           </template>
         </q-table>
@@ -209,7 +215,7 @@
                           : false
                     "
                   />
-                  <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
+                  <!-- <q-btn flat color="negative" @click="getSelectedDataToDelete(props.row)" icon="delete" /> -->
                 </q-td>
               </q-tr>
             </template>
@@ -251,6 +257,29 @@
             "
           />
           <q-btn flat label="Add" color="primary" @click="add_Order(this.transactionDetails)" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="showRemoveItem" persistent style="max-width: 500px; width: 50%">
+      <q-card>
+        <q-card-section>
+          <div class="text-h5 text-green">Proceed to remove this from the order list?</div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn
+            class="q-px-md"
+            label="Yes"
+            color="blue"
+            style="width: 150px"
+            @click="remove_order(selected_to_delete)"
+          ></q-btn>
+          <q-btn
+            label="cancel"
+            color="red"
+            style="width: 150px"
+            @click="showRemoveItem = false"
+          ></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -389,7 +418,9 @@ export default {
   },
   data() {
     return {
+      showRemoveItem: false,
       hasOpentransaction: false,
+      selected_to_delete: 0,
       ris_no: '',
       ris_id: 0,
       purpose: '',
@@ -461,7 +492,9 @@ export default {
 
     async remove_order(id) {
       await this.TransactionStore.remove_order(id)
-      this.getOrders(this.transaction_id)
+      this.getOrders(this.ris_no)
+      this.showRemoveItem = false
+
       this.$q.notify({ type: 'positive', message: 'order removed successful!' })
     },
 
@@ -544,6 +577,12 @@ export default {
       const sanitized_object = unsanitized_object.replace('__q_objt|', '')
       const user = JSON.parse(sanitized_object)
       return user.id
+    },
+
+    getSelectedDataToDelete(id) {
+      console.log(id)
+      this.selected_to_delete = id
+      this.showRemoveItem = true
     },
   },
   mounted() {},
