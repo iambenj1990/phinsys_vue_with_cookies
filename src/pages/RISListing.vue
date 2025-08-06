@@ -14,19 +14,9 @@
           <div class="text-h6 text-primary q-my-sm">Requisition and Issuance Slip</div>
           <div class="q-pa-sm row items-center justify-between">
            <div class="flex justify-start">
-              <!-- <q-input
-                dense
-                flat
-                type="date"
-                filled
-                v-model="Trans_Date"
-                label="Transaction Date"
-                class="text-h11"
-                style="width: 150px"
-                @update:model-value="get_RIS_by_Date(this.Trans_Date)"
-              /> -->
 
-            <!-- <div class="q-my-sm flex flex-wrap q-px-md justify-end">
+
+            <div class="q-my-sm flex flex-wrap q-px-md justify-end">
               <q-input v-model="rangeText" label="Select Date Range" dense readonly style="width: 250px">
                 <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
@@ -36,7 +26,7 @@
                   </q-icon>
                 </template>
               </q-input>
-            </div> -->
+            </div>
 
           </div>
             <div class="row items-center">
@@ -137,13 +127,33 @@
 <script>
 import { useRequisitionIssuanceSlip } from 'src/stores/RequisitionIssuanceSlip'
 import { useItemStore } from 'src/stores/itemsStore'
-import { date } from 'quasar'
+
+
+function debounce(fn, delay) {
+  let timeout
+  return function (...args) {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => fn.apply(this, args), delay)
+  }
+}
 
 export default {
+
+
   setup() {
-    const today = date.formatDate(Date.now(), 'YYYY-MM-DD')
+    const today = new Date()
+    today.toLocaleDateString('en-CA')
+    console.log(today)
+    const start = new Date(today.getFullYear(), today.getMonth(),1)
+
+     console.log(start)
+
+    const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+    console.log(end)
     return {
       today,
+      start,
+      end,
       columns: [
         {
           name: 'ris_id',
@@ -191,6 +201,12 @@ export default {
     }
   },
   methods: {
+
+    async get_RIS_List_byDate(payload) {
+      await this.risStore.RIS_byDate(payload)
+      this.rows = this.risStore.ris_list
+    },
+
     async get_RIS_List() {
       await this.risStore.allRIS()
       this.rows = this.risStore.ris_list
@@ -225,7 +241,21 @@ export default {
       }
     },
   },
-  watch: {},
+  watch: {
+
+      selectedDates: {
+      handler: debounce(function (newRange) {
+        this.rangeText = `${newRange.from} to ${newRange.to}`
+
+        console.log(newRange)
+        this.get_RIS_List_byDate(newRange)
+
+      }, 500),
+      immediate: true, // Call the handler immediately with the initial value
+      deep: true, // Watch for changes in the object properties
+    },
+
+  },
   computed: {
     risStore() {
       return useRequisitionIssuanceSlip()
@@ -235,7 +265,15 @@ export default {
     },
   },
   mounted() {
-    this.get_RIS_List()
+     this.get_RIS_List()
+
+    this.selectedDates= {
+      from : this.start.toISOString().split('T')[0],
+      to : this.end.toISOString().split('T')[0]
+
+    }
+
+
   },
 }
 </script>
