@@ -14,7 +14,7 @@
           <div class="text-h6 text-primary q-my-sm">Daily Customers</div>
           <div class="q-pa-sm row items-center justify-between" >
            <div class="flex justify-start">
-             <q-input
+             <!-- <q-input
               dense
               flat
               type="date"
@@ -24,7 +24,19 @@
               class="text-h11"
               style="width: 150px;"
               @update:model-value="get_clients(this.Trans_Date)"
-            />
+            /> -->
+
+              <q-input v-model="rangeText" label="Select Date Range" dense readonly style="width: 250px">
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                      <q-date v-model="selectedDates" range mask="YYYY-MM-DD" />
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+
+
            </div>
            <div class="row items-center">
             <q-btn
@@ -230,6 +242,11 @@ export default {
 
   data() {
     return {
+      rangeText:'',
+      selectedDates:{
+        from:'',
+        to:''
+      },
       Trans_Date: this.today,
       hasOpentransaction: false,
       warning: false,

@@ -63,7 +63,7 @@
               style="width: 220px; height: 110px"
               @click="
                 () => {
-                  this.$router.push({ path: '/items/reports', query: { tab: 'Low' } })
+                  this.$router.push({ path: '/items/reports', query: { tab: 'Empty' } })
                 }
               "
             >
