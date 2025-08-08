@@ -42,9 +42,11 @@ export const useCustomerStore = defineStore('customers', {
     },
 
      async getCustomersByDate(payload) {
+      console.log(payload)
       try {
-        const response = await api.post('/customers/list.dates', payload)
+        const response = await api.post('/customers/list/dates', payload)
         // console.log(response.data.customers)
+        console.log(response.data)
         this.customers = response.data.customers
         // console.log(response.data.customers)
       } catch (error) {

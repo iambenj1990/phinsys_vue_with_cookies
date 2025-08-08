@@ -144,13 +144,26 @@
 <script>
 import { useCustomerStore } from '../stores/customersStore'
 import { useItemStore } from 'src/stores/itemsStore'
-import { date } from 'quasar'
+
+
+function debounce(fn, delay) {
+  let timeout
+  return function (...args) {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => fn.apply(this, args), delay)
+  }
+}
 
 export default {
   setup() {
-    const today = date.formatDate(Date.now(), 'YYYY-MM-DD')
+    const today = new Date()
+    today.toLocaleDateString('en-CA')
+     const start = new Date(today.getFullYear(), today.getMonth(),1)
+     const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
     return {
       today,
+      start,
+      end,
       columns: [
         {
           name: 'lastname',
@@ -274,6 +287,8 @@ export default {
         is_solo: false,
         user_id: 0,
       },
+
+
     }
   },
   methods: {
@@ -293,8 +308,9 @@ export default {
 
     async get_clients(payload) {
       try {
-        await this.Customers.getCustomerOftheDay(payload)
-        this.rows = this.Customers.customersOftheDay //fetch all clients from array
+        // await this.Customers.getCustomerOftheDay(payload)
+        await this.Customers.getCustomersByDate(payload)
+        this.rows = this.Customers.customers //fetch all clients from array
         //console.log(this.rows)
       } catch (error) {
         console.log(error)
@@ -338,6 +354,22 @@ export default {
       }
     },
   },
+   watch: {
+
+      selectedDates: {
+      handler: debounce(function (newRange) {
+        this.rangeText = `${newRange.from} to ${newRange.to}`
+
+        console.log(newRange)
+        //this.get_RIS_List_byDate(newRange)
+        this.get_clients(newRange)
+
+      }, 500),
+      immediate: true, // Call the handler immediately with the initial value
+      deep: true, // Watch for changes in the object properties
+    },
+
+  },
   computed: {
     Customers() {
       return useCustomerStore()
@@ -347,7 +379,15 @@ export default {
     },
   },
   mounted() {
-    this.get_clients(this.today)
+
+
+    this.selectedDates= {
+      from : this.start.toISOString().split('T')[0],
+      to : this.end.toISOString().split('T')[0]
+
+    }
+
+      // this.get_clients(this.selectedDates)
   },
 }
 </script>

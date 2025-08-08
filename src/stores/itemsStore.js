@@ -19,7 +19,7 @@ export const useItemStore = defineStore('items', {
     temp_id: '',
     hasOpening: false,
     dosageForm: [],
-    
+
     selected_stockCard:{
       generic_name: '',
       brand_name: '',
@@ -99,9 +99,9 @@ export const useItemStore = defineStore('items', {
         })
       }
     },
-    async getItems() {
+    async getItems(payload) {
       try {
-        const response = await api.get('/items')
+        const response = await api.post('/items',payload)
         this.items = response.data.items
       } catch (error) {
         console.error(error)

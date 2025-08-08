@@ -33,14 +33,33 @@
               class="q-mr-md"
               style="max-height: 600px; height: 100%"
               :rows-per-page-options="[0]"
-
             >
               <template v-slot:top-left>
-                <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
-                  <template v-slot:append>
-                    <q-icon name="search" />
-                  </template>
-                </q-input>
+                <div class="q-pa-md q-mr-md">
+                  <q-input
+                    v-model="rangeText"
+                    label="Select Date Range"
+                    dense
+                    readonly
+                    style="width: 200px"
+                  >
+                    <template v-slot:append>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-date v-model="selectedDates" range mask="YYYY-MM-DD" />
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input>
+                </div>
+
+                <div>
+                  <q-input  dense debounce="300" v-model="filter" placeholder="Search" style="width: 500px">
+                    <template v-slot:append>
+                      <q-icon name="search" />
+                    </template>
+                  </q-input>
+                </div>
               </template>
               <template v-slot:top-right>
                 <q-btn
@@ -68,10 +87,20 @@
               </template>
               <template #body="props">
                 <q-tr :v-bind="props">
-                  <q-td key="po_no" style="font-size: 11px;" align="left">
+                  <q-td key="po_no" style="font-size: 11px" align="left">
                     {{ props.row.po_no }}
                   </q-td>
-                  <q-td key="generic_name" style="font-size: 11px;white-space: normal; word-break: break-word; max-width: 200px;" align="left" class="text-wrap">
+                  <q-td
+                    key="generic_name"
+                    style="
+                      font-size: 11px;
+                      white-space: normal;
+                      word-break: break-word;
+                      max-width: 200px;
+                    "
+                    align="left"
+                    class="text-wrap"
+                  >
                     {{ props.row.generic_name }}
                   </q-td>
                   <q-td key="brand_name" style="font-size: 11px" align="left">
@@ -132,7 +161,7 @@
           />
         </q-card-section>
         <q-card-actions>
-          <q-btn class = "text-red" flat label="Cancel" @click="showNew = false" />
+          <q-btn class="text-red" flat label="Cancel" @click="showNew = false" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -141,14 +170,50 @@
 
 <script>
 import { useItemStore } from 'src/stores/itemsStore'
+
+
+
+function debounce(fn, delay) {
+  let timeout
+  return function (...args) {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => fn.apply(this, args), delay)
+  }
+}
+
+
 export default {
   computed: {
     itemStore() {
       return useItemStore()
     },
   },
+
+  watch:{
+    selectedDates: {
+      handler: debounce(function (newRange) {
+        this.rangeText = `${newRange.from} to ${newRange.to}`
+
+        console.log(newRange)
+        //this.get_RIS_List_byDate(newRange)
+        // this.get_clients(newRange)
+        this.fetchAllStocks(newRange)
+
+      }, 500),
+      immediate: true, // Call the handler immediately with the initial value
+      deep: true, // Watch for changes in the object properties
+    },
+  },
   setup() {
+      const today = new Date()
+    today.toLocaleDateString('en-CA')
+     const start = new Date(today.getFullYear(), today.getMonth(),1)
+     const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
     return {
+      today,
+      start,
+      end,
+
       cols: [
         {
           name: 'po_no',
@@ -222,6 +287,11 @@ export default {
   },
   data() {
     return {
+      rangeText:'',
+      selectedDates:{
+        from:'',
+        to:''
+      },
       showNew: false,
       rows: [],
       filter: '',
@@ -243,18 +313,23 @@ export default {
   },
 
   methods: {
-    async fetchAllStocks() {
-      await this.itemStore.getItems()
+    async fetchAllStocks(payload) {
+      await this.itemStore.getItems(payload)
       this.rows = this.itemStore.items
     },
   },
 
   mounted() {
-    this.fetchAllStocks()
+
+  this.selectedDates= {
+      from : this.start.toISOString().split('T')[0],
+      to : this.end.toISOString().split('T')[0]
+
+    }
   },
 }
 </script>
-<style  scoped>
+<style scoped>
 .scrollable-body {
   display: block;
   max-height: 400px;
