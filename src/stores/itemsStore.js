@@ -362,6 +362,21 @@ export const useItemStore = defineStore('items', {
       }
     },
 
+        async getStocksListbyDate(payload) {
+      try {
+        const response = await api.post('/items/inventory/bydate',payload)
+        this.items = response.data.items
+      } catch (error) {
+        console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
     async openingStocks(payload) {
       try {
         await api.post('/daily/inventory/open-latest/' + payload)

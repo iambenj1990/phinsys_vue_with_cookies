@@ -21,8 +21,8 @@
               flat
               bordered
               class="q-mr-md"
-              style="min-height: 500px; max-height: 1000px; height: 100%"
-
+              style="height: 600px"
+              :rows-per-page-options="[0]"
             >
               <template v-slot:top-left>
                 <q-input
@@ -41,13 +41,29 @@
               </template>
               <template v-slot:top-right>
                 <div class="q-gutter-sm flex">
-                  <q-input
+                  <!-- <q-input
                     dense
                     type="date"
                     v-model="dateRange"
                     format="YYYY-MM-DD"
                     @update:model-value="showStocks(dateRange)"
-                  />
+                  /> -->
+
+                  <q-input
+                    v-model="rangeText"
+                    label="Select Date Range"
+                    dense
+                    readonly
+                    style="width: 250px"
+                  >
+                    <template v-slot:append>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-date v-model="selectedDates" range mask="YYYY-MM-DD" />
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input>
 
                   <q-btn
                     dense
@@ -66,7 +82,17 @@
                   <q-td key="po_no" style="font-size: 11px" align="left">
                     {{ props.row.po_no }}
                   </q-td>
-                  <q-td key="generic_name" style="font-size: 11px; white-space: normal; word-break: break-word; max-width: 250px;" align="left" class="text-wrap">
+                  <q-td
+                    key="generic_name"
+                    style="
+                      font-size: 11px;
+                      white-space: normal;
+                      word-break: break-word;
+                      max-width: 250px;
+                    "
+                    align="left"
+                    class="text-wrap"
+                  >
                     {{ props.row.generic_name }}
                   </q-td>
                   <q-td key="brand_name" style="font-size: 11px" align="left">
@@ -79,16 +105,13 @@
                     {{ props.row.dosage_form }}
                   </q-td>
 
-
                   <q-td key="unit" style="font-size: 11px" align="left">
                     <!-- {{ props.row.unit }} -->
                     pcs
                   </q-td>
 
-                      <q-td key="quantity" style="font-size: 11px" align="left">
-                    {{
-                      !props.row.quantity ? 0 : props.row.quantity
-                    }}
+                  <q-td key="current_quantity" style="font-size: 11px" align="left">
+                    {{ !props.row.current_quantity ? 0 : props.row.current_quantity }}
                   </q-td>
 
                   <!-- <q-td key="Closing_quantity" style="font-size: 11px" align="left">
@@ -101,19 +124,16 @@
                       {{ props.row.total_closing_quantity }}
                     </q-badge>
                   </q-td> -->
-                       <q-td key="total_openning_quantity" style="font-size: 11px" align="left">
-
-                      {{ props.row.total_openning_quantity }}
-
+                  <q-td key="opening_quantity" style="font-size: 11px" align="left">
+                    {{ props.row.opening_quantity }}
                   </q-td>
-                     <q-td key="Closing_quantity" style="font-size: 11px" align="left">
-
-                      {{ props.row.total_closing_quantity }}
-
+                  <q-td key="closing_quantity" style="font-size: 11px" align="left">
+                    {{ props.row.closing_quantity }}
                   </q-td>
 
-                   <q-td key="quantity_out" style="font-size: 11px" align="left">
-                    {{ props.row.quantity_difference  }}
+                  <q-td key="total_out_quantity" style="font-size: 11px" align="left">
+
+                       {{ !props.row.total_out_quantity ? 0 : props.row.total_out_quantity }}
 
                     <!-- {{ props.row.quantity_out }} -->
                   </q-td>
@@ -199,7 +219,17 @@ import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { useIndicatorStore } from 'src/stores/indicatorsStore'
 import ExcelJS from 'exceljs/dist/exceljs.min.js'
-import { date } from 'quasar'
+
+
+
+function debounce(fn, delay) {
+  let timeout
+  return function (...args) {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => fn.apply(this, args), delay)
+  }
+}
+
 export default {
   computed: {
     itemStore() {
@@ -210,10 +240,16 @@ export default {
     },
   },
   setup() {
-    const today = date.formatDate(new Date(), 'YYYY-MM-DD')
     const indicatorStore = useIndicatorStore()
+    const today = new Date()
+    today.toLocaleDateString('en-CA')
+    const start = new Date(today.getFullYear(), today.getMonth(), 1)
+    const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+
     return {
       today,
+      start,
+      end,
       indicatorStore,
       pagination: {
         page: 1,
@@ -261,7 +297,6 @@ export default {
           sortable: true,
         },
 
-
         {
           name: 'unit',
           required: true,
@@ -270,36 +305,36 @@ export default {
           field: 'unit',
           sortable: true,
         },
-          {
-          name: 'quantity',
+        {
+          name: 'current_quantity',
           required: true,
           label: 'Beginning Quantity',
           align: 'left',
-          field: 'quantity',
+          field: 'current_quantity',
         },
-             {
-          name: 'total_openning_quantity',
+        {
+          name: 'opening_quantity',
           required: true,
           label: 'Openning Quantity',
           align: 'left',
-          field: 'total_openning_quantity',
+          field: 'opening_quantity',
         },
         {
-          name: 'Closing_quantity',
+          name: 'closing_quantity',
           required: true,
           label: 'Ending Quantity',
           align: 'left',
-          field: 'total_closing_quantity',
+          field: 'closing_quantity',
           format: (val) => (val ? val : 0), // If empty, set to 0
           sortable: true,
         },
 
         {
-          name: 'quantity_out',
+          name: 'total_out_quantity',
           required: true,
           label: 'Quantity Out',
           align: 'left',
-          field: 'quantity_out',
+          field: 'total_out_quantity',
         },
 
         {
@@ -310,8 +345,6 @@ export default {
           field: 'expiration_date',
           sortable: true,
         },
-
-
 
         {
           name: 'last_inventory_date',
@@ -326,6 +359,11 @@ export default {
   },
   data() {
     return {
+      selectedDates: {
+        from: '',
+        to: '',
+      },
+      rangeText: '',
       dateRange: this.today,
       Adjusted_quantity: 0,
       open: false,
@@ -406,7 +444,7 @@ export default {
 
     async showStocks(date) {
       try {
-        await this.itemStore.getStocksList(date)
+        await this.itemStore.getStocksListbyDate(date)
         this.rows = this.itemStore.items
       } catch (error) {
         console.log(error)
@@ -509,10 +547,30 @@ export default {
   },
 
   mounted() {
-    this.showStocks(this.today)
+
+      this.selectedDates= {
+      from : this.start.toISOString().split('T')[0],
+      to : this.end.toISOString().split('T')[0]
+    }
+    // this.showStocks(this.today)
     // this.Check_OPEN()
     // this.Check_CLOSE()
   },
-  watch() {},
+  watch: {
+    selectedDates: {
+      handler: debounce(function (newRange) {
+        this.rangeText = `${newRange.from} to ${newRange.to}`
+
+        console.log(newRange)
+        //this.get_RIS_List_byDate(newRange)
+        // this.get_clients(newRange)
+        // this.fetchAllStocks(newRange)
+        this.showStocks(newRange)
+
+      }, 500),
+      immediate: true, // Call the handler immediately with the initial value
+      deep: true, // Watch for changes in the object properties
+    },
+  },
 }
 </script>
