@@ -422,6 +422,7 @@ export default {
       }
 
       if (this.Customer.isSave) {
+      console.log(this.CustomerInfo)
         this.Insert_Customer(this.CustomerInfo)
       } else if (this.Customer.isEdit) {
         this.updateCustomer(this.Customer.customer_id, this.CustomerInfo)
@@ -557,7 +558,7 @@ export default {
   unmounted() {
     this.Customer.isEdit = false
     this.Customer.isSave = true
- 
+
 
   },
 

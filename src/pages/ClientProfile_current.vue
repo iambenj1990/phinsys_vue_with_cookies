@@ -255,6 +255,7 @@ export default {
     async get_client(id) {
       await this.customerStore.getCustomer(id)
       this.costumer = this.customerStore.customer
+      console.log(this.costumer)
     },
 
     show_id(id) {

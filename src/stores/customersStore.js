@@ -68,9 +68,9 @@ export const useCustomerStore = defineStore('customers', {
     async getCustomer(id) {
       try {
         const response = await api.get('/customers/' + id)
-        //console.log(response.data[0])
+        console.log(response.data[0])
         this.customer = response.data[0]
-        // console.log(this.customer[0])
+         console.log('customer => ', this.customer)
       } catch (error) {
         console.error(error)
       }

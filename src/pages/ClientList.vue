@@ -21,11 +21,14 @@
             row-key="id"
             binary-state-sort
             no-data-label="No data available"
-            title="Client Logs/ History"
+            title="Client List/ History"
             title-class="text-bold text-subtitle1 text-primary"
             square
             :rows-per-page-options="[0]"
-            style="height: 600px;"
+
+            table-header-class="text-white"
+
+            class="my-sticky-header-table"
           >
 
             <template v-slot:top-right>
@@ -123,7 +126,7 @@ export default {
           field: 'lastname',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
         {
@@ -132,7 +135,7 @@ export default {
           field: 'firstname',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
         {
@@ -141,7 +144,7 @@ export default {
           field: 'middlename',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
         {
@@ -150,7 +153,7 @@ export default {
           field: 'ext',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
 
@@ -160,7 +163,7 @@ export default {
           field: 'birthdate',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
 
@@ -170,7 +173,7 @@ export default {
           field: 'age',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
 
@@ -180,7 +183,7 @@ export default {
           field: 'contact_number',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
         {
@@ -189,7 +192,7 @@ export default {
           field: 'barangay',
           sortable: true,
           align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
 
@@ -198,7 +201,7 @@ export default {
           label: 'Actions',
           field: 'actions',
           align: 'center',
-          headerClasses: 'bg-grey-7 text-white',
+
           headerStyle: 'font-size: 1.2 em',
         },
       ],
@@ -284,3 +287,29 @@ export default {
   }
 }
 </script>
+<style lang="sass">
+.my-sticky-header-table
+  /* height or max-height is important */
+  height: 610px
+
+
+  thead tr th
+    /* bg color is important for th; just specify one */
+    background-color: #008000
+
+  thead tr th
+    position: sticky
+    z-index: 1
+  thead tr:first-child th
+    top: 0
+
+  /* this is when the loading indicator appears */
+  &.q-table--loading thead tr:last-child th
+    /* height of all previous header rows */
+    top: 100px
+
+  /* prevent scrolling behind sticky top row on focus */
+  tbody
+    /* height of all previous header rows */
+    scroll-margin-top: 50px
+</style>

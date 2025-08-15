@@ -14,10 +14,10 @@
               :filter="filter"
               flat
               bordered
-              class="q-mr-md q-table--grid"
-              style="height: 500px;"
+              class="q-mr-md q-table--grid my-sticky-header-table"
+          
               :rows-per-page-options="[0]"
-
+              table-header-class="text-white"
               table-header-style="background-color: #f5f5f5"
             >
               <template v-slot:top-left>
@@ -204,3 +204,29 @@ export default {
   },
 }
 </script>
+<style lang="sass">
+.my-sticky-header-table
+  /* height or max-height is important */
+  height: 610px
+
+
+  thead tr th
+    /* bg color is important for th; just specify one */
+    background-color: #008000
+
+  thead tr th
+    position: sticky
+    z-index: 1
+  thead tr:first-child th
+    top: 0
+
+  /* this is when the loading indicator appears */
+  &.q-table--loading thead tr:last-child th
+    /* height of all previous header rows */
+    top: 100px
+
+  /* prevent scrolling behind sticky top row on focus */
+  tbody
+    /* height of all previous header rows */
+    scroll-margin-top: 50px
+</style>

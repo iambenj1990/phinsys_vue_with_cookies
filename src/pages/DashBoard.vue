@@ -99,11 +99,15 @@
               </q-card-section>
             </q-card>
 
-            <q-card class="q-ma-xs q-pa-md" style="width: 220px; height: 110px" @click="
-              () => {
-                this.$router.push({ path: '/items/temporary-po' })
-              }
-            ">
+            <q-card
+              class="q-ma-xs q-pa-md"
+              style="width: 220px; height: 110px"
+              @click="
+                () => {
+                  this.$router.push({ path: '/items/temporary-po' })
+                }
+              "
+            >
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
                   <q-icon name="description" color="green" size="30px" class="q-mr-sm" />
@@ -139,9 +143,7 @@
                 </div>
                 <div class="text-h4" align="right">{{ registered_customer }}</div>
               </q-card-section>
-
             </q-card>
-
 
             <q-card
               class="q-ma-xs q-pa-md"
@@ -433,8 +435,10 @@ export default {
     //this.now_date = new Date().toISOString().split('T')[0] // Set default date to today
     try {
       this.range = {
-        from: this.start.toISOString().split('T')[0],
-        to: this.end.toISOString().split('T')[0],
+        // from: this.start.toISOString().split('T')[0],
+        // to: this.end.toISOString().split('T')[0],
+        from :this.formatLocale(this.start),
+        to: this.formatLocale(this.end)
       }
 
       // console.log('Initial date range:', this.range)
@@ -649,6 +653,13 @@ export default {
         })
       }
       return 5 // Example threshold value
+    },
+
+    formatLocale(date) {
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+      return `${year}-${month}-${day}`
     },
   },
 }

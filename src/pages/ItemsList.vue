@@ -30,8 +30,8 @@
               :filter="filter"
               flat
               bordered
-              class="q-mr-md"
-              style="max-height: 600px; height: 100%"
+              class="q-mr-md my-sticky-header-table"
+              table-header-class="text-white"
               :rows-per-page-options="[0]"
             >
               <template v-slot:top-left>
@@ -329,23 +329,29 @@ export default {
   },
 }
 </script>
-<style scoped>
-.scrollable-body {
-  display: block;
-  max-height: 400px;
-  overflow-y: auto;
-}
+<style lang="sass">
+.my-sticky-header-table
+  /* height or max-height is important */
+  height: 610px
 
-.scrollable-body tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
-}
 
-thead tr {
-  position: sticky;
-  top: 0;
-  background-color: white;
-  z-index: 2;
-}
+  thead tr th
+    /* bg color is important for th; just specify one */
+    background-color: #008000
+
+  thead tr th
+    position: sticky
+    z-index: 1
+  thead tr:first-child th
+    top: 0
+
+  /* this is when the loading indicator appears */
+  &.q-table--loading thead tr:last-child th
+    /* height of all previous header rows */
+    top: 100px
+
+  /* prevent scrolling behind sticky top row on focus */
+  tbody
+    /* height of all previous header rows */
+    scroll-margin-top: 50px
 </style>

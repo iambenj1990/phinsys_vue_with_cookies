@@ -1,7 +1,7 @@
 <template>
   <q-page>
-    <div class="flex flex-center q-ma-sm">
-      <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
+    <!-- <div class="flex flex-center q-ma-sm"> -->
+      <!-- <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%"> -->
         <!-- <div class="row q-gutter-md">
           <div class="col-12">
            <div align="left" class="q-ma-md text-h6 text-primary">Medicine Inventory</div>
@@ -20,8 +20,9 @@
               :filter="filter"
               flat
               bordered
-              class="q-mr-md"
-              style="height: 600px"
+             class="my-sticky-header-table"
+             table-header-class="text-white"
+
               :rows-per-page-options="[0]"
             >
               <template v-slot:top-left>
@@ -31,7 +32,7 @@
                   debounce="300"
                   v-model="filter"
                   placeholder="Search"
-                  class="full-width"
+
                   style="width: 300px"
                 >
                   <template v-slot:append>
@@ -41,13 +42,7 @@
               </template>
               <template v-slot:top-right>
                 <div class="q-gutter-sm flex">
-                  <!-- <q-input
-                    dense
-                    type="date"
-                    v-model="dateRange"
-                    format="YYYY-MM-DD"
-                    @update:model-value="showStocks(dateRange)"
-                  /> -->
+
 
                   <q-input
                     v-model="rangeText"
@@ -55,9 +50,10 @@
                     dense
                     readonly
                     style="width: 250px"
+
                   >
-                    <template v-slot:append>
-                      <q-icon name="event" class="cursor-pointer">
+                    <template v-slot:append >
+                      <q-icon name="event" class="cursor-pointer" color="gray">
                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                           <q-date v-model="selectedDates" range mask="YYYY-MM-DD" />
                         </q-popup-proxy>
@@ -73,6 +69,8 @@
                     icon="import_export"
                     @click="exportToExcel"
                     style="height: 40px"
+                    class="q-pl-md"
+
                   />
                 </div>
               </template>
@@ -170,8 +168,8 @@
             </q-table>
           </div>
         </div>
-      </q-card>
-    </div>
+      <!-- </q-card> -->
+    <!-- </div> -->
     <q-dialog v-model="showAdjustment" persistent style="max-width: 500px; width: 50%">
       <q-card style="max-width: 800px; width: 100%">
         <q-card-section class="text-caption">
@@ -574,3 +572,29 @@ export default {
   },
 }
 </script>
+<style lang="sass">
+.my-sticky-header-table
+  /* height or max-height is important */
+  height: 610px
+
+
+  thead tr th
+    /* bg color is important for th; just specify one */
+    background-color: #008000
+
+  thead tr th
+    position: sticky
+    z-index: 1
+  thead tr:first-child th
+    top: 0
+
+  /* this is when the loading indicator appears */
+  &.q-table--loading thead tr:last-child th
+    /* height of all previous header rows */
+    top: 100px
+
+  /* prevent scrolling behind sticky top row on focus */
+  tbody
+    /* height of all previous header rows */
+    scroll-margin-top: 50px
+</style>

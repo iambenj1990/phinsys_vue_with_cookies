@@ -63,7 +63,8 @@
             binary-state-sort
             no-data-label="No data available"
             :rows-per-page-options="[0]"
-            style="height: 600px;"
+           class="my-sticky-header-table"
+           table-header-class="text-white"
           >
             <template v-slot:top-right>
               <q-btn
@@ -105,7 +106,7 @@
                   <q-btn
                     flat
                     color="primary"
-                    @click="showClient(props.row)"
+                    @click="showClient(props.row.id)"
                     icon="description"
                     to="/customers/profile/current"
                   >
@@ -298,12 +299,13 @@ export default {
     },
 
     showClient(id) {
+       console.log(id)
       this.Customers.isEdit = true
       this.Customers.isSave = false
-      this.Customers.customer_id = id.customer_id
-      this.Customers.transactions_id = id.transaction_id
+      this.Customers.customer_id = id
+       this.Customers.transactions_id = id.transaction_id
 
-      console.log(id)
+
     },
 
     async get_clients(payload) {
@@ -391,3 +393,30 @@ export default {
   },
 }
 </script>
+
+<style lang="sass">
+.my-sticky-header-table
+  /* height or max-height is important */
+  height: 610px
+
+
+  thead tr th
+    /* bg color is important for th; just specify one */
+    background-color: #008000
+
+  thead tr th
+    position: sticky
+    z-index: 1
+  thead tr:first-child th
+    top: 0
+
+  /* this is when the loading indicator appears */
+  &.q-table--loading thead tr:last-child th
+    /* height of all previous header rows */
+    top: 100px
+
+  /* prevent scrolling behind sticky top row on focus */
+  tbody
+    /* height of all previous header rows */
+    scroll-margin-top: 50px
+</style>
