@@ -233,7 +233,7 @@ export default {
     console.log(this.customerStore.customer_id)
     this.get_client(this.customerStore.customer_id)
     //this.getTransactionIds(this.customerStore.customer_id)
-    this.getOrders(this.customerStore.transactions_id)
+    this.getOrders(this.customerStore.customer_id)
   },
   methods: {
 
@@ -246,9 +246,10 @@ export default {
       this.transactionIDList = this.transactionStore.customerTransactionsIdList
     },
 
-    async getOrders(transaction_id){
-      await this.transactionStore.getTransactionOrders(transaction_id)
+    async getOrders(payload){
+      await this.transactionStore.getLatestOrders({customer_id: payload})
       this.rows = this.transactionStore.customerTransactions
+      console.log(this.rows)
     },
 
 

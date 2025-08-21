@@ -72,6 +72,22 @@ export const useTransactionStore = defineStore('transactions', {
       }
     },
 
+      async getLatestOrders(payload) {
+      try {
+        console.log(payload)
+        const response = await api.post('/orders/transactions/last',payload)
+        this.customerTransactions = response.data.data
+        // console.log(this.customerTransactions)
+      } catch (error) {
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
     async remove_order(id) {
       try {
         await api.delete('/orders/order/' + id)
