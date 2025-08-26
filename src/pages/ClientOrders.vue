@@ -21,12 +21,11 @@
               "
               label="Add Client"
               icon="add"
-              @click="$router.push({path: '/customer/releasing'})"
+              @click="$router.push({ path: '/customer/releasing' })"
             />
           </q-input>
 
-          <q-list class="q-pa-sm flex" style="width: 400px;">
-
+          <q-list class="q-pa-sm flex" style="width: 400px">
             <q-item
               v-for="item in filteredList"
               :key="item.id"
@@ -47,6 +46,25 @@
               </q-item-section>
             </q-item>
           </q-list>
+        </div>
+        <div>
+          <q-btn
+            class="q-my-sm"
+            style="
+              background-color: lightskyblue;
+              font-size: x-small;
+              font-weight: bold;
+              width: 130px;
+            "
+            label="New Maifp Client"
+            icon="add"
+            @click="
+              () => {
+                show_maifp = true
+                get_MaifpCustomers()
+              }
+            "
+          />
         </div>
 
         <q-card-section>
@@ -156,7 +174,7 @@
               >
                 <template v-slot:top-right>
                   <q-btn
-                    :disable="this.transaction_id===0"
+                    :disable="this.transaction_id === 0"
                     color="primary"
                     label="Add Order"
                     icon="add"
@@ -180,7 +198,7 @@
                     </q-td>
                     <q-td key="unit" style="font-size: 11px" align="left">
                       <!-- {{ props.row.unit }} -->
-                        pcs
+                      pcs
                     </q-td>
                     <q-td key="actions" style="font-size: 11px" align="center">
                       <q-btn
@@ -189,7 +207,6 @@
                         @click="remove_order(props.row.table_id_transactions)"
                         icon="remove_shopping_cart"
                       />
-
                     </q-td>
                   </q-tr>
                 </template>
@@ -200,11 +217,9 @@
                   label="Release Order"
                   icon="check"
                   @click="clearData()"
-                  :disabled="rows.length==0"
-
+                  :disabled="rows.length == 0"
                 />
               </div>
-
             </q-card>
           </div>
         </q-card-section>
@@ -215,9 +230,8 @@
     <q-dialog v-model="cartPrompt" persistent style="max-width: 1280px; width: 100%">
       <q-card style="max-width: 1280px; width: 100%">
         <div class="row q-gutter-md q-mb-md q-pa-md flex flex-center">
-
           <q-table
-           :rows-per-page-options="[0]"
+            :rows-per-page-options="[0]"
             :rows="availableMedsRow"
             :columns="cartCols"
             row-key="id"
@@ -240,8 +254,6 @@
               max-height: 500px;
               height: 100%;
             "
-
-
           >
             <template v-slot:top>
               <q-input
@@ -251,7 +263,7 @@
                 v-model="filter"
                 placeholder="Search"
                 class="full-width q-px-md"
-               style="background-color: lightgrey;"
+                style="background-color: lightgrey"
                 ref="searchInput"
               >
                 <template v-slot:append>
@@ -261,11 +273,21 @@
             </template>
 
             <template #body="props">
-              <q-tr :v-bind="props" >
+              <q-tr :v-bind="props">
                 <!-- <q-td key="po_no" style="font-size: 11px" align="center">
                 {{ props.row.po_no }}
               </q-td> -->
-                <q-td key="generic_name" style="font-size: 11px;white-space: normal; word-break: break-word; max-width: 300px;" align="left" class="text-wrap" >
+                <q-td
+                  key="generic_name"
+                  style="
+                    font-size: 11px;
+                    white-space: normal;
+                    word-break: break-word;
+                    max-width: 300px;
+                  "
+                  align="left"
+                  class="text-wrap"
+                >
                   {{ props.row.generic_name }}
                 </q-td>
                 <q-td key="brand_name" style="font-size: 11px" align="left">
@@ -282,23 +304,30 @@
               </q-td> -->
                 <q-td key="Closing_quantity" style="font-size: 11px" align="left">
                   {{ props.row.Closing_quantity ? props.row.Closing_quantity : 0 }}
-
                 </q-td>
                 <q-td key="unit" style="font-size: 11px" align="left">
-                   <!-- {{ props.row.dosage_form }} -->
-                     pcs
+                  <!-- {{ props.row.dosage_form }} -->
+                  pcs
                 </q-td>
 
                 <q-td key="expiration_date" style="font-size: 11px" align="left">
-                  {{props.row.expiration_date }}
+                  {{ props.row.expiration_date }}
                 </q-td>
 
                 <q-td key="status" style="font-size: 11px" align="left">
-                  <q-badge  :style="{ backgroundColor: props.row.Closing_quantity === 0 ? '#F44336' : new Date(props.row.expiration_date) <= new Date() ? '#F44336' : '#9CCC65' }">
+                  <q-badge
+                    :style="{
+                      backgroundColor:
+                        props.row.Closing_quantity === 0
+                          ? '#F44336'
+                          : new Date(props.row.expiration_date) <= new Date()
+                            ? '#F44336'
+                            : '#9CCC65',
+                    }"
+                  >
                     <!-- {{  props.row.Closing_quantity ?'In Stock': 'Out of Stock'  }} -->
-                       {{ getStockStatus(props.row) }}
+                    {{ getStockStatus(props.row) }}
                   </q-badge>
-
                 </q-td>
 
                 <q-td key="actions" style="font-size: 11px" align="center">
@@ -307,18 +336,19 @@
                     rounded
                     color="primary"
                     style="background-color: orange"
-                    @click="()=>{
-                      showData(props.row)
-
-                    }"
+                    @click="
+                      () => {
+                        showData(props.row)
+                      }
+                    "
                     icon="add_shopping_cart"
                     :disable="
-                        !props.row.Closing_quantity
+                      !props.row.Closing_quantity
+                        ? true
+                        : new Date(props.row.expiration_date) <= new Date()
                           ? true
-                          : new Date(props.row.expiration_date) <= new Date()
-                            ? true
-                            : false
-                      "
+                          : false
+                    "
                   />
                   <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
                 </q-td>
@@ -344,17 +374,23 @@
             type="text"
             mask="#####"
             autofocus
-
           />
-
         </q-card-section>
         <q-separator />
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" color="grey" @click="()=>{showQuantity = false
-              filter = ''
-              this.$refs.searchInput?.focus()
-              this.transactionDetails.quantity = ''
-          }" />
+          <q-btn
+            flat
+            label="Cancel"
+            color="grey"
+            @click="
+              () => {
+                showQuantity = false
+                filter = ''
+                this.$refs.searchInput?.focus()
+                this.transactionDetails.quantity = ''
+              }
+            "
+          />
           <q-btn flat label="Add" color="primary" @click="add_Order(this.transactionDetails)" />
         </q-card-actions>
       </q-card>
@@ -362,8 +398,124 @@
 
     <!-- SHOW ADD NEW CUSTOMER -->
     <q-dialog v-model="customerStore.closeNewCustomer" persistent>
-      <q-card style="max-width: 900px; width: 100%;overflow: hidden;max-height: 660px;" >
-        <newClients/>
+      <q-card style="max-width: 900px; width: 100%; overflow: hidden; max-height: 660px">
+        <newClients />
+      </q-card>
+    </q-dialog>
+
+    <!-- SHOW ADD NEW MAIFP CUSTOMER -->
+    <q-dialog v-model="show_maifp" persistent>
+      <q-card
+        style="max-width: 900px; width: 100%; overflow: hidden; height: 75%; max-height: 800px"
+      >
+        <q-card-section>
+          <div class="text-h6 text-green">New MAIFP Customer</div>
+        </q-card-section>
+        <q-separator></q-separator>
+        <q-card-section>
+          <q-table
+            :rows="maifpDataRows"
+            :columns="maifpCols"
+            row-key="id"
+            class="q-ma-xs"
+            style="height: 500px"
+          >
+            <template #bottom>
+              <q-tr>
+                <q-td colspan="100%">
+                  <q-btn @click="add_maifp_customer(maifpDataRows)" label="Get All MAIFP Customers" color="primary" />
+                </q-td>
+              </q-tr>
+            </template>
+            <template #body="props">
+              <q-tr :v-bind="props">
+                <!-- <q-td key="po_no" style="font-size: 11px" align="center">
+                {{ props.row.po_no }}
+              </q-td> -->
+                <q-td
+                  key="lastname"
+                  style="
+                    font-size: 11px;
+                    white-space: normal;
+                    word-break: break-word;
+                    max-width: 300px;
+                  "
+                  align="left"
+                  class="text-wrap"
+                >
+                  {{ props.row.lastname }}
+                </q-td>
+                <q-td key="firstname" style="font-size: 11px" align="left">
+                  {{ props.row.firstname }}
+                </q-td>
+                <q-td key="middlename" style="font-size: 11px" align="left">
+                  {{ props.row.middlename }}
+                </q-td>
+                <q-td key="ext" style="font-size: 11px" align="left">
+                  {{ props.row.ext }}
+                </q-td>
+                <q-td key="birthdate" style="font-size: 11px" align="left">
+                  {{ props.row.birthdate }}
+                </q-td>
+                <q-td key="contact_number" style="font-size: 11px" align="left">
+                  {{ props.row.contact_number }}
+                </q-td>
+                <q-td key="age" style="font-size: 11px" align="left">
+                  {{ props.row.age }}
+                </q-td>
+                <q-td key="gender" style="font-size: 11px" align="left">
+                  {{ props.row.gender }}
+                </q-td>
+                <q-td key="is_not_tagum" style="font-size: 11px" align="left">
+                  {{ props.row.is_not_tagum }}
+                </q-td>
+                <q-td key="street" style="font-size: 11px" align="left">
+                  {{ props.row.street }}
+                </q-td>
+                <q-td key="purok" style="font-size: 11px" align="left">
+                  {{ props.row.purok }}
+                </q-td>
+                <q-td key="barangay" style="font-size: 11px" align="left">
+                  {{ props.row.barangay }}
+                </q-td>
+                <q-td key="city" style="font-size: 11px" align="left">
+                  {{ props.row.city }}
+                </q-td>
+                <q-td key="province" style="font-size: 11px" align="left">
+                  {{ props.row.province }}
+                </q-td>
+                <q-td key="category" style="font-size: 11px" align="left">
+                  {{ props.row.category }}
+                </q-td>
+                <q-td key="is_pwd" style="font-size: 11px" align="left">
+                  {{ props.row.is_pwd }}
+                </q-td>
+                <q-td key="is_solo" style="font-size: 11px" align="left">
+                  {{ props.row.is_solo }}
+                </q-td>
+
+                <q-td key="actions" style="font-size: 11px" align="center">
+                  <q-btn
+                    flat
+                    rounded
+                    color="primary"
+                    icon="save"
+                    @click="
+                      () => {
+                        console.log(props.row)
+                      }
+                    "
+                  >
+                    <q-tooltip> Save </q-tooltip>
+                  </q-btn>
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn class="q-mx-md" @click="show_maifp = false" label="Close" color="negative" />
+        </q-card-actions>
       </q-card>
     </q-dialog>
   </q-page>
@@ -379,7 +531,172 @@ export default {
     newClients,
   },
   setup() {
+    const customerStore = useCustomerStore()
     return {
+      customerStore,
+      maifpCols: [
+        {
+          name: 'last_name',
+          label: 'Last Name',
+          field: 'last_name',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'first_name',
+          label: 'First Name',
+          field: 'first_name',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'middle_name',
+          label: 'Middle Name',
+          field: 'middle_name',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'ext',
+          label: 'Extension',
+          field: 'ext',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'birthdate',
+          label: 'Birthdate',
+          field: 'birthdate',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'contact_number',
+          label: 'Contact Number',
+          field: 'contact_number',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'age',
+          label: 'Age',
+          field: 'age',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'gender',
+          label: 'Gender',
+          field: 'gender',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'is_not_tagum',
+          label: 'From Tagum',
+          field: 'is_not_tagum',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'street',
+          label: 'Street',
+          field: 'street',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'purok',
+          label: 'Purok',
+          field: 'purok',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'barangay',
+          label: 'Barangay',
+          field: 'barangay',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'city',
+          label: 'City',
+          field: 'city',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'province',
+          label: 'Province',
+          field: 'province',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'category',
+          label: 'Category',
+          field: 'category',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'is_pwd',
+          label: 'PWD',
+          field: 'is_pwd',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'is_solo',
+          label: 'Solo Parent',
+          field: 'is_solo',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'actions',
+          label: 'Actions',
+          sortable: true,
+          align: 'center',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+      ],
       cols: [
         {
           name: 'brand_name',
@@ -439,8 +756,6 @@ export default {
       ],
 
       cartCols: [
-
-
         {
           name: 'generic_name',
           required: true,
@@ -502,7 +817,6 @@ export default {
           sortable: true,
         },
 
-
         {
           name: 'status',
           required: true,
@@ -524,11 +838,12 @@ export default {
   },
   data() {
     return {
-      unit_per_piece: [
-        'pcs','bottle','sachet','vial','ampule'
-      ],
-      selectedMedicine:{},
-       selectedMedicineQty: 0,
+      show_maifp: false,
+      maifpDataRows: [],
+      maif_latest_transaction:'',
+      unit_per_piece: ['pcs', 'bottle', 'sachet', 'vial', 'ampule'],
+      selectedMedicine: {},
+      selectedMedicineQty: 0,
       isEditable: true,
       selectedClient_id: 0,
       transaction_id: 0,
@@ -572,15 +887,13 @@ export default {
     }
   },
   mounted() {
-
     this.get_clients()
   },
   methods: {
-
-    clearData(){
-      this.costumer={}
-      this.transaction_id=0
-      this.rows=[]
+    clearData() {
+      this.costumer = {}
+      this.transaction_id = 0
+      this.rows = []
 
       this.$q.notify({
         type: 'positive',
@@ -610,9 +923,7 @@ export default {
       this.$q.notify({ type: 'positive', message: 'order removed successful!' })
     },
 
-
     showData(payload) {
-
       if (!payload.Openning_quantity && !payload.Closing_quantity) {
         this.$q.notify({ type: 'negative', message: 'Cannot add item Stocks still closed!' })
         return
@@ -624,7 +935,7 @@ export default {
 
       this.transactionDetails.transaction_id = this.transaction_id
       this.transactionDetails.customer_id = this.selectedClient_id
-      this.transactionDetails.transaction_date = new  Date().toLocaleDateString('en-CA')
+      this.transactionDetails.transaction_date = new Date().toLocaleDateString('en-CA')
       this.transactionDetails.item_id = payload.item_id
       this.transactionDetails.unit = payload.dosage_form
       this.transactionDetails.user_id = this.GetUserID()
@@ -639,7 +950,6 @@ export default {
     },
 
     async add_Order(payload) {
-
       payload.quantity = Number(payload.quantity)
       this.showQuantity = false
 
@@ -663,7 +973,6 @@ export default {
       this.filter = ''
       this.$refs.searchInput?.focus()
 
-
       //  this.$q.notify({ type: 'positive', message: 'order added successful!' })
     },
 
@@ -684,7 +993,15 @@ export default {
       await this.customerStore.getCustomer(id)
       this.costumer = this.customerStore.customer
       this.searchTerm = ''
-      this.getNewTransactionID(id)
+
+      if(this.costumer.origin === 'MAIFP'){
+        this.get_maif_latest_transaction({patient_id:this.costumer.maifp_id})
+         this.transaction_id = this.customerStore.customer_maifp_latest_trx
+      } else {
+
+         this.getNewTransactionID(id)
+      }
+
     },
     async get_clients() {
       try {
@@ -704,6 +1021,48 @@ export default {
       })
       console.log(id)
       this.searchTerm = ''
+    },
+
+    async add_maifp_customer(payload) {
+        try {
+          for(const customer of payload) {
+            const new_customer ={...customer, origin: 'MAIFP', maifp_id: customer.id.toString()}
+            delete new_customer.id
+            await this.customerStore.newCustomer(new_customer)
+          }
+        this.show_maifp = false
+        this.customerStore.customer_id = 0
+        this.get_clients()
+      } catch (error) {
+        console.error('Error adding MAIFP customers:', error)
+        this.$q.notify({
+          type: 'negative',
+          message: `Error adding MAIFP Customers.`,
+          position: 'center',
+          timeout: 1200,
+        })
+      }
+
+    },
+
+    async get_maif_latest_transaction(payload){
+
+      try {
+         await this.customerStore.latest_Maifp_trx(payload)
+        this.maif_latest_transaction = this.customerStore.customer_maifp_latest_trx
+      } catch (error) {
+        console.error('Error fetching MAIFP latest transaction:', error)
+      }
+    },
+
+    async get_MaifpCustomers() {
+      try {
+        await this.customerStore.ShowMaifpCustomers()
+        this.maifpDataRows = this.customerStore.customer_maifp
+        console.log(this.maifpDataRows)
+      } catch (error) {
+        console.error('Error fetching MAIFP customers:', error)
+      }
     },
 
     filterList() {
@@ -734,7 +1093,7 @@ export default {
       return age
     },
 
-     GetUserID(){
+    GetUserID() {
       const unsanitized_object = localStorage.getItem('user')
       const sanitized_object = unsanitized_object.replace('__q_objt|', '')
       const user = JSON.parse(sanitized_object)
@@ -743,7 +1102,7 @@ export default {
   },
 
   watch: {
-    'customerStore.customer_id'(value){
+    'customerStore.customer_id'(value) {
       this.get_client(value)
     },
 
@@ -783,9 +1142,6 @@ export default {
     },
   },
   computed: {
-    customerStore() {
-      return useCustomerStore()
-    },
     itemStore() {
       return useItemStore()
     },

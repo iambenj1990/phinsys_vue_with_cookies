@@ -18,9 +18,44 @@ export const useCustomerStore = defineStore('customers', {
 
     customer_transactions_list: [],
     customer_transactions_list_exploded: [],
+
+    customer_maifp: [],
+    customer_maifp_latest_trx: '',
   }),
 
   actions: {
+    async latest_Maifp_trx(payload){
+      try {
+        console.log(payload)
+        const response = await api.post('/maif/transactions/latest', payload)
+        this.customer_maifp_latest_trx = response.data.trx_num
+          console.log(response.data.trx_num)
+
+
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async ShowMaifpCustomers() {
+      try {
+        const response = await api.get('/maif/patients')
+        console.log(response.data.customers)
+        this.customer_maifp = response.data.customers
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    async store_bulk_customers(payload) {
+      try {
+        const response = await api.post('/customers/bulk', payload)
+        console.log(response.data)
+        this.customers = response.data.customers
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
     async get_transactions(id) {
       try {
         this.customer_transactions_list = []
@@ -41,7 +76,7 @@ export const useCustomerStore = defineStore('customers', {
       }
     },
 
-     async getCustomersByDate(payload) {
+    async getCustomersByDate(payload) {
       console.log(payload)
       try {
         const response = await api.post('/customers/list/dates', payload)
@@ -70,7 +105,7 @@ export const useCustomerStore = defineStore('customers', {
         const response = await api.get('/customers/' + id)
         console.log(response.data[0])
         this.customer = response.data[0]
-         console.log('customer => ', this.customer)
+        console.log('customer => ', this.customer)
       } catch (error) {
         console.error(error)
       }
@@ -78,7 +113,7 @@ export const useCustomerStore = defineStore('customers', {
 
     async newCustomer(payload) {
       try {
-        if (!payload.contact_number){
+        if (!payload.contact_number) {
           payload.contact_number = 'N/A'
         }
         const response = await api.post('/customers', payload)
@@ -87,15 +122,14 @@ export const useCustomerStore = defineStore('customers', {
         this.customers.push(response.data.customers)
 
         // Set customer_id from response
-        this.customer_id = response.data.customers.id
+        this.customer_id = response.data.customers.id ? response.data.customers.id : '0'
 
-         Notify.create({
+        Notify.create({
           type: 'positive',
           message: 'Customer registration successful: ',
           position: 'center',
           timeout: 1200,
         })
-
       } catch (error) {
         // Get a safe error message
         const message = error.response?.data?.message || error.message || 'Unknown error'
