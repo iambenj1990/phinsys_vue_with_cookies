@@ -11,9 +11,47 @@ export const useTransactionStore = defineStore('transactions', {
     customerTransactionsIdList: [],
 
     SelecteddailyInventory: {},
+    maifp_transactions:[],
   }),
 
   actions: {
+
+    async maif_medication_status(transaction){
+
+      try {
+        const response = await api.post('/maif/medication/status', transaction)
+        console.log(response.data)
+      } catch (error) {
+         console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
+    async throw_maif_medication_to_db(transaction){
+
+      try {
+        const response = await api.post('/maif/medication/new', transaction)
+        this.maifp_transactions = response.data
+        console.log(response.data)
+
+
+      } catch (error) {
+        console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+
+    },
+
     async newTransactionID(newCustomerTransaction) {
       try {
         const response = await api.get('/orders/transaction/new/' + newCustomerTransaction)

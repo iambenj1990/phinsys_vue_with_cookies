@@ -29,7 +29,7 @@ export const useCustomerStore = defineStore('customers', {
         console.log(payload)
         const response = await api.post('/maif/transactions/latest', payload)
         this.customer_maifp_latest_trx = response.data.trx_num
-          console.log(response.data.trx_num)
+        console.log(response.data.trx_num)
 
 
       } catch (error) {
@@ -38,9 +38,9 @@ export const useCustomerStore = defineStore('customers', {
     },
     async ShowMaifpCustomers() {
       try {
-        const response = await api.get('/maif/patients')
-        console.log(response.data.customers)
-        this.customer_maifp = response.data.customers
+        const response = await api.get('http://192.168.8.182:8000/api/medications')
+        console.log(response.data)
+        this.customer_maifp = response.data
       } catch (error) {
         console.log(error)
       }

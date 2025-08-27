@@ -4,6 +4,7 @@ import { Notify } from 'quasar'
 
 export const useItemStore = defineStore('items', {
   state: () => ({
+    item_Price:0,
     counter: 0,
     item_id: 0,
     items: [],
@@ -23,7 +24,10 @@ export const useItemStore = defineStore('items', {
     selected_stockCard:{
       generic_name: '',
       brand_name: '',
-    }
+    },
+
+    item_name: '',
+    item_amount: 0
   }),
 
   actions: {
@@ -464,11 +468,44 @@ export const useItemStore = defineStore('items', {
           position: 'center',
           timeout: 5000,
         })
+      }
+    },
+
+    async get_Name_Amount(payload){
+
+      try {
+        const response = await api.post('/items/name', payload)
+        console.log(response.data)
+        this.item_name = response.data.item_name
+        this.item_amount = response.data.amount
+
+      } catch (error) {
+        console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
+   async get_Item_Price(payload) {
+      try {
+        const response = await api.post('/items/price', payload)
+        this.item_Price = response.data.price
+      } catch (error) {
+        console.error(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
 
       }
+
     }
-
-
 
   },
 })
