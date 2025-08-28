@@ -16,6 +16,7 @@ class AuthService {
 
       if (response.data.success) {
         // Store token in localStorage
+        console.log('User authentication token:', response.data.data)
         LocalStorage.set('auth_token', response.data.data.token)
         LocalStorage.set('user', response.data.data.user)
 
@@ -48,6 +49,7 @@ class AuthService {
       const response = await api.post('/register', userData)
 
       if (response.data.success) {
+
         LocalStorage.set('auth_token', response.data.data.token)
         LocalStorage.set('user', response.data.data.user)
         this.setAuthHeader(response.data.data.token)

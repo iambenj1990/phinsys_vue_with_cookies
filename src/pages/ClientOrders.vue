@@ -204,7 +204,10 @@
                       <q-btn
                         flat
                         color="red"
-                        @click="remove_order(props.row.table_id_transactions)"
+                        @click="()=>{
+                          remove_maifp_order(props.row)
+                          // remove_order(props.row.table_id_transactions)
+                          }"
                         icon="remove_shopping_cart"
                       />
                     </q-td>
@@ -404,10 +407,8 @@
     </q-dialog>
 
     <!-- SHOW ADD NEW MAIFP CUSTOMER -->
-    <q-dialog v-model="show_maifp" style="height: 600px;" persistent>
-      <q-card
-        style="max-width: 900px; width: 100%; overflow: hidden; "
-      >
+    <q-dialog v-model="show_maifp" style="height: 600px" persistent>
+      <q-card style="max-width: 900px; width: 100%; overflow: hidden">
         <q-card-section>
           <div class="text-h6 text-green">New MAIFP Customer</div>
         </q-card-section>
@@ -419,6 +420,18 @@
             row-key="id"
             class="q-ma-xs"
             style="height: 500px"
+            :visible-columns="[
+              'lastname',
+              'firstname',
+              'middlename',
+              'ext',
+              'birthdate',
+              'contact_number',
+              'age',
+              'gender',
+              'barangay',
+              'actions',
+            ]"
           >
             <template #bottom>
               <q-tr>
@@ -470,7 +483,7 @@
                 <q-td key="gender" style="font-size: 11px" align="left">
                   {{ props.row.gender }}
                 </q-td>
-                <q-td key="is_not_tagum" style="font-size: 11px" align="left">
+                <!-- <q-td key="is_not_tagum" style="font-size: 11px" align="left">
                   {{ props.row.is_not_tagum }}
                 </q-td>
                 <q-td key="street" style="font-size: 11px" align="left">
@@ -478,11 +491,11 @@
                 </q-td>
                 <q-td key="purok" style="font-size: 11px" align="left">
                   {{ props.row.purok }}
-                </q-td>
+                </q-td> -->
                 <q-td key="barangay" style="font-size: 11px" align="left">
                   {{ props.row.barangay }}
                 </q-td>
-                <q-td key="city" style="font-size: 11px" align="left">
+                <!-- <q-td key="city" style="font-size: 11px" align="left">
                   {{ props.row.city }}
                 </q-td>
                 <q-td key="province" style="font-size: 11px" align="left">
@@ -496,7 +509,7 @@
                 </q-td>
                 <q-td key="is_solo" style="font-size: 11px" align="left">
                   {{ props.row.is_solo }}
-                </q-td>
+                </q-td> -->
 
                 <q-td key="actions" style="font-size: 11px" align="center">
                   <q-btn
@@ -507,11 +520,28 @@
                     @click="
                       () => {
                         console.log(props.row)
-                        this.status_done_maif(this.transaction_id)
+                        this.add_maifp_individual(props.row)
                       }
                     "
                   >
                     <q-tooltip> Save </q-tooltip>
+                  </q-btn>
+                  <q-btn
+                    flat
+                    rounded
+                    color="green"
+                    icon="done"
+                    @click="
+                      () => {
+                        console.log(props.row)
+                        console.log(props.row.transaction[0].id.toString())
+                        this.status_done_maif(
+                          props.row.transaction[0].transaction_number.toString(),
+                        )
+                      }
+                    "
+                  >
+                    <q-tooltip> Done </q-tooltip>
                   </q-btn>
                 </q-td>
               </q-tr>
@@ -541,27 +571,27 @@ export default {
       customerStore,
       maifpCols: [
         {
-          name: 'last_name',
+          name: 'lastname',
           label: 'Last Name',
-          field: 'last_name',
+          field: 'lastname',
           sortable: true,
           align: 'left',
           headerClasses: 'bg-grey-7 text-white',
           headerStyle: 'font-size: 1.2 em',
         },
         {
-          name: 'first_name',
+          name: 'firstname',
           label: 'First Name',
-          field: 'first_name',
+          field: 'firstname',
           sortable: true,
           align: 'left',
           headerClasses: 'bg-grey-7 text-white',
           headerStyle: 'font-size: 1.2 em',
         },
         {
-          name: 'middle_name',
+          name: 'middlename',
           label: 'Middle Name',
-          field: 'middle_name',
+          field: 'middlename',
           sortable: true,
           align: 'left',
           headerClasses: 'bg-grey-7 text-white',
@@ -612,33 +642,33 @@ export default {
           headerClasses: 'bg-grey-7 text-white',
           headerStyle: 'font-size: 1.2 em',
         },
-        {
-          name: 'is_not_tagum',
-          label: 'From Tagum',
-          field: 'is_not_tagum',
-          sortable: true,
-          align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
-          headerStyle: 'font-size: 1.2 em',
-        },
-        {
-          name: 'street',
-          label: 'Street',
-          field: 'street',
-          sortable: true,
-          align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
-          headerStyle: 'font-size: 1.2 em',
-        },
-        {
-          name: 'purok',
-          label: 'Purok',
-          field: 'purok',
-          sortable: true,
-          align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
-          headerStyle: 'font-size: 1.2 em',
-        },
+        // {
+        //   name: 'is_not_tagum',
+        //   label: 'From Tagum',
+        //   field: 'is_not_tagum',
+        //   sortable: true,
+        //   align: 'left',
+        //   headerClasses: 'bg-grey-7 text-white',
+        //   headerStyle: 'font-size: 1.2 em',
+        // },
+        // {
+        //   name: 'street',
+        //   label: 'Street',
+        //   field: 'street',
+        //   sortable: true,
+        //   align: 'left',
+        //   headerClasses: 'bg-grey-7 text-white',
+        //   headerStyle: 'font-size: 1.2 em',
+        // },
+        // {
+        //   name: 'purok',
+        //   label: 'Purok',
+        //   field: 'purok',
+        //   sortable: true,
+        //   align: 'left',
+        //   headerClasses: 'bg-grey-7 text-white',
+        //   headerStyle: 'font-size: 1.2 em',
+        // },
         {
           name: 'barangay',
           label: 'Barangay',
@@ -648,51 +678,51 @@ export default {
           headerClasses: 'bg-grey-7 text-white',
           headerStyle: 'font-size: 1.2 em',
         },
-        {
-          name: 'city',
-          label: 'City',
-          field: 'city',
-          sortable: true,
-          align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
-          headerStyle: 'font-size: 1.2 em',
-        },
-        {
-          name: 'province',
-          label: 'Province',
-          field: 'province',
-          sortable: true,
-          align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
-          headerStyle: 'font-size: 1.2 em',
-        },
-        {
-          name: 'category',
-          label: 'Category',
-          field: 'category',
-          sortable: true,
-          align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
-          headerStyle: 'font-size: 1.2 em',
-        },
-        {
-          name: 'is_pwd',
-          label: 'PWD',
-          field: 'is_pwd',
-          sortable: true,
-          align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
-          headerStyle: 'font-size: 1.2 em',
-        },
-        {
-          name: 'is_solo',
-          label: 'Solo Parent',
-          field: 'is_solo',
-          sortable: true,
-          align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
-          headerStyle: 'font-size: 1.2 em',
-        },
+        // {
+        //   name: 'city',
+        //   label: 'City',
+        //   field: 'city',
+        //   sortable: true,
+        //   align: 'left',
+        //   headerClasses: 'bg-grey-7 text-white',
+        //   headerStyle: 'font-size: 1.2 em',
+        // },
+        // {
+        //   name: 'province',
+        //   label: 'Province',
+        //   field: 'province',
+        //   sortable: true,
+        //   align: 'left',
+        //   headerClasses: 'bg-grey-7 text-white',
+        //   headerStyle: 'font-size: 1.2 em',
+        // },
+        // {
+        //   name: 'category',
+        //   label: 'Category',
+        //   field: 'category',
+        //   sortable: true,
+        //   align: 'left',
+        //   headerClasses: 'bg-grey-7 text-white',
+        //   headerStyle: 'font-size: 1.2 em',
+        // },
+        // {
+        //   name: 'is_pwd',
+        //   label: 'PWD',
+        //   field: 'is_pwd',
+        //   sortable: true,
+        //   align: 'left',
+        //   headerClasses: 'bg-grey-7 text-white',
+        //   headerStyle: 'font-size: 1.2 em',
+        // },
+        // {
+        //   name: 'is_solo',
+        //   label: 'Solo Parent',
+        //   field: 'is_solo',
+        //   sortable: true,
+        //   align: 'left',
+        //   headerClasses: 'bg-grey-7 text-white',
+        //   headerStyle: 'font-size: 1.2 em',
+        // },
         {
           name: 'actions',
           label: 'Actions',
@@ -905,12 +935,14 @@ export default {
 
     async status_done_maif(transaction_id) {
       try {
+        console.log('setting maif transaction status to done for id:', transaction_id)
         const payload = {
           transaction_id: transaction_id,
           status: 'Done'
         }
-
+        console.log('setting maif transaction status to done for payload:', payload)
         await this.transactionStore.maif_medication_status(payload)
+        await this.get_MaifpCustomers()
       } catch (error) {
         console.log(error)
       }
@@ -967,6 +999,16 @@ export default {
       await this.transactionStore.remove_order(id)
       this.getOrders(this.transaction_id)
       this.$q.notify({ type: 'positive', message: 'order removed successful!' })
+    },
+
+    async remove_maifp_order(payload){
+      try {
+        console.log('removing maifp order for payload:', payload)
+      //  await this.transactionStore.remove_maifp_order(payload)
+        //await this.get_MaifpCustomers()
+      } catch (error) {
+        console.log(error)
+      }
     },
 
     showData(payload) {
@@ -1084,6 +1126,23 @@ export default {
       this.searchTerm = ''
     },
 
+    async add_maifp_individual(payload){
+      try {
+           const new_customer = { ...payload, origin: 'MAIFP', maifp_id: payload.id.toString() }
+          delete new_customer.id
+          await this.customerStore.newCustomer(new_customer)
+
+      } catch (error) {
+       console.error('Error adding MAIFP customers:', error)
+        this.$q.notify({
+          type: 'negative',
+          message: `Error adding MAIFP Customers.`,
+          position: 'center',
+          timeout: 1200,
+        })
+      }
+
+    },
     async add_maifp_customer(payload) {
       try {
         for (const customer of payload) {
