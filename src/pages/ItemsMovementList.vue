@@ -287,6 +287,7 @@
 </template>
 
 <script>
+import { useConfigurationsStore } from 'src/stores/configurations'
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { useIndicatorStore } from 'src/stores/indicatorsStore'
@@ -303,9 +304,11 @@ export default {
     },
   },
   setup() {
+    const ConfigStore = useConfigurationsStore()
     const today = date.formatDate(new Date(), 'YYYY-MM-DD')
     const indicatorStore = useIndicatorStore()
     return {
+      ConfigStore,
       today,
       indicatorStore,
       pagination: {
@@ -606,8 +609,8 @@ export default {
       const timeDiff = expirationDate.getTime() - today.getTime()
       const daysToExpire = Math.ceil(timeDiff / (1000 * 60 * 60 * 24))
 
-      console.log('Expiration Date:', expirationDate, 'Today:', today, 'Days to expire:', daysToExpire)
-      console.log('Days to expire:', daysToExpire)
+      // console.log('Expiration Date:', expirationDate, 'Today:', today, 'Days to expire:', daysToExpire)
+      // console.log('Days to expire:', daysToExpire)
 
       if (daysToExpire < 0) {
         return 'red' // Already expired
