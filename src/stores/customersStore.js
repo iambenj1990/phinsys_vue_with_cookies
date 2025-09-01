@@ -21,17 +21,17 @@ export const useCustomerStore = defineStore('customers', {
 
     customer_maifp: [],
     customer_maifp_latest_trx: '',
+
+    cust_response: {},
   }),
 
   actions: {
-    async latest_Maifp_trx(payload){
+    async latest_Maifp_trx(payload) {
       try {
         console.log(payload)
         const response = await api.post('/maif/transactions/latest', payload)
         this.customer_maifp_latest_trx = response.data.trx_num
         console.log(response.data.trx_num)
-
-
       } catch (error) {
         console.log(error)
       }
@@ -118,18 +118,21 @@ export const useCustomerStore = defineStore('customers', {
         }
         const response = await api.post('/customers', payload)
 
-        // If customers is an array of objects
-        this.customers.push(response.data.customers)
+        if (response.data.success) {
+          // Set customer_id from response
+          this.customer_id = response.data.customers.id ? response.data.customers.id : '0'
 
-        // Set customer_id from response
-        this.customer_id = response.data.customers.id ? response.data.customers.id : '0'
-
-        Notify.create({
-          type: 'positive',
-          message: 'Customer registration successful: ',
-          position: 'center',
-          timeout: 1200,
-        })
+          Notify.create({
+            type: 'positive',
+            message: 'Customer registration successful: ',
+            position: 'center',
+            timeout: 1200,
+          })
+        }else{
+          console.log('existing name => ',response.data.existing_name)
+          console.log('existing id => ',response.data.existing_name[0].id)
+          this.customer_id = response.data.existing_name[0].id ? response.data.existing_name[0].id : '0'
+        }
       } catch (error) {
         // Get a safe error message
         const message = error.response?.data?.message || error.message || 'Unknown error'

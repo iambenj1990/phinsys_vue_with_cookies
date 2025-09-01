@@ -519,8 +519,11 @@
                     icon="save"
                     @click="
                       () => {
-                        console.log(props.row)
-                        this.add_maifp_individual(props.row)
+
+                        const clicked_data = {...props.row, origin: 'MAIFP', maifp_id: props.row.id.toString()}
+                        this.selectedMaifpCustomer = clicked_data
+                        console.log('clicked maifp customer => ',this.selectedMaifpCustomer)
+                         this.add_maifp_individual(this.selectedMaifpCustomer)
                       }
                     "
                   >
@@ -533,8 +536,7 @@
                     icon="done"
                     @click="
                       () => {
-                        console.log(props.row)
-                        console.log(props.row.transaction[0].id.toString())
+
                         this.status_done_maif(
                           props.row.transaction[0].transaction_number.toString(),
                         )
@@ -873,6 +875,8 @@ export default {
   },
   data() {
     return {
+      selected_id_customer:0,
+      selectedMaifpCustomer:{},
       itemPrice: 0,
       show_maifp: false,
       maifpDataRows: [],
@@ -935,7 +939,7 @@ export default {
 
     async status_done_maif(transaction_id) {
       try {
-        console.log('setting maif transaction status to done for id:', transaction_id)
+
         const payload = {
           transaction_id: transaction_id,
           status: 'Done'
@@ -997,6 +1001,9 @@ export default {
 
     async remove_order(id) {
       await this.transactionStore.remove_order(id)
+      if (this.costumer.origin === 'MAIFP') {
+        await this.transactionStore.remove_maifp_order({ transaction_id: this.transaction_id, item_id: id })
+      }
       this.getOrders(this.transaction_id)
       this.$q.notify({ type: 'positive', message: 'order removed successful!' })
     },
@@ -1024,6 +1031,8 @@ export default {
       this.transactionDetails.item_id = payload.item_id
       this.transactionDetails.unit = payload.dosage_form
       this.transactionDetails.user_id = this.GetUserID()
+      this.transactionDetails.origin = this.selectedMaifpCustomer.origin
+      this.transactionDetails.maifp_id = this.selectedMaifpCustomer.maifp_id
       this.showQuantity = true
     },
 
@@ -1048,10 +1057,10 @@ export default {
         this.$refs.searchInput?.focus()
         return
       }
-
+      console.log('order payload => ',payload)
       await this.transactionStore.newTransaction(payload)
 
-      if (this.costumer.origin === 'MAIFP') {
+      if (this.selectedMaifpCustomer.origin === 'MAIFP') {
           console.log('selected item id: ',payload.item_id)
         console.log('selected medicine: => ',this.selectedMedicine)
         await this.show_stock_name_amount({id:payload.item_id})
@@ -1064,6 +1073,7 @@ export default {
           transaction_date: payload.transaction_date,
           amount: this.itemsData.item_amount,
           transaction_id: this.transaction_id,
+          item_id: payload.item_id
         }
         console.log('medication details to be sent to maifp db => ', medication_details)
        await this.transactionStore.throw_maif_medication_to_db(medication_details)
@@ -1090,14 +1100,14 @@ export default {
     },
     async get_client(id) {
       this.selectedClient_id = id
-      //console.log(id)
+      console.log('selected client_ID =>',id)
       await this.customerStore.getCustomer(id)
       this.costumer = this.customerStore.customer
       this.searchTerm = ''
 
-      if (this.costumer.origin === 'MAIFP') {
+      if (this.selectedMaifpCustomer.origin === 'MAIFP') {
 
-       await this.get_maif_latest_transaction({ patient_id: this.costumer.maifp_id })
+       await this.get_maif_latest_transaction({ patient_id: this.selectedMaifpCustomer.maifp_id })
          console.log('get client transaction id => ',this.maif_latest_transaction)
         this.transaction_id = this.maif_latest_transaction
         console.log(this.transaction_id)
@@ -1128,9 +1138,10 @@ export default {
 
     async add_maifp_individual(payload){
       try {
-           const new_customer = { ...payload, origin: 'MAIFP', maifp_id: payload.id.toString() }
-          delete new_customer.id
-          await this.customerStore.newCustomer(new_customer)
+
+          await this.customerStore.newCustomer(payload)
+          this.get_client(this.customerStore.customer_id)
+          this.show_maifp = false
 
       } catch (error) {
        console.error('Error adding MAIFP customers:', error)
@@ -1150,9 +1161,10 @@ export default {
           delete new_customer.id
           await this.customerStore.newCustomer(new_customer)
         }
-        this.show_maifp = false
+
         this.customerStore.customer_id = 0
         this.get_clients()
+         this.show_maifp = false
       } catch (error) {
         console.error('Error adding MAIFP customers:', error)
         this.$q.notify({
@@ -1222,9 +1234,9 @@ export default {
   },
 
   watch: {
-    'customerStore.customer_id'(value) {
-      this.get_client(value)
-    },
+    // 'customerStore.customer_id'(value) {
+    //   this.get_client(value)
+    // },
 
     searchTerm(newValue) {
       if (newValue) {

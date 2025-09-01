@@ -139,6 +139,19 @@ export const useTransactionStore = defineStore('transactions', {
       }
     },
 
+    async remove_maifp_order(payload) {
+      try {
+        await api.post('/maif/medication/order', payload)
+      } catch (error) {
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
     async getDailyInventory(id) {
       try {
         const response = await api.get('/daily/' + id)
