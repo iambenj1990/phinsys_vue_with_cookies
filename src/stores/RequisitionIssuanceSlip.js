@@ -44,6 +44,8 @@ export const useRequisitionIssuanceSlip = defineStore('ris', {
       }
     },
 
+    
+
     async getRISinfo(payload) {
       console.log(payload)
       try {

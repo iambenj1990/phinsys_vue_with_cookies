@@ -141,6 +141,7 @@ export const useTransactionStore = defineStore('transactions', {
 
     async remove_maifp_order(payload) {
       try {
+        console.log('removing maifp order for payload:', payload)
         await api.post('/maif/medication/order', payload)
       } catch (error) {
         Notify.create({

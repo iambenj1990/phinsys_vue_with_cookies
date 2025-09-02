@@ -64,6 +64,19 @@
               <q-td key="quantity" style="font-size: 11px" align="left">
                 {{ props.row.quantity }}
               </q-td>
+              <q-td key="actions" style="font-size: 11px" align="left">
+                <q-btn
+                  flat
+                  rounded
+                  color="red"
+                  @click="
+                    () => {
+                      console.log(props.row)
+                    }
+                  "
+                  icon="remove_shopping_cart"
+                />
+              </q-td>
 
 
             </q-tr>
@@ -297,6 +310,13 @@ export default {
           label: 'Quantity',
           align: 'left',
           field: 'quantity',
+        },
+         {
+          name: 'actions',
+          required: true,
+          label: 'Actions',
+          align: 'left',
+
         },
 
       ],
