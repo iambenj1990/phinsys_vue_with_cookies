@@ -59,6 +59,12 @@ const routes = [
         meta: { requiresAuth: true },
       },
 
+         {
+        path: '/ris/info/adjust',
+        component: () => import('pages/AdjustRIS.vue'),
+        meta: { requiresAuth: true },
+      },
+
 
         {
         path: '/ris/orders/info',

@@ -44,7 +44,7 @@ export const useRequisitionIssuanceSlip = defineStore('ris', {
       }
     },
 
-    
+
 
     async getRISinfo(payload) {
       console.log(payload)
@@ -101,5 +101,27 @@ export const useRequisitionIssuanceSlip = defineStore('ris', {
         })
       }
     },
-  },
+
+    async remove_ris_item(payload) {
+
+      try {
+        const response = await api.post('/daily/ris/remove/item', payload)
+        Notify.create({
+          type: 'positive',
+          message: response.data.message,
+          position: 'center',
+          timeout: 1500,
+        })
+      } catch (error) {
+        console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
+}
 })
