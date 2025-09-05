@@ -435,7 +435,7 @@
               'actions',
             ]"
           >
-            <template #bottom>
+            <!-- <template #bottom>
               <q-tr>
                 <q-td colspan="100%">
                   <q-btn
@@ -445,7 +445,7 @@
                   />
                 </q-td>
               </q-tr>
-            </template>
+            </template> -->
             <template #body="props">
               <q-tr :v-bind="props">
                 <!-- <q-td key="po_no" style="font-size: 11px" align="center">
@@ -524,7 +524,7 @@
                         const clicked_data = {
                           ...props.row,
                           origin: 'MAIFP',
-                          maifp_id: props.row.id.toString(),
+                          maifp_id: props.row.patient_id.toString(),
                         }
                         this.selectedMaifpCustomer = clicked_data
                         console.log('clicked maifp customer => ', this.selectedMaifpCustomer)
@@ -542,7 +542,7 @@
                     @click="
                       () => {
                         this.status_done_maif(
-                          props.row.transaction[0].transaction_number.toString(),
+                          props.row.transaction_number.toString(),
                         )
                       }
                     "
@@ -1186,7 +1186,7 @@ export default {
       try {
         await this.customerStore.ShowMaifpCustomers()
         this.maifpDataRows = this.customerStore.customer_maifp
-        console.log(this.maifpDataRows)
+        console.log('sent to table => ',this.maifpDataRows)
       } catch (error) {
         console.error('Error fetching MAIFP customers:', error)
       }

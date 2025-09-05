@@ -38,9 +38,9 @@ export const useCustomerStore = defineStore('customers', {
     },
     async ShowMaifpCustomers() {
       try {
-        const response = await api.get('http://192.168.8.182:8000/api/medications')
-        console.log(response.data)
-        this.customer_maifp = response.data
+        const response = await api.get('/maif/patients/medication')
+        console.log(response.data.patients)
+        this.customer_maifp = response.data.patients
       } catch (error) {
         console.log(error)
       }

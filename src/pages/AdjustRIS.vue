@@ -474,6 +474,17 @@ export default {
       }
     },
 
+    async get_purpose(ris_id) {
+    try {
+
+      await this.risStore.getRISinfo(ris_id)
+      this.form.purpose = this.risStore.ris_info.purpose
+    } catch (error) {
+      console.log(error)
+    }
+
+    },
+
     clearData() {
       this.ris_id = ''
       this.ris_no = 0
@@ -585,7 +596,11 @@ export default {
       this.showRemoveItem = true
     },
   },
-  mounted() {},
+  mounted() {
+    this.ris_no = this.$route.query.ris_no
+    this.get_purpose({ ris_no: this.ris_no })
+    this.getOrders(this.ris_no )
+  },
 
   computed: {
     hasRIS_ID() {

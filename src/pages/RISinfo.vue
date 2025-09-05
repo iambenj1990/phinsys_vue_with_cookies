@@ -64,7 +64,7 @@
               <q-td key="quantity" style="font-size: 11px" align="left">
                 {{ props.row.quantity }}
               </q-td>
-              <q-td key="actions" style="font-size: 11px" align="left">
+              <!-- <q-td key="actions" style="font-size: 11px" align="left">
                 <q-btn
                   flat
                   rounded
@@ -76,14 +76,21 @@
                   "
                   icon="remove_shopping_cart"
                 />
-              </q-td>
-
-
+              </q-td> -->
             </q-tr>
           </template>
         </q-table>
 
         <q-card-actions align="right">
+          <q-btn
+            color="green"
+            type="button"
+            label="Adjust"
+            class="text-subtitle2 text-white q-pa-md q-mt-md"
+            icon="edit_note"
+            style="width: 110px"
+            @click="$router.push({ path: '/ris/info/adjust', query: { ris_no: ris_no } })"
+          />
           <q-btn
             color="red"
             type="button"
@@ -92,7 +99,6 @@
             icon="close"
             style="width: 110px"
             @click="$router.back()"
-
           />
         </q-card-actions>
       </q-card-section>
@@ -311,14 +317,12 @@ export default {
           align: 'left',
           field: 'quantity',
         },
-         {
-          name: 'actions',
-          required: true,
-          label: 'Actions',
-          align: 'left',
-
-        },
-
+        // {
+        //   name: 'actions',
+        //   required: true,
+        //   label: 'Actions',
+        //   align: 'left',
+        // },
       ],
       cartCols: [
         {
@@ -427,24 +431,21 @@ export default {
         quantity: 0,
         user_id: 0,
       },
-      ris_info:{}
+      ris_info: {},
     }
   },
   methods: {
-
-    async get_ris_information(payload){
-
-       await this.risStore.getRISinfo({ris_no : payload})
+    async get_ris_information(payload) {
+      await this.risStore.getRISinfo({ ris_no: payload })
       this.ris_info = this.risStore.ris_info
       console.log('ris_info => ', this.ris_info)
 
       this.ris_no = this.ris_info.ris_id
       this.form.purpose = this.ris_info.purpose
 
-      await this.risStore.RIS_Transactions({ris_no:payload})
+      await this.risStore.RIS_Transactions({ ris_no: payload })
       this.rows = this.risStore.ris_medicine_list
     },
-
 
     async lookforOpen() {
       try {
@@ -577,13 +578,11 @@ export default {
     },
   },
   mounted() {
-
+    this.get_ris_information(this.risStore.ris_no)
   },
   created() {
-    console.log('created => ',this.risStore.ris_no)
-  const ris_no = this.risStore.ris_no
-  this.get_ris_information(ris_no)
-},
+    console.log('created => ', this.risStore.ris_no)
+  },
 
   computed: {
     hasRIS_ID() {
