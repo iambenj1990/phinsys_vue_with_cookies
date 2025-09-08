@@ -6,11 +6,11 @@ export const useConfigurationsStore = defineStore('configurations', {
   state: () => ({
     // Add your state properties here
     selected_ID: 1,
-    normal_color: 0,
-    low_color: 0,
+    normal_color: '',
+    low_color: '',
     empty_color: '',
-    low_count: '',
-    days_toExpire: '',
+    low_count: 0,
+    days_toExpire: 0,
 
     configuration: {},
   }),
@@ -33,7 +33,7 @@ export const useConfigurationsStore = defineStore('configurations', {
           })
         }
         this.configuration = response.data.configuration
-        console.log('response => ', response.data.configuration)
+
 
       } catch (error) {
         console.log(error)
@@ -58,7 +58,7 @@ export const useConfigurationsStore = defineStore('configurations', {
         }
 
         this.configuration = response.data.configuration
-       // console.log('response => ', response.data.configuration)
+        console.log('response => ', this.configuration)
       } catch (error) {
         Notify.create({
           type: 'negative',

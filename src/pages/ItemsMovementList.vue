@@ -9,7 +9,7 @@
         </div> -->
         <!-- <q-separator /> -->
         <div class="q-my-sm q-mx-sm" align="right">
-          <q-btn flat label="Close Stocks" color="grey" @click="closeStock()" />
+          <q-btn flat label="Close Stocks" color="grey" @click="closePrompt = true" />
           <q-btn
             flat
             label="Open Stocks"
@@ -17,7 +17,8 @@
             color="green"
             @click="
               () => {
-                openStock(GetUserID())
+                // openStock(GetUserID())
+                openPrompt = true
               }
             "
           />
@@ -135,9 +136,8 @@
 
                   <q-td key="Closing_quantity" style="font-size: 11px" align="left">
                     <q-badge
-                      style="width: 100px"
-                      :color="getStockColor(props.row.total_closing_quantity, props.row.quantity)"
-                      text-color="black"
+
+                      :style="{ backgroundColor: getStockColor(props.row.total_closing_quantity, props.row.quantity), color: '#000000', width: '100px' }"
                       class="flex flex-center q-pa-xs"
                     >
                       {{
@@ -283,6 +283,39 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <q-dialog v-model="closePrompt" persistent>
+      <q-card style="max-width: 450px; width: 100%">
+        <q-card-section class="text-subtitle1 text-grey text-weight-medium">
+          <q-icon name="warning" size="26px" color="orange" />Closing Stocks</q-card-section
+        >
+        <q-separator />
+        <q-card-section class="text-caption">
+          <div class="text-h6 text-green">You are about to close your stocks.</div>
+        </q-card-section>
+        <q-separator />
+        <q-card-actions align="right">
+          <q-btn flat label="Cancel" color="grey" @click="closePrompt = false" />
+          <q-btn flat label="Proceed" color="negative" @click="closeStock()" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="openPrompt" persistent>
+      <q-card style="max-width: 450px; width: 100%">
+        <q-card-section class="text-subtitle1 text-grey text-weight-medium">
+          <q-icon name="warning" size="26px" color="orange" />Opening Stocks</q-card-section
+        >
+        <q-separator />
+        <q-card-section class="text-caption">
+          <div class="text-h6 text-green">You are about to open your stocks.</div>
+        </q-card-section>
+        <q-separator />
+        <q-card-actions align="right">
+          <q-btn flat label="Cancel" color="grey" @click="openPrompt = false" />
+          <q-btn flat label="Proceed" color="negative" @click="openStock(GetUserID())" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -397,7 +430,6 @@ export default {
           label: 'Status',
           align: 'left',
           field: 'stock_status',
-
         },
 
         {
@@ -406,7 +438,6 @@ export default {
           label: 'As of',
           align: 'left',
           field: 'transaction_date',
-
         },
         {
           name: 'actions',
@@ -420,6 +451,7 @@ export default {
   },
   data() {
     return {
+      closePrompt: false,
       openDate: false,
       openPrompt: false,
       dateRange: this.today,
@@ -553,6 +585,7 @@ export default {
         await this.itemStore.openingStocks(payload)
         // await this.fetchAllStocks()
         await this.showStocks(this.today)
+        this.openPrompt = false
       } catch (error) {
         console.log(error)
       }
@@ -563,6 +596,7 @@ export default {
         await this.itemStore.closingStocks(this.GetUserID())
         // await this.fetchAllStocks()
         await this.showStocks(this.today)
+        this.closePrompt = false
       } catch (error) {
         console.log(error)
       }
@@ -573,16 +607,24 @@ export default {
       return Math.round((remaining / total) * 100)
     },
 
-    getStockColor(remaining, total) {
-      // console.log('remaining =>', remaining, ' total=> ', total)
-      const percentage = this.getStockPercentage(remaining, total)
-      //console.log('percentage =>', percentage)
+    // getStockColor(remaining, total) {
+    //   const percentage = this.getStockPercentage(remaining, total)
+    //   if (percentage === 0) return this.ConfigStore.empty_color // Out of stock (0%)
+    //   if (percentage <= 20) return this.ConfigStore.low_color // Low (≤20%)
+    //   if (percentage <= 50) return  this.ConfigStore.normal_color // Medium (≤50%)
+    //   return this.ConfigStore.normal_color // Safe (>50%)
+    // },
 
-      if (percentage === 0) return 'red' // Out of stock (0%)
-      if (percentage <= 10) return 'orange' // Critical (≤10%)
-      if (percentage <= 20) return 'yellow' // Low (≤20%)
-      if (percentage <= 50) return 'blue' // Medium (≤50%)
-      return 'light-green' // Safe (>50%)
+    getStockColor(remaining, total) {
+      const percentage = this.getStockPercentage(remaining, total)
+
+      const low = this.ConfigStore.configuration.low_color
+      const normal = this.ConfigStore.configuration.normal_color
+      const empty = this.ConfigStore.configuration.empty_color
+
+      if (percentage === 0) return empty// Red = Out of stock
+      if (percentage <= 50) return low // Yellow = Medium stock
+      return normal // Green = Safe
     },
 
     getStockStatus(row) {
@@ -614,7 +656,7 @@ export default {
 
       if (daysToExpire < 0) {
         return 'red' // Already expired
-      } else if (daysToExpire <= 30) {
+      } else if (daysToExpire <= this.ConfigStore.configuration.days_toExpire) {
         return 'orange' // Expiring within 30 days
       } else {
         return 'green' // Still valid
@@ -667,6 +709,8 @@ export default {
 
   mounted() {
     this.showStocks(this.today)
+    this.ConfigStore.getConfiguration()
+
   },
 
   watch: {
