@@ -15,7 +15,7 @@
               flat
               bordered
               class="q-mr-md q-table--grid my-sticky-header-table"
-          
+
               :rows-per-page-options="[0]"
               table-header-class="text-white"
               table-header-style="background-color: #f5f5f5"
@@ -98,8 +98,8 @@ export default {
         class: 'text-wrap',
         style: 'white-space: normal; word-break: break-word; max-width: 300px;',
       },
-      { name: 'quantity', label: 'Quantity', field: 'quantity', align: 'right', sortable: true },
-      { name: 'balance', label: 'Balance', field: 'balance', align: 'right', sortable: true },
+      { name: 'quantity', label: 'Quantity', field: 'quantity', align: 'center', sortable: true },
+      { name: 'balance', label: 'Balance', field: 'balance', align: 'center', sortable: true },
     ]
 
     const cols = [...staticCols, ...MonthCols]
@@ -175,7 +175,7 @@ export default {
               po_no: row.po_no,
               item: row.item,
               quantity: row.quantity,
-              balance: row.balance,
+              balance: row.latest_balance,
               dispensed: 0, // will sum below
             }
             // Initialize months with 0
