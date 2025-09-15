@@ -18,7 +18,7 @@
             />
           </div>
           <div class="row justify-end">
-            <q-btn type="submit" color="green" label="Proceed" />
+            <!-- <q-btn type="submit" color="green" label="Proceed" /> -->
           </div>
         </q-form>
       </q-card-section>
@@ -81,7 +81,7 @@
           <q-btn
             color="green"
             type="button"
-            label="Save"
+            label="Update"
             class="text-subtitle2 text-white q-pa-md q-mt-md"
             icon="save"
             style="width: 110px"
@@ -493,7 +493,7 @@ export default {
 
       this.$q.notify({
         type: 'positive',
-        message: `Order submitted`,
+        message: `Order updated successfully!`,
         position: 'center',
         timeout: 1200,
       })

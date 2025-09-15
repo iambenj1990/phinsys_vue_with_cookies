@@ -51,7 +51,7 @@
             row-key="id"
             binary-state-sort
             no-data-label="No data available"
-            :rows-per-page-options="[0]"
+            :rows-per-page-options="[10, 20, 50, 100, 200]"
             style="height: 600px"
           >
             <!-- <template v-slot:top-right>
