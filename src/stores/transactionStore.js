@@ -9,6 +9,7 @@ export const useTransactionStore = defineStore('transactions', {
     customerTransactionID: 0,
     newCustomerTransactionID: 0,
     customerTransactionsIdList: [],
+    MedicineRecipients: [],
 
     SelecteddailyInventory: {},
     maifp_transactions:[],
@@ -194,6 +195,19 @@ export const useTransactionStore = defineStore('transactions', {
         })
       }
     },
+
+    async MedicineUtilizationPerCustomer(payload) {
+      try {
+        const response = await api.post('/reports/dispense/recipient', payload)
+        console.log(response.data.recipients)
+        this.MedicineRecipients = response.data.recipients
+
+      }
+      catch (error) {
+        console.log(error)
+      }
+    }
+
   },
 })
 

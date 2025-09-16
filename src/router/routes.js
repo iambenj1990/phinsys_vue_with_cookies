@@ -128,6 +128,12 @@ const routes = [
         meta: { requiresAuth: true },
       }, // get low quantity items
 
+       {
+        path: '/customer/dispense',
+        component: () => import('pages/ItemsCustomerDispense.vue'),
+        meta: { requiresAuth: true },
+      },
+
       {
         path: '/inventory',
         component: () => import('pages/ItemsInventory.vue'),
