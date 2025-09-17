@@ -4,7 +4,7 @@ import { Notify } from 'quasar'
 
 export const useItemStore = defineStore('items', {
   state: () => ({
-    item_Price:0,
+    item_Price: 0,
     counter: 0,
     item_id: 0,
     items: [],
@@ -12,7 +12,7 @@ export const useItemStore = defineStore('items', {
     expiring: [],
     expired: [],
     po_items: [],
-    po_temp:[],
+    po_temp: [],
     zero_stocks: [],
     low_stocks: [],
     stockMiniInfo: [],
@@ -21,13 +21,13 @@ export const useItemStore = defineStore('items', {
     hasOpening: false,
     dosageForm: [],
 
-    selected_stockCard:{
+    selected_stockCard: {
       generic_name: '',
       brand_name: '',
     },
 
     item_name: '',
-    item_amount: 0
+    item_amount: 0,
   }),
 
   actions: {
@@ -36,7 +36,7 @@ export const useItemStore = defineStore('items', {
       // If token exists, set it in the default headers
       if (token) {
         const sanitized_object = token.replace('__q_strn|', '')
-       // console.log('Sanitized token:', sanitized_object)
+        // console.log('Sanitized token:', sanitized_object)
         api.defaults.headers.common['Authorization'] = `Bearer ${sanitized_object}`
       }
     },
@@ -61,7 +61,7 @@ export const useItemStore = defineStore('items', {
       try {
         const response = await api.get('/daily/inventoryOpen/today')
         this.hasOpening = response.data.status
-       // console.log(this.hasOpening)
+        // console.log(this.hasOpening)
       } catch (error) {
         console.error(error)
         Notify.create({
@@ -105,7 +105,7 @@ export const useItemStore = defineStore('items', {
     },
     async getItems(payload) {
       try {
-        const response = await api.post('/items',payload)
+        const response = await api.post('/items', payload)
         this.items = response.data.items
       } catch (error) {
         console.error(error)
@@ -132,7 +132,7 @@ export const useItemStore = defineStore('items', {
         })
       }
     },
-  async getTempPO() {
+    async getTempPO() {
       try {
         const response = await api.get('/items/temp/po')
         this.po_temp = response.data.list
@@ -147,11 +147,11 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async UpdateTempPO(id,request ) {
+    async UpdateTempPO(id, request) {
       try {
         console.log('temp => ', id, 'new po => ', request)
-        const response = await api.put('/items/temp/po/' + id, {'po_no': request})
-          Notify.create({
+        const response = await api.put('/items/temp/po/' + id, { po_no: request })
+        Notify.create({
           type: 'positive',
           message: response.data.message,
           position: 'center',
@@ -186,8 +186,7 @@ export const useItemStore = defineStore('items', {
 
     async postItem(payload) {
       try {
-         await api.post('/items/new', payload)
-
+        await api.post('/items/new', payload)
       } catch (error) {
         console.log(error)
 
@@ -200,12 +199,12 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async batchInsert(payload){
+    async batchInsert(payload) {
       try {
         const response = await api.post('/items/batch/new', payload)
         Notify.create({
           type: 'positive',
-          message: response.data.message ,
+          message: response.data.message,
           position: 'center',
           timeout: 2000,
         })
@@ -237,8 +236,8 @@ export const useItemStore = defineStore('items', {
 
     async deleteItem(id) {
       try {
-         await api.delete('/items/' + id)
-      //  console.log(response.data.success, ' --- ', response.data.message)
+        await api.delete('/items/' + id)
+        //  console.log(response.data.success, ' --- ', response.data.message)
       } catch (error) {
         console.log(error)
         Notify.create({
@@ -253,7 +252,7 @@ export const useItemStore = defineStore('items', {
     async deletePOItems(po_no) {
       try {
         await api.delete('/items/po/' + po_no)
-      //  console.log(response.data.success, ' --- ', response.data.message)
+        //  console.log(response.data.success, ' --- ', response.data.message)
         Notify.create({
           type: 'positive',
           message: 'Items Deleted Successfully',
@@ -287,7 +286,7 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-     async getJoinedTable_DailyInventor_Items_filtered() {
+    async getJoinedTable_DailyInventor_Items_filtered() {
       try {
         const response = await api.get('/items/stock/filteredlist')
         this.items = response.data
@@ -326,7 +325,6 @@ export const useItemStore = defineStore('items', {
           position: 'center',
           timeout: 2000,
         })
-
       } catch (error) {
         if (error.response && error.response.status === 404) {
           // Show notification for HTTP 409 error
@@ -354,7 +352,7 @@ export const useItemStore = defineStore('items', {
       try {
         const response = await api.get('/daily/inventory/get-list/' + date)
         this.items = response.data.list
-     //   console.log(this.items)
+        //   console.log(this.items)
       } catch (error) {
         console.log(error)
         Notify.create({
@@ -366,9 +364,9 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-        async getStocksListbyDate(payload) {
+    async getStocksListbyDate(payload) {
       try {
-        const response = await api.post('/items/inventory/bydate',payload)
+        const response = await api.post('/items/inventory/bydate', payload)
         this.items = response.data.items
       } catch (error) {
         console.log(error)
@@ -414,26 +412,22 @@ export const useItemStore = defineStore('items', {
     },
 
     async LowStocks(threshold) {
-
       // console.log('Store Threshold:', threshold)
       try {
         const response = await api.get('/daily/inventory/lowquantity/' + threshold)
         this.low_stocks = response.data.stocks
         console.log('Low Stocks:', this.low_stocks)
-
       } catch (error) {
-
         Notify.create({
           type: 'negative',
           message: error.response.data.message || 'An error occurred.',
           position: 'center',
           timeout: 5000,
         })
-
       }
     },
 
-     async EmptyStocks() {
+    async EmptyStocks() {
       try {
         const response = await api.get('/daily/inventory/emptyquantity')
         this.zero_stocks = response.data.stocks
@@ -456,9 +450,9 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async getStockCard(payload){
+    async getStockCard(payload) {
       try {
-        const response = await api.post('/items/stockcard',payload)
+        const response = await api.post('/items/stockcard', payload)
         this.stockCard = response.data.stockCard
       } catch (error) {
         console.error(error)
@@ -471,14 +465,12 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async get_Name_Amount(payload){
-
+    async get_Name_Amount(payload) {
       try {
         const response = await api.post('/items/name', payload)
         console.log(response.data)
         this.item_name = response.data.item_name
         this.item_amount = response.data.amount
-
       } catch (error) {
         console.log(error)
         Notify.create({
@@ -490,7 +482,7 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-   async get_Item_Price(payload) {
+    async get_Item_Price(payload) {
       try {
         const response = await api.post('/items/price', payload)
         this.item_Price = response.data.price
@@ -502,11 +494,8 @@ export const useItemStore = defineStore('items', {
           position: 'center',
           timeout: 5000,
         })
-
       }
-
-    }
-
+    },
   },
 })
 if (import.meta.hot) {
