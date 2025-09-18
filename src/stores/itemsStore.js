@@ -304,6 +304,7 @@ export const useItemStore = defineStore('items', {
       try {
         const response = await api.get('/items/stock/list')
         this.items = response.data
+        console.log(this.items)
       } catch (error) {
         console.log(error)
         Notify.create({
