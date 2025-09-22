@@ -22,6 +22,7 @@
             <q-tab name="Empty" label="Zero Stocks" />
             <q-tab name="Dispense" label="Dispense" />
             <q-tab name="Temporary" label="Temporary P.O. #" />
+            <q-tab name="Consumption" label="Customer Dispense" />
           </q-tabs>
           <q-separator />
 
@@ -56,6 +57,11 @@
               <!-- <div class="text-h6">Movies</div> -->
               <tempPO />
             </q-tab-panel>
+
+                <q-tab-panel name="Consumption">
+              <!-- <div class="text-h6">Movies</div> -->
+              <consumation />
+            </q-tab-panel>
           </q-tab-panels>
         </q-card-section>
       </q-card>
@@ -71,6 +77,7 @@ import Empty from 'src/pages/ItemsEmptyStocksList.vue'
 import dispense from './ItemsMonthlyDispenseReport.vue'
 import inventory from './ItemsInventory.vue'
 import tempPO from './ItemsTemporaryPO.vue'
+import consumation from './ItemsCustomerDispense.vue'
 
 export default {
   name: 'ItemReports',
@@ -81,6 +88,7 @@ export default {
     dispense,
     expire,
     low,
+    consumation,
     // stock,
   },
   setup() {
