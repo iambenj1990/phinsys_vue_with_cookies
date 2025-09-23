@@ -6,12 +6,32 @@
           :rows="items"
           :columns="cols"
           row-key="id"
+          :filter="filter"
           flat
           bordered
           class="q-ma-md my-sticky-header-table"
           style="height: 500px"
           :rows-per-page-options="[10,20,30]"
         >
+          <template #top-right>
+            <q-input
+              dense
+              debounce="300"
+              v-model="filter"
+              placeholder="Search"
+              class="q-ml-md"
+              style="max-width: 200px"
+              clearable
+              outlined
+              rounded
+              hide-bottom-space
+              :loading="items.length === 0"
+            >
+              <template v-slot:append>
+                <q-icon name="search" class="cursor-pointer" />
+              </template>
+            </q-input>
+          </template>
           <template #body="props">
             <q-tr :v-bind="props">
               <q-td key="po_no" style="font-size: 11px" align="left">
@@ -46,9 +66,9 @@
           </template>
         </q-table>
       </q-card-section>
-      <q-card-actions align="right" class="q-px-md">
+      <!-- <q-card-actions align="right" class="q-px-md">
         <q-btn label="Close" flat class="text-subtitle2 text-green" ></q-btn>
-      </q-card-actions>
+      </q-card-actions> -->
 
     </q-card>
 
@@ -64,9 +84,14 @@
           class="q-ma-md my-sticky-header-table"
           style="height: 600px"
           :rows-per-page-options="[10,20,30]"
+          v-model:pagination="pagination"
         >
           <template #body="props">
             <q-tr :v-bind="props">
+               <q-td key="no" style="font-size: 11px" align="left">
+               <!-- {{ props.pageIndex + 1 }} -->
+                {{ (pagination.page - 1) * pagination.rowsPerPage + props.pageIndex + 1 }}
+              </q-td>
               <q-td key="customer" style="font-size: 11px" align="left">
                 {{ props.row.recipient_name }}
               </q-td>
@@ -88,7 +113,6 @@
         </q-card-section>
         <q-card-actions align="right">
           <q-btn label="Close" class="text-green text-subtitle2" flat @click="showCustomerlist=false">
-
           </q-btn>
         </q-card-actions>
       </q-card>
@@ -181,6 +205,12 @@ export default {
       ],
 
        Customercols: [
+            {
+          name: 'no',
+          required: true,
+          label: 'No.',
+          align: 'left',
+        },
         {
           name: 'customer',
           required: true,
@@ -228,9 +258,14 @@ export default {
 
   data() {
     return {
+      pagination:{
+        page: 1,
+        rowsPerPage: 10,
+      },
       items: [],
       showCustomerlist:false,
       customerList:[],
+      filter:'',
     }
   },
 

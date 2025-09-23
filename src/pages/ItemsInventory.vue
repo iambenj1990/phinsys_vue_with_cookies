@@ -559,7 +559,7 @@ export default {
       handler: debounce(function (newRange) {
         this.rangeText = `${newRange.from} to ${newRange.to}`
 
-        console.log(newRange)
+        // console.log(newRange)
         //this.get_RIS_List_byDate(newRange)
         // this.get_clients(newRange)
         // this.fetchAllStocks(newRange)
