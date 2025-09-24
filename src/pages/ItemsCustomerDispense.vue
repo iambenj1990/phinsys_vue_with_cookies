@@ -57,7 +57,7 @@
               </q-td>
               <q-td key="actions" style="font-size: 11px" align="center">
                 <q-btn flat class="text-green" icon="format_list_numbered" @click="()=>{
-                  console.log(props.row)
+                  // console.log(props.row)
                   customerUtilization({item_id:props.row.item_id})
                   showCustomerlist=true
                 }"></q-btn>
@@ -72,8 +72,8 @@
 
     </q-card>
 
-    <q-dialog persisten v-model="showCustomerlist" >
-      <q-card>
+    <q-dialog persisten v-model="showCustomerlist"  >
+      <q-card style="width: 700px; max-width: 90vw">
         <q-card-section>
            <q-table
           :rows="customerList"
@@ -82,7 +82,7 @@
           flat
           bordered
           class="q-ma-md my-sticky-header-table"
-          style="height: 600px"
+          style="height: 600px; width: auto;"
           :rows-per-page-options="[10,20,30]"
           v-model:pagination="pagination"
         >

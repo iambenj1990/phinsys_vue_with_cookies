@@ -21,10 +21,10 @@
             <q-tooltip>Account</q-tooltip>
 
             <q-list style="min-width: 150px">
-              <q-item clickable v-close-popup @click=" $router.push('/users/user/')">
+              <q-item clickable v-close-popup @click="$router.push('/users/user/')">
                 <q-item-section>
                   <q-item-label>
-                    <q-icon name="account_circle"  size="20px"></q-icon>
+                    <q-icon name="account_circle" size="20px"></q-icon>
                     Account
                   </q-item-label>
                 </q-item-section>
@@ -32,7 +32,7 @@
               <q-item clickable v-close-popup @click="logout()">
                 <q-item-section>
                   <q-item-label>
-                     <q-icon name="logout" size="20px"></q-icon>
+                    <q-icon name="logout" size="20px"></q-icon>
                     Logout
                   </q-item-label>
                 </q-item-section>
@@ -100,7 +100,7 @@
                 >
               </q-item-section>
             </q-item>
-             <q-item clickable v-ripple to="/ris/orders">
+            <q-item clickable v-ripple to="/ris/orders">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="receipt" class="q-ml-md q-mr-md" size="24px" />
@@ -168,6 +168,21 @@
                 </q-item-label>
               </q-item-section>
             </q-item>
+            <q-item
+              clickable
+              v-ripple
+              @click="
+                () => {
+                  syncdataDialog = true
+                }
+              "
+            >
+              <q-item-section class="q-ml-sm">
+                <q-item-label class="text-caption">
+                  <q-icon name="wifi_off" class="q-ml-md q-mr-md" size="24px" />Offline Mode
+                </q-item-label>
+              </q-item-section>
+            </q-item>
           </q-expansion-item>
         </q-list>
       </q-scroll-area>
@@ -176,12 +191,63 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <q-dialog v-model="syncdataDialog" persistent>
+      <q-card class="q-px-md">
+        <q-card-section class="row items-center" v-if="online">
+          <q-icon name="sync" size="56px" class="q-mr-md" color="orange" />
+          <div>
+            <div class="text-h6">Fetch Data from Main Server</div>
+            <div class="text-subtitle2">
+              Download data for offline use. Please ensure you have a stable connection.
+              <q-btn
+                color="primary"
+                class="q-ml-sm q-mt-md text-subtitle2"
+                :loading="loadingDownload"
+                @click="downloadData()"
+              >
+                <div>Download Data</div>
+                <q-icon name="cloud_download" class="q-mr-sm q-ml-sm" />
+                <template v-slot:loading>
+                  <q-spinner size="20px" color="white" />
+                </template>
+              </q-btn>
+            </div>
+          </div>
+        </q-card-section>
+        <q-card-section class="row items-center" v-else>
+          <q-icon name="wifi_off" size="56px" class="q-mr-md" color="orange" />
+          <div class="col-md-6 q-pt-lg">
+            <div class="text-h6">Push Data to Main Server</div>
+            <div class="text-subtitle2">
+              Upload data to sync with the server.
+              <q-btn
+                color="green"
+                class="q-ml-sm q-mt-md text-subtitle2"
+                :loading="loadingUpload"
+                @click="uploadData()"
+              >
+                <div>Upload Data</div>
+                <q-icon name="cloud_upload" class="q-mr-sm q-ml-sm" />
+                <template v-slot:loading>
+                  <q-spinner size="20px" color="white" />
+                </template>
+              </q-btn>
+            </div>
+          </div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Close" color="red" @click="syncdataDialog = false" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-layout>
 </template>
 
 <script>
 import auth from 'src/services/auth'
-import {useUserStore} from 'src/stores/userStore'
+import { useUserStore } from 'src/stores/userStore'
 export default {
   name: 'MyLayout',
   components: {},
@@ -191,36 +257,58 @@ export default {
     const userStore = useUserStore()
     return {
       ausSrvc,
-      userStore
+      userStore,
     }
   },
   data() {
     return {
+      online: true,
+      syncdataDialog: false,
       leftDrawerOpen: false,
       expanded: true,
+      loadingDownload: false,
+      loadingUpload: false,
     }
   },
   methods: {
+    async downloadData() {
+      this.loadingDownload = true
+      await new Promise(
+        setTimeout(() => {
+          this.loadingDownload = false
+        }, 3000),
+      )
+    },
+
+    async uploadData() {
+      this.loadingUpload = true
+      await new Promise(
+        setTimeout(() => {
+          this.loadingUpload = false
+        }, 3000),
+      )
+    },
+
     toggleLeftDrawer() {
       this.leftDrawerOpen = !this.leftDrawerOpen
     },
 
-    async logout(){
+    async logout() {
       try {
         await this.ausSrvc.logout()
         this.$router.push('/')
       } catch (error) {
-        console.log (error)
+        console.log(error)
       }
     },
 
-    GetUserID(){
+    GetUserID() {
       const unsanitized_object = localStorage.getItem('user')
       const sanitized_object = unsanitized_object.replace('__q_objt|', '')
       const user = JSON.parse(sanitized_object)
       this.userStore.authenticatedUser = user.id
-     // console.log(user.id)
-    }
+      // console.log(user.id)
+    },
   },
 
   watch: {},
