@@ -3,28 +3,31 @@ import { api } from 'boot/axios'
 import { LocalStorage } from 'quasar'
 
 class AuthService {
-  constructor() {
-    // this.baseURL = 'http://192.168.8.11:8000/api'
-     this.baseURL = 'http://192.168.50.98:8000/api'
-    // this.baseURL = 'http://10.0.1.23:89/api'
-  }
 
   async login(credentials) {
     try {
-      const response = await api.post('/user/login', credentials)
-      // console.log('response =>', response)
+      // const response = await api.post('/api/user/login', credentials)
+      // // console.log('response =>', response)
 
-      if (response.data.success) {
-        // Store token in localStorage
-        console.log('User authentication token:', response.data.data)
-        LocalStorage.set('auth_token', response.data.data.token)
-        LocalStorage.set('user', response.data.data.user)
+      // if (response.data.success) {
+      //   // Store token in localStorage
+      //   console.log('User authentication token:', response.data.data)
+      //   LocalStorage.set('auth_token', response.data.data.token)
+      //   LocalStorage.set('user', response.data.data.user)
 
-        // Set default authorization header
-        this.setAuthHeader(response.data.data.token)
+      //   // Set default authorization header
+      //   this.setAuthHeader(response.data.data.token)
 
-        return response.data
-      }
+      //   return response.data
+      await api.get('/sanctum/csrf-cookie');
+      console.log('CSRF cookie set');
+      console.log('Logging in with credentials:', credentials);
+      const response = await api.post('/login', credentials);
+
+      console.log('response =>', response);
+
+    return response.data.user;
+
     } catch (error) {
       throw error.response?.data || error
     }

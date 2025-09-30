@@ -1,6 +1,6 @@
 import { defineRouter } from '#q-app/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
-import authSrvc from 'src/services/auth'
+import { useUserStore } from 'src/stores/userStore'
 import routes from './routes'
 
 
@@ -29,17 +29,29 @@ export default defineRouter(function (/* { store, ssrContext } */) {
 
   })
 
-  Router.beforeEach((to, from, next) => {
+  Router.beforeEach(async(to, from, next) => {
+  const authenticated = useUserStore()
 
-
-  // Check all matched routes (including parent layout)
-  // const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-
-  if (to.meta.requiresAuth  && !authSrvc.isAuthenticated()) {
-    next('/')
-  } else {
-    next()
+   if (authenticated.user === null) {
+    console.log('Authenticated user check performed in router')
+    await authenticated.authenticatedUserCheck()
   }
+
+  const isAuthenticated = authenticated.isAuthenticated
+  const isLoginPage = to.path === '/'
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    // not logged in → go to login page
+    return next('/')
+  }
+
+  if (isLoginPage && isAuthenticated) {
+    // logged in but going to login → redirect to dashboard
+    return next('/main')
+  }
+
+  return next()
+
 })
 
 

@@ -1,6 +1,6 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { api } from 'src/boot/axios'
-import { Notify, LocalStorage } from 'quasar'
+import { Notify } from 'quasar'
 
 export const useUserStore = defineStore('users', {
   state: () => ({
@@ -8,6 +8,7 @@ export const useUserStore = defineStore('users', {
     users: [],
     selected_id: null,
     authenticatedUser:0,
+    isAuthenticated: false,
   }),
 
   actions: {
@@ -165,30 +166,15 @@ export const useUserStore = defineStore('users', {
       }
    },
 
-    async loginUser(payload) {
+    async loginUser(credentials) {
       try {
-        // await api.get('/sanctum/csrf-cookie') // Get CSRF cookie first
-        const response = await api.post('/user/login', payload)
-        console.log(response.data)
-
-          if (response.data.success) {
-                // Store token in localStorage
-                LocalStorage.set('auth_token', response.data.data.token)
-                LocalStorage.set('user', response.data.data.user)
-
-                // Set default authorization header
-                this.setAuthHeader(response.data.data.token)
-
-                return response.data
-              }
-        if (response.data.Login_Status) {
-          Notify.create({
-            type: 'positive',
-            message: 'User Logged-in.',
-            position: 'center',
-            timeout: 5000,
-          })
-        }
+      await api.get('/sanctum/csrf-cookie');
+      console.log('CSRF cookie set');
+      console.log('Logging in with credentials:', credentials);
+      const response = await api.post('/login', credentials);
+      this.user = response.data.user
+      console.log('response =>', response);
+      return response.data.success
       } catch (error) {
         Notify.create({
           type: 'negative',
@@ -198,6 +184,22 @@ export const useUserStore = defineStore('users', {
         })
       }
     },
+
+    async authenticatedUserCheck() {
+       try {
+        const response = await api.get('/api/user/authenticated');
+        this.user = response.data.user;
+        this.isAuthenticated = response.data.success;
+
+      } catch (error) {
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    }
   },
 })
 if (import.meta.hot) {

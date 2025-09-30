@@ -72,14 +72,14 @@ export default {
 
     return {
       loginStore,
-      loginAuth
+      loginAuth,
     }
   },
   data() {
     return {
-      userLogin:{
-        username:'',
-        password:''
+      userLogin: {
+        username: '',
+        password: '',
       },
       email: '',
       password: '',
@@ -93,27 +93,15 @@ export default {
       this.loading = true
 
       try {
-
-        await this.loginAuth.login(this.userLogin)
-        // console.log('Show data => ',response)
-        //  this.loginStore.loginUser(this.userLogin)
-
-        // Simulate an API call
-
-
-
-        // Replace with actual API request
-        // await new Promise((resolve) => setTimeout(resolve, 1500))
-
-        this.$q.notify({ type: 'positive', message: 'Login successful!' })
-
-        //localStorage.setItem('user_id', this.loginSession.user_id = 1)
-
-
-        // Redirect or perform other actions on success
-         this.$router.push('/main')
+        //  await this.loginAuth.login(this.userLogin)
+        const success = await this.loginStore.loginUser(this.userLogin)
+        console.log(success)
+        if (success){
+          this.$q.notify({ type: 'positive', message: 'Login successful!' })
+          this.$router.push('/main')
+        }
       } catch (error) {
-        this.$q.notify({ type: 'negative', message:  error.message })
+        this.$q.notify({ type: 'negative', message: error.message })
       } finally {
         this.loading = false
       }

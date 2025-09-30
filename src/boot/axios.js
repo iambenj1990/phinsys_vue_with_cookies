@@ -11,21 +11,22 @@ import axios from 'axios'
 // for each client)
 const api = axios.create({
 
-              baseURL: 'http://192.168.8.11:8000/api',
+              baseURL: 'http://192.168.8.11:8000',
               // baseURL: 'http://10.0.1.23:89/api',
               // baseURL: process.env.API_URL, //office
               // baseURL: 'http://192.168.50.98:8000/api', //Home
-              withCredentials: true
+              withCredentials: true,
+              withXSRFToken: true,
             })
 
 
-    const token = localStorage.getItem('auth_token')
-      // If token exists, set it in the default headers
-      if (token) {
-        const sanitized_object = token.replace('__q_strn|', '')
-       // console.log('Sanitized token:', sanitized_object)
-        api.defaults.headers.common['Authorization'] = `Bearer ${sanitized_object}`
-      }
+    // const token = localStorage.getItem('auth_token')
+    //   // If token exists, set it in the default headers
+    //   if (token) {
+    //     const sanitized_object = token.replace('__q_strn|', '')
+    //    // console.log('Sanitized token:', sanitized_object)
+    //     api.defaults.headers.common['Authorization'] = `Bearer ${sanitized_object}`
+    //   }
 
 
 export default defineBoot(({ app }) => {
