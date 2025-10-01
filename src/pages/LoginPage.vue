@@ -63,16 +63,16 @@
 
 <script>
 import { useUserStore } from 'src/stores/userStore'
-import auth from 'src/services/auth'
+
 
 export default {
   setup() {
     const loginStore = useUserStore()
-    const loginAuth = auth
+
 
     return {
       loginStore,
-      loginAuth,
+
     }
   },
   data() {
@@ -95,8 +95,8 @@ export default {
       try {
         //  await this.loginAuth.login(this.userLogin)
         const success = await this.loginStore.loginUser(this.userLogin)
-        console.log(success)
         if (success){
+          this.loading = false
           this.$q.notify({ type: 'positive', message: 'Login successful!' })
           this.$router.push('/dashboard')
         }

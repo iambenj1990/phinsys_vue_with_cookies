@@ -2,18 +2,10 @@
   <q-page class="q-pa-md">
     <q-card>
       <q-card-section>
-        <div class="text-h6">Registered Users List</div>
+        <div class="text-h6 text-green">Registered Users List</div>
       </q-card-section>
-
+      <q-separator></q-separator>
       <q-card-section>
-        <q-input
-          filled
-          v-model="search"
-          label="Search"
-          class="q-mb-md"
-          debounce="300"
-          :clearable="true"
-        />
         <div class="text-right">
           <q-btn
             dense
@@ -25,27 +17,43 @@
             @click="$router.push('/users/new')"
           />
         </div>
-        <q-table :rows="rows" :columns="columns" row-key="id" flat bordered>
+        <q-table :rows="rows" :columns="columns" row-key="id" flat bordered v-model:filter="search">
+          <template v-slot:top-right>
+            <q-input
+              filled
+              v-model="search"
+              label="Search"
+              class="q-mb-md text-uppercase"
+              debounce="300"
+              :clearable="true"
+              style="width: 300px;"
+              dense
+            >
+             <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+          </q-input>
+          </template>
           <template #body="props">
             <q-tr :v-bind="props">
               <!-- <q-td key="id" style="font-size: 11px" align="left">
                 {{ props.row.id }}
               </q-td> -->
-              <q-td key="name" style="font-size: 11px" align="left">
+              <q-td key="name" style="font-size: 11px" align="left" class="text-uppercase">
                 {{
                   props.row.last_name + ', ' + props.row.first_name + ' ' + props.row.middle_name
                 }}
               </q-td>
-              <q-td key="username" style="font-size: 11px" align="left">
+              <q-td key="username" style="font-size: 11px" align="left" class="text-uppercase">
                 {{ props.row.username }}
               </q-td>
-              <q-td key="position" style="font-size: 11px" align="left">
+              <q-td key="position" style="font-size: 11px" align="left" class="text-uppercase">
                 {{ props.row.position }}
               </q-td>
-              <q-td key="office" style="font-size: 11px" align="left">
+              <q-td key="office" style="font-size: 11px" align="left" class="text-uppercase">
                 {{ props.row.office }}
               </q-td>
-              <q-td key="status" style="font-size: 11px" align="left">
+              <q-td key="status" style="font-size: 11px" align="left" class="text-uppercase">
                 <q-chip
                   class="q-mr-sm"
                   :color="props.row.status === 'Active' ? 'green' : 'red'"
@@ -175,7 +183,6 @@
 </template>
 
 <script>
-
 import { useUserStore } from 'src/stores/userStore'
 import { useUserCredentialstore } from 'src/stores/userCredentialStore'
 export default {
@@ -209,7 +216,7 @@ export default {
     // Define any methods you need for your component
     getUser(id) {
       this.userStore.selected_id = id
-      this.UserCredentialstore.selected_id=id
+      this.UserCredentialstore.selected_id = id
       console.log(id)
       console.log(this.userStore.selected_id)
     },

@@ -296,8 +296,8 @@ export default {
 
     async logout() {
       try {
-        await this.ausSrvc.logout()
-        this.$router.push('/')
+        await this.userStore.logoutUser()
+        this.$router.push('/login')
       } catch (error) {
         console.log(error)
       }

@@ -4,6 +4,7 @@
       <q-card-section>
         <div class="text-h6 text-green">User Credentials</div>
         <div class="text-subtitle2 text-weight-light">Manage your credentials</div>
+        <q-separator></q-separator>
 
         <div class="q-mt-md" style="width: 900px">
           <q-list class="q-ma-xs">
@@ -77,15 +78,18 @@ export default {
         { key: 'CustomerHistory', title: 'Customer History', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
         { key: 'Purchasing', title: 'Purchasing', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
         { key: 'Adjustments', title: 'Adjustments', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
+        { key: 'RIS', title: 'RIS', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
         {
           key: 'Stocks',
-          title: 'Stocks',
+          title: 'Stocks Report',
           submodules: [
-            { key: 'StocksView', title: 'Stocks', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
-            { key: 'Expiry', title: 'Expiry', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
-            { key: 'LowStocks', title: 'Low Stocks', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
-            { key: 'Inventory', title: 'Inventory', permissions:  ['view', 'add', 'edit', 'delete', 'export']},
-            { key: 'Dispensed', title: 'Dispensed', permissions:  ['view', 'add', 'edit', 'delete', 'export']}
+            { key: 'StocksView', title: 'Stocks', permissions: ['view','export'] },
+            { key: 'Expiry', title: 'Expiry', permissions:  ['view', 'export'] },
+            { key: 'LowStocks', title: 'Low Stocks', permissions:  ['view', 'export'] },
+            { key: 'Inventory', title: 'Inventory', permissions:  ['view', 'export']},
+            { key: 'Dispensed', title: 'Dispensed', permissions:  ['view', 'export']},
+            { key: 'temporary', title: 'Temporary PO#', permissions:  ['view', 'export']},
+              { key: 'Customer', title: 'Customer Dispensed', permissions:  ['view', 'export']}
           ]
         },
         { key: 'UserManagement', title: 'User Management', permissions: ['view', 'add', 'edit', 'delete', 'export'] },

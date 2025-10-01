@@ -2,10 +2,10 @@
   <q-page class="flex flex-center">
     <q-card class="q-pa-lg" style="min-width: 350px; max-width: 800px; width: 100%">
       <q-card-section>
-        <div class="text-h6 text-left" style="color: #4b4e6d">User Profile</div>
-
+        <div class="text-h6 text-left text-green" style="color: #4b4e6d">User Profile</div>
+        <q-separator></q-separator>
       </q-card-section>
-
+      <q-card-section>
       <q-form ref="registrationForm" @submit.prevent="onSubmit">
         <div class="row flex">
           <div class="col-12 col-md-4 q-mx-sm">
@@ -80,6 +80,7 @@
           <q-btn label="Update" type="submit" color="primary" />
         </div>
       </q-form>
+      </q-card-section>
     </q-card>
   </q-page>
 </template>
@@ -160,26 +161,13 @@ export default {
       this.$refs.registrationForm.resetValidation()
     },
 
-    async getUser(id){
-      try {
-        await this.userStore.getUser(id)
-        Object.assign(this.form, this.userStore.user)
-        // this.form = this.userStore.user
-      } catch (error) {
-        console.error('Error fetching user:', error)
-        this.$q.notify({
-          type: 'negative',
-          message: 'Unable to fetch user',
-          position: 'center',
-          timeout: 1000,
-        })
-      }
-    },
+
 
 
      async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
       this.user = this.userStore.user
+      this.form = this.user
     },
 
 
@@ -189,9 +177,9 @@ export default {
     this.GetAuthenticatedUser();
     // Fetch data or perform any setup when the component is mounted
     // console.log('Selected ID:', this.userStore.selected_id)
-    if (this.userStore.authenticatedUser) {
-      this.getUser(this.user.id)
-    }
+    // if (this.userStore.isAuthenticated) {
+    //   this.getUser(this.user.id)
+    // }
   },
 }
 </script>
