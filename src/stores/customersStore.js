@@ -29,7 +29,7 @@ export const useCustomerStore = defineStore('customers', {
     async latest_Maifp_trx(payload) {
       try {
         console.log(payload)
-        const response = await api.post('/maif/transactions/latest', payload)
+        const response = await api.post('/api/maif/transactions/latest', payload)
         this.customer_maifp_latest_trx = response.data.trx_num
         console.log(response.data.trx_num)
       } catch (error) {
@@ -38,7 +38,7 @@ export const useCustomerStore = defineStore('customers', {
     },
     async ShowMaifpCustomers() {
       try {
-        const response = await api.get('/maif/patients/medication')
+        const response = await api.get('/api/maif/patients/medication')
         console.log(response.data.patients)
         this.customer_maifp = response.data.patients
       } catch (error) {
@@ -48,7 +48,7 @@ export const useCustomerStore = defineStore('customers', {
 
     async store_bulk_customers(payload) {
       try {
-        const response = await api.post('/customers/bulk', payload)
+        const response = await api.post('/api/customers/bulk', payload)
         console.log(response.data)
         this.customers = response.data.customers
       } catch (error) {
@@ -59,7 +59,7 @@ export const useCustomerStore = defineStore('customers', {
     async get_transactions(id) {
       try {
         this.customer_transactions_list = []
-        const response = await api.get('/customers/transactions/' + id)
+        const response = await api.get('/api/customers/transactions/' + id)
         this.customer_transactions_list = response.data.result
       } catch (error) {
         console.log(error)
@@ -69,7 +69,7 @@ export const useCustomerStore = defineStore('customers', {
     async get_transactions_exploded(id, trans_id) {
       try {
         this.customer_transactions_list_exploded = []
-        const response = await api.get('/customers/transactions/' + id + '/list/' + trans_id)
+        const response = await api.get('/api/customers/transactions/' + id + '/list/' + trans_id)
         this.customer_transactions_list_exploded = response.data.result
       } catch (error) {
         console.log(error)
@@ -79,7 +79,7 @@ export const useCustomerStore = defineStore('customers', {
     async getCustomersByDate(payload) {
       console.log(payload)
       try {
-        const response = await api.post('/customers/list/dates', payload)
+        const response = await api.post('/api/customers/list/dates', payload)
         // console.log(response.data.customers)
         console.log(response.data)
         this.customers = response.data.customers
@@ -91,7 +91,7 @@ export const useCustomerStore = defineStore('customers', {
 
     async getCustomers() {
       try {
-        const response = await api.get('/customers')
+        const response = await api.get('/api/customers')
         // console.log(response.data.customers)
         this.customers = response.data.customers
         // console.log(response.data.customers)
@@ -102,7 +102,7 @@ export const useCustomerStore = defineStore('customers', {
 
     async getCustomer(id) {
       try {
-        const response = await api.get('/customers/' + id)
+        const response = await api.get('/api/customers/' + id)
         console.log(response.data[0])
         this.customer = response.data[0]
         console.log('customer => ', this.customer)
@@ -116,7 +116,7 @@ export const useCustomerStore = defineStore('customers', {
         if (!payload.contact_number) {
           payload.contact_number = 'N/A'
         }
-        const response = await api.post('/customers', payload)
+        const response = await api.post('/api/customers', payload)
 
         if (response.data.success) {
           // Set customer_id from response
@@ -150,7 +150,7 @@ export const useCustomerStore = defineStore('customers', {
 
     async updateCustomer(id, payload) {
       try {
-        const response = await api.put('/customers/' + id, payload)
+        const response = await api.put('/api/customers/' + id, payload)
         this.customer = response.data.customers
       } catch (error) {
         console.log(error)
@@ -167,7 +167,7 @@ export const useCustomerStore = defineStore('customers', {
 
     async getCustomerOftheDay(payload) {
       try {
-        const response = await api.get('/orders/transaction/latest/' + payload)
+        const response = await api.get('/api/orders/transaction/latest/' + payload)
         this.customersOftheDay = response.data.data
       } catch (error) {
         console.log(error)

@@ -20,7 +20,7 @@ export const useCatalogStore = defineStore('catalog', {
     },
     async getCatalog() {
       try {
-        const response = await api.get('/system/library/medlist')
+        const response = await api.get('/api/system/library/medlist')
         this.catalog_list = response.data.items
         console.log('Catalog fetched successfully:', this.catalog_list)
       } catch (error) {
@@ -37,7 +37,7 @@ export const useCatalogStore = defineStore('catalog', {
     async newCatalog(payload) {
       try {
         this.catalog_list = [] // Clear the catalog list before adding new items
-        const response = await api.post('/system/library/medlist/new', payload)
+        const response = await api.post('/api/system/library/medlist/new', payload)
         this.catalog_list = response.data.items
         Notify.create({
           type: 'positive',

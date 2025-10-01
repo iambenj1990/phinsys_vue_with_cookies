@@ -20,7 +20,7 @@ export const useTransactionStore = defineStore('transactions', {
     async maif_medication_status(transaction){
 
       try {
-        const response = await api.post('/maif/medication/status', transaction)
+        const response = await api.post('/api/maif/medication/status', transaction)
         console.log(response.data)
       } catch (error) {
          console.log(error)
@@ -36,7 +36,7 @@ export const useTransactionStore = defineStore('transactions', {
     async throw_maif_medication_to_db(transaction){
 
       try {
-        const response = await api.post('/maif/medication/new', transaction)
+        const response = await api.post('/api/maif/medication/new', transaction)
         this.maifp_transactions = response.data
         console.log(response.data)
 
@@ -55,7 +55,7 @@ export const useTransactionStore = defineStore('transactions', {
 
     async newTransactionID(newCustomerTransaction) {
       try {
-        const response = await api.get('/orders/transaction/new/' + newCustomerTransaction)
+        const response = await api.get('/api/orders/transaction/new/' + newCustomerTransaction)
         this.newCustomerTransactionID = response.data
       } catch (error) {
         Notify.create({
@@ -69,7 +69,7 @@ export const useTransactionStore = defineStore('transactions', {
 
     async getTransactionID(customer_id) {
       try {
-        const response = await api.get('/orders/transaction/unique/' + customer_id)
+        const response = await api.get('/api/orders/transaction/unique/' + customer_id)
         // console.log( response.data)
         this.customerTransactionsIdList = response.data
       } catch (error) {
@@ -84,7 +84,7 @@ export const useTransactionStore = defineStore('transactions', {
 
     async newTransaction(payload) {
       try {
-        await api.post('/orders/new', payload)
+        await api.post('/api/orders/new', payload)
       } catch (error) {
         console.log(error)
         Notify.create({
@@ -98,7 +98,7 @@ export const useTransactionStore = defineStore('transactions', {
 
     async getTransactionOrders(transaction_id) {
       try {
-        const response = await api.get('/orders/transaction/' + transaction_id)
+        const response = await api.get('/api/orders/transaction/' + transaction_id)
         this.customerTransactions = response.data.transactions
         // console.log(this.customerTransactions)
       } catch (error) {
@@ -114,7 +114,7 @@ export const useTransactionStore = defineStore('transactions', {
       async getLatestOrders(payload) {
       try {
         console.log(payload)
-        const response = await api.post('/orders/transactions/last',payload)
+        const response = await api.post('/api/orders/transactions/last',payload)
         this.customerTransactions = response.data.data
         // console.log(this.customerTransactions)
       } catch (error) {
@@ -129,7 +129,7 @@ export const useTransactionStore = defineStore('transactions', {
 
     async remove_order(id) {
       try {
-        await api.delete('/orders/order/' + id)
+        await api.delete('/api/orders/order/' + id)
       } catch (error) {
         Notify.create({
           type: 'negative',
@@ -143,7 +143,7 @@ export const useTransactionStore = defineStore('transactions', {
     async remove_maifp_order(payload) {
       try {
         console.log('removing maifp order for payload:', payload)
-        await api.post('/maif/medication/order', payload)
+        await api.post('/api/maif/medication/order', payload)
       } catch (error) {
         Notify.create({
           type: 'negative',
@@ -156,7 +156,7 @@ export const useTransactionStore = defineStore('transactions', {
 
     async getDailyInventory(id) {
       try {
-        const response = await api.get('/daily/' + id)
+        const response = await api.get('/api/daily/' + id)
         this.SelecteddailyInventory = response.data.transaction
       } catch (error) {
         Notify.create({
@@ -170,7 +170,7 @@ export const useTransactionStore = defineStore('transactions', {
 
     async updateDailyInvetory(id, payload) {
       try {
-        const response = await api.put('/daily/' + id, payload)
+        const response = await api.put('/api/daily/' + id, payload)
         console.log(response.data)
       } catch (error) {
         Notify.create({
@@ -184,7 +184,7 @@ export const useTransactionStore = defineStore('transactions', {
 
     async newDailyInventory(payload) {
       try {
-        const response = await api.post('/daily/', payload)
+        const response = await api.post('/api/daily/', payload)
         console.log(response.data)
       } catch (error) {
         Notify.create({
@@ -198,7 +198,7 @@ export const useTransactionStore = defineStore('transactions', {
 
     async MedicineUtilizationPerCustomer(payload) {
       try {
-        const response = await api.post('/reports/dispense/recipient', payload)
+        const response = await api.post('/api/reports/dispense/recipient', payload)
         console.log(response.data.recipients)
         this.MedicineRecipients = response.data.recipients
 

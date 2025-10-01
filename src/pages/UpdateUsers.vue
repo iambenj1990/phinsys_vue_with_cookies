@@ -98,6 +98,7 @@ export default {
   },
   data() {
     return {
+      user:{},
 
       form: {
         first_name: '',
@@ -175,21 +176,21 @@ export default {
       }
     },
 
-     GetUserID(){
-      const unsanitized_object = localStorage.getItem('user')
-      const sanitized_object = unsanitized_object.replace('__q_objt|', '')
-      const user = JSON.parse(sanitized_object)
-      return user.id
-    }
+
+     async GetAuthenticatedUser() {
+      await this.userStore.authenticatedUserCheck()
+      this.user = this.userStore.user
+    },
 
 
 
   },
    mounted() {
+    this.GetAuthenticatedUser();
     // Fetch data or perform any setup when the component is mounted
     // console.log('Selected ID:', this.userStore.selected_id)
     if (this.userStore.authenticatedUser) {
-      this.getUser(this.GetUserID())
+      this.getUser(this.user.id)
     }
   },
 }

@@ -13,7 +13,7 @@ export const useDosageStore = defineStore('dosage', {
   actions: {
     async getDosagesTypes() {
       try {
-        const response = await api.get('/system/library/dosages')
+        const response = await api.get('/api/system/library/dosages')
         this.dosageTypes = response.data.dosagetypes
       } catch (error) {
         console.error(error)
@@ -27,7 +27,7 @@ export const useDosageStore = defineStore('dosage', {
     },
     async getDosageType(id) {
       try {
-        const response = await api.get('/system/library/dosages/' + id)
+        const response = await api.get('/api/system/library/dosages/' + id)
         this.dosageInfo = response.data.dosagetype.type
       } catch (error) {
         console.error(error)
@@ -42,7 +42,7 @@ export const useDosageStore = defineStore('dosage', {
 
     async newDosageType(payload) {
       try {
-        await api.post('/system/library/dosages', payload)
+        await api.post('/api/system/library/dosages', payload)
         this.getDosagesTypes()
         Notify.create({
           type: 'positive',
@@ -63,7 +63,7 @@ export const useDosageStore = defineStore('dosage', {
 
     async updateDosageType(id, payload) {
       try {
-        await api.put('/system/library/dosages/' + id, payload)
+        await api.put('/api/system/library/dosages/' + id, payload)
         this.getDosagesTypes()
         Notify.create({
           type: 'positive',
@@ -84,7 +84,7 @@ export const useDosageStore = defineStore('dosage', {
 
     async removeDosageType(id) {
       try {
-        await api.post('/system/library/dosages/remove',  { id } )
+        await api.post('/api/system/library/dosages/remove',  { id } )
         this.getDosagesTypes()
         Notify.create({
           type: 'positive',

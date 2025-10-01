@@ -52,24 +52,26 @@
 
 <script>
 import { useItemStore } from 'src/stores/itemsStore'
-import { useLoginStore } from 'src/stores/loginSessionStore'
+import { useUserStore } from 'src/stores/userStore';
 import * as XLSX from 'xlsx'
 
 export default {
   watch: {},
 
-  created() {},
+  created() {
+    this.GetAuthenticatedUser()
+  },
 
   computed: {
     itemStore() {
       return useItemStore()
     },
-    sessionStore() {
-      return useLoginStore()
-    },
+
   },
   setup() {
+    const userStore = useUserStore();
     return {
+      userStore,
       defaultValues: {
         po_no: '',
         brand_name: '',
@@ -197,6 +199,7 @@ export default {
   },
   data() {
     return {
+      user:{},
       rows: [],
       excelPathModel: null,
 
@@ -276,18 +279,17 @@ export default {
       return `${year}-${month}-${day}`
     },
 
-    GetUserID() {
-      const unsanitized_object = localStorage.getItem('user')
-      const sanitized_object = unsanitized_object.replace('__q_objt|', '')
-      const user = JSON.parse(sanitized_object)
-      return user.id
+
+     async GetAuthenticatedUser() {
+      await this.userStore.authenticatedUserCheck()
+      this.user = this.userStore.user
     },
 
     async batchNewItems(payload) {
       try {
         payload.medicines.forEach((item) => {
           item.category = 'N/A'
-          item.user_id = this.GetUserID()
+          item.user_id = this.user.id
         })
 
           console.log('Batch insert payload:', payload)

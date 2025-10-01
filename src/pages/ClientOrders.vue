@@ -2,7 +2,7 @@
   <q-page>
     <div class="q-pa-md flex justify-center">
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
-        <div align="right" >
+        <div align="right">
           <q-btn
             class="q-ma-sm q-pa-sm"
             style="
@@ -206,7 +206,6 @@
                         color="red"
                         @click="
                           () => {
-
                             remove_order(props.row)
                           }
                         "
@@ -541,9 +540,7 @@
                     icon="done"
                     @click="
                       () => {
-                        this.status_done_maif(
-                          props.row.transaction_number.toString(),
-                        )
+                        this.status_done_maif(props.row.transaction_number.toString())
                       }
                     "
                   >
@@ -567,14 +564,17 @@ import { useCustomerStore } from 'src/stores/customersStore'
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import newClients from 'src/pages/NewClientsReleasing.vue'
+import { useUserStore } from 'src/stores/userStore'
 export default {
   components: {
     newClients,
   },
   setup() {
     const customerStore = useCustomerStore()
+    const userStore = useUserStore()
     return {
       customerStore,
+      userStore,
       maifpCols: [
         {
           name: 'lastname',
@@ -879,6 +879,7 @@ export default {
   },
   data() {
     return {
+      user:{},
       selected_id_customer: 0,
       selectedMaifpCustomer: {},
       itemPrice: 0,
@@ -936,6 +937,7 @@ export default {
     }
   },
   mounted() {
+    this.GetAuthenticatedUser()
     this.get_clients()
   },
   methods: {
@@ -1000,7 +1002,7 @@ export default {
     async remove_order(payload) {
       console.log('removing order with payload => ', payload)
 
-       await this.transactionStore.remove_order(payload.table_id_transactions)
+      await this.transactionStore.remove_order(payload.table_id_transactions)
       if (this.selectedMaifpCustomer.origin === 'MAIFP') {
         await this.transactionStore.remove_maifp_order({
           transaction_id: this.transaction_id,
@@ -1010,7 +1012,6 @@ export default {
       this.getOrders(this.transaction_id)
       this.$q.notify({ type: 'positive', message: 'order removed successful!' })
     },
-
 
     showData(payload) {
       if (!payload.Openning_quantity && !payload.Closing_quantity) {
@@ -1030,7 +1031,7 @@ export default {
       this.transactionDetails.transaction_date = new Date().toLocaleDateString('en-CA')
       this.transactionDetails.item_id = payload.item_id
       this.transactionDetails.unit = payload.dosage_form
-      this.transactionDetails.user_id = this.GetUserID()
+      this.transactionDetails.user_id = this.user.id
       this.transactionDetails.origin = this.selectedMaifpCustomer.origin
       this.transactionDetails.maifp_id = this.selectedMaifpCustomer.maifp_id
       this.showQuantity = true
@@ -1186,7 +1187,7 @@ export default {
       try {
         await this.customerStore.ShowMaifpCustomers()
         this.maifpDataRows = this.customerStore.customer_maifp
-        console.log('sent to table => ',this.maifpDataRows)
+        console.log('sent to table => ', this.maifpDataRows)
       } catch (error) {
         console.error('Error fetching MAIFP customers:', error)
       }
@@ -1220,11 +1221,9 @@ export default {
       return age
     },
 
-    GetUserID() {
-      const unsanitized_object = localStorage.getItem('user')
-      const sanitized_object = unsanitized_object.replace('__q_objt|', '')
-      const user = JSON.parse(sanitized_object)
-      return user.id
+    async GetAuthenticatedUser() {
+      await this.userStore.authenticatedUserCheck()
+      this.user = this.userStore.user
     },
   },
 

@@ -17,7 +17,7 @@
             color="green"
             @click="
               () => {
-                // openStock(GetUserID())
+
                 openPrompt = true
               }
             "
@@ -312,7 +312,9 @@
         <q-separator />
         <q-card-actions align="right">
           <q-btn flat label="Cancel" color="grey" @click="openPrompt = false" />
-          <q-btn flat label="Proceed" color="negative" @click="openStock(GetUserID())" />
+          <q-btn flat label="Proceed" color="negative" @click="()=>{
+            openStock(this.user.id)
+          }" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -320,6 +322,7 @@
 </template>
 
 <script>
+import { useUserStore } from 'src/stores/userStore'
 import { useConfigurationsStore } from 'src/stores/configurations'
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
@@ -337,10 +340,12 @@ export default {
     },
   },
   setup() {
+    const userStore = useUserStore()
     const ConfigStore = useConfigurationsStore()
     const today = date.formatDate(new Date(), 'YYYY-MM-DD')
     const indicatorStore = useIndicatorStore()
     return {
+      userStore,
       ConfigStore,
       today,
       indicatorStore,
@@ -451,6 +456,7 @@ export default {
   },
   data() {
     return {
+      user:{},
       closePrompt: false,
       openDate: false,
       openPrompt: false,
@@ -497,11 +503,9 @@ export default {
   },
 
   methods: {
-    GetUserID() {
-      const unsanitized_object = localStorage.getItem('user')
-      const sanitized_object = unsanitized_object.replace('__q_objt|', '')
-      const user = JSON.parse(sanitized_object)
-      return user.id
+    async GetAuthenticatedUser() {
+      await this.userStore.authenticatedUserCheck()
+      this.user = this.userStore.user
     },
     async showStocks(date) {
       try {
@@ -593,7 +597,7 @@ export default {
 
     async closeStock() {
       try {
-        await this.itemStore.closingStocks(this.GetUserID())
+        await this.itemStore.closingStocks(this.user.id)
         // await this.fetchAllStocks()
         await this.showStocks(this.today)
         this.closePrompt = false
@@ -708,6 +712,7 @@ export default {
   },
 
   mounted() {
+    this.GetAuthenticatedUser()
     this.showStocks(this.today)
     this.ConfigStore.getConfiguration()
 

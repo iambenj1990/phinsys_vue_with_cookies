@@ -12,7 +12,7 @@ export const useIndicatorStore = defineStore('indicator', {
 
     async getStatus (){
       try {
-        const response = await api.get('/indicators/current')
+        const response = await api.get('/api/indicators/current')
         this.isOpen = response.data.data.is_open
         this.isClose = response.data.data.is_close
 
@@ -22,8 +22,8 @@ export const useIndicatorStore = defineStore('indicator', {
     },
     async open_status() {
       try {
-        await api.post('/indicators/open')
-    
+        await api.post('/api/indicators/open')
+
       } catch (error) {
         throw error.response?.data?.message || error.message || 'An unexpected error occurred'
       }
@@ -31,7 +31,7 @@ export const useIndicatorStore = defineStore('indicator', {
 
     async close_status() {
       try {
-      await api.put('/indicators/close')
+      await api.put('/api/indicators/close')
 
       } catch (error) {
         throw error.response?.data?.message || error.message || 'An unexpected error occurred'

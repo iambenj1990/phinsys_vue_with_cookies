@@ -98,7 +98,7 @@ export default {
         console.log(success)
         if (success){
           this.$q.notify({ type: 'positive', message: 'Login successful!' })
-          this.$router.push('/main')
+          this.$router.push('/dashboard')
         }
       } catch (error) {
         this.$q.notify({ type: 'negative', message: error.message })

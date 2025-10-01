@@ -22,7 +22,7 @@ export const useConfigurationsStore = defineStore('configurations', {
     async updateConfiguration(payload) {
       try {
 
-        const response = await api.put('/system/configuration/'+ this.selected_ID +'/config', payload)
+        const response = await api.put('/api/system/configuration/'+ this.selected_ID +'/config', payload)
 
         if (response == null) {
           Notify.create({
@@ -47,7 +47,7 @@ export const useConfigurationsStore = defineStore('configurations', {
     },
     async getConfiguration() {
       try {
-        const response = await api.get('/system/configuration/'+ this.selected_ID)
+        const response = await api.get('/api/system/configuration/'+ this.selected_ID)
         if (response == null) {
           Notify.create({
             type: 'negative',
@@ -71,7 +71,7 @@ export const useConfigurationsStore = defineStore('configurations', {
 
     async newConfig(payload) {
       try {
-        const response = await api.post('/system/configuration/', payload)
+        const response = await api.post('/api/system/configuration/', payload)
         this.configuration = response.data.configuration
 
         if (response.data.success) {

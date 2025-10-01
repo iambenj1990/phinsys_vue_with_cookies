@@ -12,7 +12,7 @@ export const useUserCredentialstore = defineStore('userCredential', {
   actions: {
     async getAllCredentials() {
       try {
-        const response = await api.get('/system/users')
+        const response = await api.get('/api/system/users')
         this.users = response.data.users
       } catch (error) {
         Notify.create({
@@ -26,7 +26,7 @@ export const useUserCredentialstore = defineStore('userCredential', {
 
     async getUserCredential(id) {
       try {
-        const response = await api.get('/system/user/' + id + '/credentials/')
+        const response = await api.get('/api/system/user/' + id + '/credentials/')
         console.log(response.data.credential)
         this.credentials = response.data.credential
         console.log(this.credentials)
@@ -42,7 +42,7 @@ export const useUserCredentialstore = defineStore('userCredential', {
 
     async getUserModuleCredential(id, module) {
       try {
-        const response = await api.get('/system/user/profile/' + id, module)
+        const response = await api.get('/api/system/user/profile/' + id, module)
         this.user = response.data.user[0]
         // console.log(id)
       } catch (error) {
@@ -58,7 +58,7 @@ export const useUserCredentialstore = defineStore('userCredential', {
     async newUserCredential(payload) {
       try {
         console.log(payload)
-        const response = await api.post('/system/user/credentials', payload)
+        const response = await api.post('/api/system/user/credentials', payload)
         // console.log(response.data.success)
         if (response.data.success) {
           Notify.create({
@@ -89,7 +89,7 @@ export const useUserCredentialstore = defineStore('userCredential', {
         // Remove confirm_password from payload before sending to API
 
         console.log('Payload sent to API:', payload)
-        const response = await api.put('/system/user/profile-update/' + id, {
+        const response = await api.put('/api/system/user/profile-update/' + id, {
           ...payload,
           password_confirmation: payload.confirm_password,
         })
@@ -116,7 +116,7 @@ export const useUserCredentialstore = defineStore('userCredential', {
 
     async removeUser(id) {
       try {
-        const response = await api.post('/system/user/profile-remove/' + id)
+        const response = await api.post('/api/system/user/profile-remove/' + id)
         // console.log(response.data.success)
         if (response.data.success) {
           Notify.create({
@@ -137,7 +137,7 @@ export const useUserCredentialstore = defineStore('userCredential', {
     },
     async deactivateUser(id) {
       try {
-        const response = await api.put('/system/user/profile-deactivate/' + id)
+        const response = await api.put('/api/system/user/profile-deactivate/' + id)
         // console.log(response.data.success)
         if (response.data.success) {
           Notify.create({
@@ -159,7 +159,7 @@ export const useUserCredentialstore = defineStore('userCredential', {
 
     async activateUser(id) {
       try {
-        const response = await api.put('/system/user/profile-activate/' + id)
+        const response = await api.put('/api/system/user/profile-activate/' + id)
         // console.log(response.data.success)
         if (response.data.success) {
           Notify.create({

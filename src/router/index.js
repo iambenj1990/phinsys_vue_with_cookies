@@ -38,19 +38,19 @@ export default defineRouter(function (/* { store, ssrContext } */) {
   }
 
   const isAuthenticated = authenticated.isAuthenticated
-  const isLoginPage = to.path === '/'
+  // const isLoginPage = to.path === '/'
 
   if (to.meta.requiresAuth && !isAuthenticated) {
-    // not logged in → go to login page
-    return next('/')
-  }
+      next('/login')
+    } else if (to.path === '/login' && isAuthenticated) {
+    
+      // Already logged in → redirect to dashboard
+      next('/dashboard')
+    } else {
+      next()
+    }
 
-  if (isLoginPage && isAuthenticated) {
-    // logged in but going to login → redirect to dashboard
-    return next('/main')
-  }
 
-  return next()
 
 })
 

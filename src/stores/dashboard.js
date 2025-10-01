@@ -45,7 +45,7 @@ export const useDashboardStore = defineStore('dashboard', {
     async customerBarangay(payload) {
       try {
         this.barangayData = []
-        const response = await api.get('/dashboard/customers/perbrgy', {
+        const response = await api.get('/api/dashboard/customers/perbrgy', {
           params: payload,
         })
 
@@ -73,7 +73,7 @@ export const useDashboardStore = defineStore('dashboard', {
         this.ageData.senior = 0
         this.ageData.adult = 0
         this.ageData.children = 0
-        const response = await api.get('/dashboard/customers/age', {
+        const response = await api.get('/api/dashboard/customers/age', {
           params: payload,
         })
 
@@ -95,7 +95,7 @@ export const useDashboardStore = defineStore('dashboard', {
         // console.log('Fetching registered customer count with payload:', payload)
         this.male = 0
         this.female = 0
-        const response = await api.get('/dashboard/customers/gender', {
+        const response = await api.get('/api/dashboard/customers/gender', {
           params: payload,
         })
         if (response.status === 200) {
@@ -121,7 +121,7 @@ export const useDashboardStore = defineStore('dashboard', {
     async customerRegistered(payload) {
       try {
         // console.log('Fetching registered customer count with payload:', payload)
-        const response = await api.get('/dashboard/customers/registered', {
+        const response = await api.get('/api/dashboard/customers/registered', {
           params: payload,
         })
         if (response.status === 200) {
@@ -138,7 +138,7 @@ export const useDashboardStore = defineStore('dashboard', {
     async customerServed(payload) {
       try {
         // console.log('Fetching served customer count with payload:', payload)
-        const response = await api.get('/dashboard/customers/served', {
+        const response = await api.get('/api/dashboard/customers/served', {
           params: payload,
         })
         if (response.status === 200) {
@@ -154,7 +154,7 @@ export const useDashboardStore = defineStore('dashboard', {
 
     async medicineExpiry() {
       try {
-        const response = await api.get('/dashboard/medicines/expiredStocks')
+        const response = await api.get('/api/dashboard/medicines/expiredStocks')
         if (response.status === 200) {
           const data = response.data
           this.expire = data
@@ -169,7 +169,7 @@ export const useDashboardStore = defineStore('dashboard', {
 
     async medicineInStock() {
       try {
-        const response = await api.get('/dashboard/medicines/activeStocks')
+        const response = await api.get('/api/dashboard/medicines/activeStocks')
         if (response.status === 200) {
           const data = response.data
           this.inStock = data
@@ -184,7 +184,7 @@ export const useDashboardStore = defineStore('dashboard', {
 
     async medicineNoStock() {
       try {
-        const response = await api.get('/dashboard/medicines/noStocks')
+        const response = await api.get('/api/dashboard/medicines/noStocks')
         if (response.status === 200) {
           const data = response.data.noStock
           this.noStock = data
@@ -200,7 +200,7 @@ export const useDashboardStore = defineStore('dashboard', {
 
        async medicineLowStock(threshold) {
       try {
-        const response = await api.get('/dashboard/medicines/LowStocks/' + threshold)
+        const response = await api.get('/api/dashboard/medicines/LowStocks/' + threshold)
         if (response.status === 200) {
           const data = response.data.stocks
           console.log('Low stock medicines:', data)
@@ -217,7 +217,7 @@ export const useDashboardStore = defineStore('dashboard', {
 
     async medicineTempPOno() {
       try {
-        const response = await api.get('/dashboard/medicines/temporary')
+        const response = await api.get('/api/dashboard/medicines/temporary')
         if (response.status === 200) {
           const data = response.data.count
           this.countTemp = data
@@ -232,7 +232,7 @@ export const useDashboardStore = defineStore('dashboard', {
 
     async medicineTop10() {
       try {
-        const response = await api.get('/dashboard/medicines/ten')
+        const response = await api.get('/api/dashboard/medicines/ten')
         if (response.status === 200) {
           const data = response.data.top_ten_medicines
           this.top10 = data

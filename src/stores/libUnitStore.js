@@ -14,7 +14,7 @@ export const useUnitStore = defineStore('units', {
 
     async getUnits() {
       try {
-        const response = await api.get('/system/library/units')
+        const response = await api.get('/api/system/library/units')
         this.units = response.data.units
       } catch (error) {
         console.error(error)
@@ -28,7 +28,7 @@ export const useUnitStore = defineStore('units', {
     },
     async getUnit(id) {
       try {
-        const response = await api.get('/system/library/units/'+ id)
+        const response = await api.get('/api/system/library/units/'+ id)
         this.unit = response.data.unit
       } catch (error) {
         console.error(error)
@@ -43,7 +43,7 @@ export const useUnitStore = defineStore('units', {
 
     async newUnit(payload) {
       try {
-        const response = await api.post('/system/library/units', payload)
+        const response = await api.post('/api/system/library/units', payload)
         this.units.push(response.data.unit)
         Notify.create({
           type: 'positive',
@@ -64,7 +64,7 @@ export const useUnitStore = defineStore('units', {
 
     async updateUnit(id,payload) {
       try {
-        await api.put('/system/library/units/'+ id, payload)
+        await api.put('/api/system/library/units/'+ id, payload)
         this.getUnits()
         Notify.create({
           type: 'positive',
@@ -85,7 +85,7 @@ export const useUnitStore = defineStore('units', {
 
     async removeUnit(id) {
     try {
-      await api.delete('/system/library/units/'+ id)
+      await api.delete('/api/system/library/units/'+ id)
       this.getUnits()
       Notify.create({
         type: 'positive',

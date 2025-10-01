@@ -15,7 +15,7 @@ export const useRequisitionIssuanceSlip = defineStore('ris', {
   actions: {
     async RIS_byDate(payload) {
       try {
-        const response = await api.post('daily/ris/date', payload)
+        const response = await api.post('/api/daily/ris/date', payload)
         this.ris_list = response.data.list
 
       } catch (error) {
@@ -31,7 +31,7 @@ export const useRequisitionIssuanceSlip = defineStore('ris', {
 
     async allRIS() {
       try {
-        const reponse = await api.get('/daily/ris/list')
+        const reponse = await api.get('/api/daily/ris/list')
         this.ris_list = reponse.data.list
       } catch (error) {
         console.log(error)
@@ -49,7 +49,7 @@ export const useRequisitionIssuanceSlip = defineStore('ris', {
     async getRISinfo(payload) {
       console.log(payload)
       try {
-        const response = await api.post('/daily/ris/info', payload)
+        const response = await api.post('/api/daily/ris/info', payload)
         console.log(response.data.info[0])
         this.ris_info = response.data.info[0]
         console.log('store get ris => ', this.ris_info)
@@ -66,7 +66,7 @@ export const useRequisitionIssuanceSlip = defineStore('ris', {
 
     async RIS_Transactions(payload) {
       try {
-        const reponse = await api.post('/daily/ris/transactions', payload)
+        const reponse = await api.post('/api/daily/ris/transactions', payload)
         this.ris_medicine_list = reponse.data.list
       } catch (error) {
         console.log(error)
@@ -81,7 +81,7 @@ export const useRequisitionIssuanceSlip = defineStore('ris', {
 
     async newRIS(payload) {
       try {
-        const response = await api.post('/daily/ris/new', payload)
+        const response = await api.post('/api/daily/ris/new', payload)
         this.return_ris_id = response.data.ris_id
         this.return_id = response.data.id
 
@@ -105,7 +105,7 @@ export const useRequisitionIssuanceSlip = defineStore('ris', {
     async remove_ris_item(payload) {
 
       try {
-        const response = await api.post('/daily/ris/remove/item', payload)
+        const response = await api.post('/api/daily/ris/remove/item', payload)
         Notify.create({
           type: 'positive',
           message: response.data.message,

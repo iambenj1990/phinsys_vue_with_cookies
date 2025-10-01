@@ -333,16 +333,18 @@
 <script>
 import { useTagumStore } from '../stores/TagumStore'
 import { useCustomerStore } from '../stores/customersStore'
-import { useLoginStore } from '../stores/loginSessionStore'
+
+import { useUserStore } from '../stores/userStore'
 
 export default {
   setup() {
-    const UserStore = useLoginStore()
+
     const TagumBarangay = useTagumStore()
     const Customer = useCustomerStore()
+    const userStore = useUserStore()
 
     return {
-      UserStore,
+      userStore,
       Customer,
       TagumBarangay,
       GenSelection: ['Male', 'Female', 'LGBTQ'],
@@ -371,6 +373,7 @@ export default {
   },
   data() {
     return {
+      user:{},
       user_id: 0,
       showError: false,
       errorMsg: [],
@@ -405,13 +408,12 @@ export default {
     }
   },
   methods: {
-
-     GetUserID(){
-      const unsanitized_object = localStorage.getItem('user')
-      const sanitized_object = unsanitized_object.replace('__q_objt|', '')
-      const user = JSON.parse(sanitized_object)
-      return user.id
+     async GetAuthenticatedUser() {
+      await this.userStore.authenticatedUserCheck()
+      this.user = this.userStore.user
     },
+
+
 
     async submitCustomerForm() {
       const isValid = await this.$refs.customerForm.validate()
@@ -476,7 +478,7 @@ export default {
     },
 
     async Insert_Customer(payload) {
-      payload.user_id = this.GetUserID()
+      payload.user_id = this.user.id
       try {
         console.log (payload)
         this.errorMsg = []
@@ -550,9 +552,10 @@ export default {
   },
 
   mounted() {
+    this.GetAuthenticatedUser()
     this.CustomerInfo.city ='TAGUM CITY'
     this.CustomerInfo.province ='DAVAO DEL NORTE'
-    this.user_id = this.GetUserID()
+    this.user_id = this.user.id
 
   },
   unmounted() {

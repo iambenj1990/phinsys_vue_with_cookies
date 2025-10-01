@@ -287,16 +287,20 @@
 </template>
 
 <script>
+import {useUserStore} from 'src/stores/userStore'
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { useRequisitionIssuanceSlip } from 'src/stores/RequisitionIssuanceSlip'
 
+
 export default {
   setup() {
+    const userStore = useUserStore()
     const risStore = useRequisitionIssuanceSlip()
     const itemStore = useItemStore()
     const TransactionStore = useTransactionStore()
     return {
+      userStore,
       risStore,
       itemStore,
       TransactionStore,
@@ -418,6 +422,7 @@ export default {
   },
   data() {
     return {
+      user: {},
       showRemoveItem: false,
       hasOpentransaction: false,
       selected_to_delete: 0,
@@ -572,7 +577,7 @@ export default {
       this.transactionDetails.transaction_date = new Date().toLocaleDateString('en-CA')
       this.transactionDetails.item_id = payload.item_id
       this.transactionDetails.unit = payload.dosage_form
-      this.transactionDetails.user_id = this.GetUserID()
+      this.transactionDetails.user_id = this.user.id
       // console.log(payload)
       // console.log(this.transactionDetails)
       this.showQuantity = true
@@ -583,11 +588,9 @@ export default {
       this.rows = this.TransactionStore.customerTransactions
     },
 
-    GetUserID() {
-      const unsanitized_object = localStorage.getItem('user')
-      const sanitized_object = unsanitized_object.replace('__q_objt|', '')
-      const user = JSON.parse(sanitized_object)
-      return user.id
+   async GetAuthenticatedUser() {
+      await this.userStore.authenticatedUserCheck()
+      this.user = this.userStore.user
     },
 
     getSelectedDataToDelete(id) {
@@ -597,6 +600,7 @@ export default {
     },
   },
   mounted() {
+    this.GetAuthenticatedUser()
     this.ris_no = this.$route.query.ris_no
     this.get_purpose({ ris_no: this.ris_no })
     this.getOrders(this.ris_no )

@@ -330,16 +330,18 @@
 <script>
 import { useTagumStore } from '../stores/TagumStore'
 import { useCustomerStore } from '../stores/customersStore'
-import { useLoginStore } from '../stores/loginSessionStore'
+
+import { useUserStore } from 'src/stores/userStore'
 
 export default {
   setup() {
-    const UserStore = useLoginStore()
+
     const TagumBarangay = useTagumStore()
     const Customer = useCustomerStore()
+    const userStore = useUserStore()
 
     return {
-      UserStore,
+      userStore,
       Customer,
       TagumBarangay,
       GenSelection: ['Male', 'Female', 'LGBTQ'],
@@ -368,6 +370,7 @@ export default {
   },
   data() {
     return {
+      user:{},
       user_id: 0,
       showError: false,
       errorMsg: [],
@@ -403,11 +406,9 @@ export default {
     }
   },
   methods: {
-    GetUserID() {
-      const unsanitized_object = localStorage.getItem('user')
-      const sanitized_object = unsanitized_object.replace('__q_objt|', '')
-      const user = JSON.parse(sanitized_object)
-      return user.id
+    async GetAuthenticatedUser() {
+      await this.userStore.authenticatedUserCheck()
+      this.user = this.userStore.user
     },
 
     async submitCustomerForm() {
@@ -471,7 +472,7 @@ export default {
     },
 
     async Insert_Customer(payload) {
-      payload.user_id = this.GetUserID()
+      payload.user_id = this.user.id
       try {
         this.errorMsg = []
         this.us
@@ -548,8 +549,9 @@ export default {
   },
 
   mounted() {
+     this.GetAuthenticatedUser()
     this.CustomerInfo = JSON.parse(JSON.stringify(this.CustomerInfoDefault))
-    this.user_id = this.GetUserID()
+
     this.selected_id = this.Customer.customer_id
     // this.Select_Customer(this.Customer.customer_id)
   },

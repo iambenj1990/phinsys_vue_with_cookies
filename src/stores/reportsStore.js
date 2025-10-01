@@ -15,7 +15,7 @@ export const useReportsStore = defineStore('reports', {
     // Define your actions here
     async MonthlyDispenseReports() {
       try {
-        const response = await api.get('/reports/dispense/monthly');
+        const response = await api.get('/api/reports/dispense/monthly');
         this.monthly_dispense = response.data.dispense;
       } catch (error) {
         console.error(error);

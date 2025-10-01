@@ -17,6 +17,8 @@ const api = axios.create({
               // baseURL: 'http://192.168.50.98:8000/api', //Home
               withCredentials: true,
               withXSRFToken: true,
+              xsrfCookieName: 'XSRF-TOKEN',
+              xsrfHeaderName: 'X-XSRF-TOKEN',
             })
 
 

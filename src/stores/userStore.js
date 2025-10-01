@@ -172,9 +172,13 @@ export const useUserStore = defineStore('users', {
       console.log('CSRF cookie set');
       console.log('Logging in with credentials:', credentials);
       const response = await api.post('/login', credentials);
-      this.user = response.data.user
-      console.log('response =>', response);
-      return response.data.success
+      if (response.data.success){
+          console.log('response =>', response);
+          this.user = response.data.user
+          this.isAuthenticated = true
+          return true
+      }
+      return false
       } catch (error) {
         Notify.create({
           type: 'negative',
@@ -187,7 +191,7 @@ export const useUserStore = defineStore('users', {
 
     async authenticatedUserCheck() {
        try {
-        const response = await api.get('/api/user/authenticated');
+        const response = await api.get('/api/system/user/authenticated');
         this.user = response.data.user;
         this.isAuthenticated = response.data.success;
 

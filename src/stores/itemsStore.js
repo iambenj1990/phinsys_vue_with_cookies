@@ -43,7 +43,7 @@ export const useItemStore = defineStore('items', {
 
     async getDosageForm() {
       try {
-        const response = await api.get('/system/library/dosages')
+        const response = await api.get('/api/system/library/dosages')
         this.dosageForm = response.data.dosagetypes
         console.log(this.dosageForm)
       } catch (error) {
@@ -59,7 +59,7 @@ export const useItemStore = defineStore('items', {
 
     async openLookup() {
       try {
-        const response = await api.get('/daily/inventoryOpen/today')
+        const response = await api.get('/api/daily/inventoryOpen/today')
         this.hasOpening = response.data.status
         // console.log(this.hasOpening)
       } catch (error) {
@@ -75,7 +75,7 @@ export const useItemStore = defineStore('items', {
 
     async getTempID() {
       try {
-        const response = await api.get('/items/generate/tempno')
+        const response = await api.get('/api/items/generate/tempno')
         this.temp_id = response.data
         //console.log(this.temp_id)
       } catch (error) {
@@ -91,7 +91,7 @@ export const useItemStore = defineStore('items', {
 
     async getStockMiniInfo() {
       try {
-        const response = await api.get('/system/library/medlist')
+        const response = await api.get('/api/system/library/medlist')
         this.stockMiniInfo = response.data.items
       } catch (error) {
         console.error(error)
@@ -105,7 +105,7 @@ export const useItemStore = defineStore('items', {
     },
     async getItems(payload) {
       try {
-        const response = await api.post('/items', payload)
+        const response = await api.post('/api/items', payload)
         this.items = response.data.items
       } catch (error) {
         console.error(error)
@@ -120,7 +120,7 @@ export const useItemStore = defineStore('items', {
 
     async getItem(id) {
       try {
-        const response = await api.get('/items/' + id)
+        const response = await api.get('/api/items/' + id)
         this.item = response.data.items[0]
       } catch (error) {
         console.log(error)
@@ -134,7 +134,7 @@ export const useItemStore = defineStore('items', {
     },
     async getTempPO() {
       try {
-        const response = await api.get('/items/temp/po')
+        const response = await api.get('/api/items/temp/po')
         this.po_temp = response.data.list
       } catch (error) {
         console.log(error)
@@ -150,7 +150,7 @@ export const useItemStore = defineStore('items', {
     async UpdateTempPO(id, request) {
       try {
         console.log('temp => ', id, 'new po => ', request)
-        const response = await api.put('/items/temp/po/' + id, { po_no: request })
+        const response = await api.put('/api/items/temp/po/' + id, { po_no: request })
         Notify.create({
           type: 'positive',
           message: response.data.message,
@@ -171,7 +171,7 @@ export const useItemStore = defineStore('items', {
 
     async getItemsByPO(po_num) {
       try {
-        const response = await api.get('/items/po/show/' + po_num)
+        const response = await api.get('/api/items/po/show/' + po_num)
         this.po_items = response.data.items
       } catch (error) {
         console.log(error)
@@ -186,7 +186,7 @@ export const useItemStore = defineStore('items', {
 
     async postItem(payload) {
       try {
-        await api.post('/items/new', payload)
+        await api.post('/api/items/new', payload)
       } catch (error) {
         console.log(error)
 
@@ -201,7 +201,7 @@ export const useItemStore = defineStore('items', {
 
     async batchInsert(payload) {
       try {
-        const response = await api.post('/items/batch/new', payload)
+        const response = await api.post('/api/items/batch/new', payload)
         Notify.create({
           type: 'positive',
           message: response.data.message,
@@ -221,7 +221,7 @@ export const useItemStore = defineStore('items', {
 
     async updateItem(id, payload) {
       try {
-        const response = await api.put('/items/' + id, payload)
+        const response = await api.put('/api/items/' + id, payload)
         this.item = response.data.item[0]
       } catch (error) {
         console.log(error)
@@ -236,7 +236,7 @@ export const useItemStore = defineStore('items', {
 
     async deleteItem(id) {
       try {
-        await api.delete('/items/' + id)
+        await api.delete('/api/items/' + id)
         //  console.log(response.data.success, ' --- ', response.data.message)
       } catch (error) {
         console.log(error)
@@ -251,7 +251,7 @@ export const useItemStore = defineStore('items', {
 
     async deletePOItems(po_no) {
       try {
-        await api.delete('/items/po/' + po_no)
+        await api.delete('/api/items/po/' + po_no)
         //  console.log(response.data.success, ' --- ', response.data.message)
         Notify.create({
           type: 'positive',
@@ -272,7 +272,7 @@ export const useItemStore = defineStore('items', {
 
     async getExpiringItems() {
       try {
-        const response = await api.get('/items/expire/list')
+        const response = await api.get('/api/items/expire/list')
         this.expiring = response.data.items
         //console.log(response.data.success, ' --- ', response.data.message)
       } catch (error) {
@@ -288,7 +288,7 @@ export const useItemStore = defineStore('items', {
 
     async getJoinedTable_DailyInventor_Items_filtered() {
       try {
-        const response = await api.get('/items/stock/filteredlist')
+        const response = await api.get('/api/items/stock/filteredlist')
         this.items = response.data
       } catch (error) {
         console.log(error)
@@ -302,7 +302,7 @@ export const useItemStore = defineStore('items', {
     },
     async getJoinedTable_DailyInventor_Items() {
       try {
-        const response = await api.get('/items/stock/list')
+        const response = await api.get('/api/items/stock/list')
         this.items = response.data
         console.log(this.items)
       } catch (error) {
@@ -318,7 +318,7 @@ export const useItemStore = defineStore('items', {
 
     async closingStocks($id) {
       try {
-        await api.post('/daily/inventory/close-latest/' + $id)
+        await api.post('/api/daily/inventory/close-latest/' + $id)
 
         Notify.create({
           type: 'positive',
@@ -351,7 +351,7 @@ export const useItemStore = defineStore('items', {
 
     async getStocksList(date) {
       try {
-        const response = await api.get('/daily/inventory/get-list/' + date)
+        const response = await api.get('/api/daily/inventory/get-list/' + date)
         this.items = response.data.list
         //   console.log(this.items)
       } catch (error) {
@@ -367,7 +367,7 @@ export const useItemStore = defineStore('items', {
 
     async getStocksListbyDate(payload) {
       try {
-        const response = await api.post('/items/inventory/bydate', payload)
+        const response = await api.post('/api/items/inventory/bydate', payload)
         this.items = response.data.items
       } catch (error) {
         console.log(error)
@@ -382,7 +382,7 @@ export const useItemStore = defineStore('items', {
 
     async openingStocks(payload) {
       try {
-        await api.post('/daily/inventory/open-latest/' + payload)
+        await api.post('/api/daily/inventory/open-latest/' + payload)
         Notify.create({
           type: 'positive',
           message: 'Regenerated new stock list for today',
@@ -415,7 +415,7 @@ export const useItemStore = defineStore('items', {
     async LowStocks(threshold) {
       // console.log('Store Threshold:', threshold)
       try {
-        const response = await api.get('/daily/inventory/lowquantity/' + threshold)
+        const response = await api.get('/api/daily/inventory/lowquantity/' + threshold)
         this.low_stocks = response.data.stocks
         console.log('Low Stocks:', this.low_stocks)
       } catch (error) {
@@ -430,7 +430,7 @@ export const useItemStore = defineStore('items', {
 
     async EmptyStocks() {
       try {
-        const response = await api.get('/daily/inventory/emptyquantity')
+        const response = await api.get('/api/daily/inventory/emptyquantity')
         this.zero_stocks = response.data.stocks
 
         // Notify.create({
@@ -453,7 +453,7 @@ export const useItemStore = defineStore('items', {
 
     async getStockCard(payload) {
       try {
-        const response = await api.post('/items/stockcard', payload)
+        const response = await api.post('/api/items/stockcard', payload)
         this.stockCard = response.data.stockCard
       } catch (error) {
         console.error(error)
@@ -468,7 +468,7 @@ export const useItemStore = defineStore('items', {
 
     async get_Name_Amount(payload) {
       try {
-        const response = await api.post('/items/name', payload)
+        const response = await api.post('/api/items/name', payload)
         console.log(response.data)
         this.item_name = response.data.item_name
         this.item_amount = response.data.amount
@@ -485,7 +485,7 @@ export const useItemStore = defineStore('items', {
 
     async get_Item_Price(payload) {
       try {
-        const response = await api.post('/items/price', payload)
+        const response = await api.post('/api/items/price', payload)
         this.item_Price = response.data.price
       } catch (error) {
         console.error(error)

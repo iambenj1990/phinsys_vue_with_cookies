@@ -11,6 +11,11 @@
         </q-card-section>
 
         <q-card-section>
+             <div v-if="loading" class="flex flex-center">
+          <q-circular-progress indeterminate size="50px" color="primary" />
+          <div class="text-h6 text-primary q-ml-sm">Loading data. Please wait...</div>
+        </div>
+        <div v-else class=" q-gutter-md">
           <q-table
             flat
             bordered
@@ -24,7 +29,7 @@
             title="Client List/ History"
             title-class="text-bold text-subtitle1 text-primary"
             square
-            :rows-per-page-options="[0]"
+            :rows-per-page-options="[10, 25, 50, 100]"
 
             table-header-class="text-white"
 
@@ -95,6 +100,7 @@
               </q-tr>
             </template>
           </q-table>
+          </div>
         </q-card-section>
       </q-card>
     </div>
@@ -210,6 +216,7 @@ export default {
 
   data() {
     return {
+      loading: false,
       Selected_ID:0,
       DeleteClient: false,
       search: '',
@@ -254,9 +261,11 @@ export default {
 
     async get_clients() {
       try {
+        this.loading = true
         await this.Customers.getCustomers()
         this.rows = this.Customers.customers //fetch all clients from array
         //console.log(this.rows)
+        this.loading = false
       } catch (error) {
         console.log(error)
       }

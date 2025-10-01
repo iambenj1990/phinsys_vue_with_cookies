@@ -281,11 +281,13 @@
 
 <script>
 import { useItemStore } from 'src/stores/itemsStore'
-import { useLoginStore } from 'src/stores/loginSessionStore'
+import { useUserStore } from 'src/stores/userStore';
+
 
 
 
 export default {
+
   watch: {
     New_Po(newvalue) {
       if (newvalue && newvalue.trim() !== '') {
@@ -308,6 +310,7 @@ export default {
 
   created() {
     // this.itemStore.injectToken() //should be always on top to inject token before any api call
+    this.GetAuthenticatedUser()
     this.fetch_Medicine_info()
     this.ShowDosageForm()
 
@@ -318,13 +321,13 @@ export default {
     itemStore() {
       return useItemStore()
     },
-    sessionStore() {
-      return useLoginStore()
-    },
+
   },
   setup() {
+    const userStore = useUserStore()
 
     return {
+      userStore,
 
       defaultValues: {
         po_no: '',
@@ -457,17 +460,18 @@ export default {
       },
       searchTerm: '',
       MedType: [],
+      user: {}
 
     }
   },
 
   methods: {
 
-    GetUserID(){
-      const unsanitized_object = localStorage.getItem('user')
-      const sanitized_object = unsanitized_object.replace('__q_objt|', '')
-      const user = JSON.parse(sanitized_object)
-      return user.id
+
+
+     async GetAuthenticatedUser() {
+      await this.userStore.authenticatedUserCheck()
+      this.user = this.userStore.user
     },
 
 
@@ -541,9 +545,9 @@ export default {
     },
 
     async insertNewItem(payload) {
-      //console.log('payload =>', this.GetUserID())
+
       payload.po_no = this.New_Po
-      payload.user_id = this.GetUserID()
+      payload.user_id = this.user.id
 
       await this.itemStore.postItem(payload)
       this.fetchItemsbyPO(this.New_Po)
