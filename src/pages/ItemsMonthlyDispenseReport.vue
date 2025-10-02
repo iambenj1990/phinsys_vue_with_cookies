@@ -4,6 +4,7 @@
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
         <div v-if="loading" class="flex flex-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
+              <span class="q-ml-sm">Loading...</span>
         </div>
         <div v-else class="row q-gutter-md">
           <div class="col-12 col-md-12 q-pa-sm">

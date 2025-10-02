@@ -48,28 +48,28 @@
 
             <template #body="props">
               <q-tr :v-bind="props">
-                <q-td key="lastname" style="font-size: 11px" align="left">
+                <q-td key="lastname" style="font-size: 11px" align="left" class="text-uppercase">
                   {{ props.row.lastname }}
                 </q-td>
-                <q-td key="firstname" style="font-size: 11px" align="left">
+                <q-td key="firstname" style="font-size: 11px" align="left" class="text-uppercase">
                   {{ props.row.firstname }}
                 </q-td>
-                <q-td key="middle_name" style="font-size: 11px" align="left">
+                <q-td key="middle_name" style="font-size: 11px" align="left" class="text-uppercase">
                   {{ props.row.middlename }}
                 </q-td>
-                <q-td key="ext" style="font-size: 11px" align="left">
+                <q-td key="ext" style="font-size: 11px" align="left" class="text-uppercase">
                   {{ props.row.ext }}
                 </q-td>
-                <q-td key="birthdate" style="font-size: 11px" align="left">
+                <q-td key="birthdate" style="font-size: 11px" align="left" class="text-uppercase">
                   {{ props.row.birthdate }}
                 </q-td>
-                <q-td key="age" style="font-size: 11px" align="left">
+                <q-td key="age" style="font-size: 11px" align="left" class="text-uppercase">
                   {{ props.row.age }}
                 </q-td>
-                <q-td key="contact_number" style="font-size: 11px" align="left">
+                <q-td key="contact_number" style="font-size: 11px" align="left" class="text-uppercase">
                   {{ props.row.contact_number }}
                 </q-td>
-                <q-td key="barangay" style="font-size: 11px" align="left">
+                <q-td key="barangay" style="font-size: 11px" align="left" class="text-uppercase">
                   {{ props.row.barangay }}
                 </q-td>
 

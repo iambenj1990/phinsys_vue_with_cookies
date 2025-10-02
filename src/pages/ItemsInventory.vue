@@ -10,6 +10,7 @@
         <q-separator /> -->
         <div v-if="loading" class="flex flex-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
+          <span class="q-ml-sm">Loading...</span>
         </div>
         <div v-else class="row q-gutter-md">
           <div class="col-12 col-md-12 q-pa-sm">
@@ -494,8 +495,10 @@ export default {
       console.log(id)
     },
     async fetchAllStocks() {
+      this.loading = true
       await this.itemStore.getJoinedTable_DailyInventor_Items()
       this.rows = this.itemStore.items
+      this.loading = false
     },
     async Check_OPEN() {
       await this.indicatorStore.getStatus()

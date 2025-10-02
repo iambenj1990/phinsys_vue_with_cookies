@@ -262,6 +262,15 @@ export default {
   },
   data() {
     return {
+      Credentials: [],
+      module_access: {
+        module:'',
+        add:false,
+        edit:false,
+        delete:false,
+        view:false,
+        export:false,
+      },
       user: {},
       online: true,
       syncdataDialog: false,
@@ -306,6 +315,7 @@ export default {
      async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
       this.user = this.userStore.user
+      this.Credentials = this.userStore.credentials
     },
 
   },

@@ -10,6 +10,7 @@ export const useUserStore = defineStore('users', {
     authenticatedUser: 0,
     isAuthenticated: false,
     message: '',
+    credentials:[]
   }),
 
   actions: {
@@ -169,13 +170,14 @@ export const useUserStore = defineStore('users', {
     async loginUser(credentials) {
       try {
         await api.get('/sanctum/csrf-cookie')
-        console.log('CSRF cookie set')
-        console.log('Logging in with credentials:', credentials)
+
         const response = await api.post('/login', credentials)
         if (response.data.success) {
-          console.log('response =>', response)
+
           this.user = response.data.user
           this.isAuthenticated = true
+          this.credentials = response.data.user.credentials
+          console.log('authentications store method fired => ',this.credentials)
           return true
         }
         return false
@@ -194,6 +196,8 @@ export const useUserStore = defineStore('users', {
         const response = await api.get('/api/system/user/authenticated')
         this.user = response.data.user
         this.isAuthenticated = response.data.success
+        this.credentials = response.data.user.credentials
+        console.log('authentications store method fired => ',this.credentials)
       } catch (error) {
         Notify.create({
           type: 'negative',

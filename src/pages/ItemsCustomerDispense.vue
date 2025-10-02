@@ -2,6 +2,11 @@
   <q-page>
     <q-card style="width: auto">
       <q-card-section>
+         <div v-if="loading" class="flex flex-center">
+          <q-circular-progress indeterminate size="90px" color="primary" />
+              <span class="q-ml-sm">Loading...</span>
+        </div>
+        <div v-else class="q-gutter-md">
         <q-table
           :rows="items"
           :columns="cols"
@@ -65,6 +70,7 @@
             </q-tr>
           </template>
         </q-table>
+        </div>
       </q-card-section>
       <!-- <q-card-actions align="right" class="q-px-md">
         <q-btn label="Close" flat class="text-subtitle2 text-green" ></q-btn>
@@ -258,6 +264,7 @@ export default {
 
   data() {
     return {
+      loading: false,
       pagination:{
         page: 1,
         rowsPerPage: 10,
@@ -271,10 +278,12 @@ export default {
 
   methods: {
     async getItems() {
+      this.loading = true
       await this.itemStore.getJoinedTable_DailyInventor_Items()
       console.log('items => ', this.itemStore.items)
       this.items = this.itemStore.items
       console.log(this.items)
+      this.loading = false
     },
     async customerUtilization(payload){
       await this.transactionStore.MedicineUtilizationPerCustomer(payload)

@@ -417,10 +417,11 @@
         <q-separator></q-separator>
         <q-card-section>
           <q-table
+            :filter="maif_search"
             :rows="maifpDataRows"
             :columns="maifpCols"
             row-key="id"
-            class="q-ma-xs"
+            class="q-ma-xs my-sticky-header-table"
             style="height: 500px"
             :visible-columns="[
               'lastname',
@@ -446,6 +447,21 @@
                 </q-td>
               </q-tr>
             </template> -->
+            <template v-slot:top>
+              <q-input
+                borderless
+                dense
+                debounce="300"
+                v-model="maif_search"
+                placeholder="Search"
+                class="full-width q-px-md"
+                style="background-color: lightgrey"
+              >
+                <template v-slot:append>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
+            </template>
             <template #body="props">
               <q-tr :v-bind="props">
                 <!-- <q-td key="po_no" style="font-size: 11px" align="center">
@@ -880,6 +896,7 @@ export default {
   },
   data() {
     return {
+      maif_search: '',
       user:{},
       selected_id_customer: 0,
       selectedMaifpCustomer: {},
