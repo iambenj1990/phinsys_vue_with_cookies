@@ -13,9 +13,10 @@
         <div class="q-ml-auto q-gutter-sm">
           <q-btn-dropdown flat dense dropdown-icon="arrow_drop_down">
             <template v-slot:label>
-              <q-avatar size="26px">
+              <q-avatar size="26px" class="q-mr-sm">
                 <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
               </q-avatar>
+              {{ user.first_name }} {{ user.last_name }}
             </template>
 
             <q-tooltip>Account</q-tooltip>
@@ -47,7 +48,7 @@
         <q-list>
           <q-item> </q-item>
 
-          <q-item clickable v-ripple to="/dashboard">
+          <q-item clickable v-ripple to="/dashboard" v-if="moduleAccess('Dashboard')">
             <q-icon name="dashboard" size="24px" class="q-mr-md" />
             <p class="text-sm">Dashboard</p>
           </q-item>
@@ -58,7 +59,7 @@
             icon="app_registration"
             class="text-subtitle2"
           >
-            <q-item clickable v-ripple to="/customer/orders">
+            <q-item clickable v-ripple to="/customer/orders" v-if="moduleAccess('Releasing')">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="pallet" class="q-ml-md q-mr-md" size="24px" />
@@ -76,7 +77,7 @@
               </q-item-section>
               </q-item>
             -->
-            <q-item clickable v-ripple to="/customers">
+            <q-item clickable v-ripple to="/customers" v-if="moduleAccess('Customer History')">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="person" class="q-ml-md q-mr-md" size="24px" />
@@ -92,7 +93,7 @@
             class="text-subtitle2"
             v-model="expanded"
           >
-            <q-item clickable v-ripple to="/items/list">
+            <q-item clickable v-ripple to="/items/list" v-if="moduleAccess('Purchasing')">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="get_app" class="q-ml-md q-mr-md" size="24px" />Stock
@@ -100,7 +101,7 @@
                 >
               </q-item-section>
             </q-item>
-            <q-item clickable v-ripple to="/ris/orders">
+            <q-item clickable v-ripple to="/ris/orders" v-if="moduleAccess('RIS')">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="receipt" class="q-ml-md q-mr-md" size="24px" />
@@ -108,7 +109,7 @@
                 </q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable v-ripple to="/inventory/adjustment">
+            <q-item clickable v-ripple to="/inventory/adjustment" v-if="moduleAccess('Adjustments')">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="lock_clock" class="q-ml-md q-mr-md" size="24px" />Stock
@@ -116,7 +117,7 @@
                 >
               </q-item-section>
             </q-item>
-            <q-item clickable v-ripple to="/items/movement">
+            <q-item clickable v-ripple to="/items/movement" v-if="moduleAccess('Stocks')">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="timeline" class="q-ml-md q-mr-md" size="24px" />Stock
@@ -132,6 +133,7 @@
             icon="bar_chart"
             class="text-subtitle2"
             v-model="expanded"
+
           >
             <q-item clickable v-ripple to="/items/reports">
               <q-item-section class="q-ml-sm">
@@ -153,7 +155,7 @@
             class="text-subtitle2"
             v-model="expanded"
           >
-            <q-item clickable v-ripple to="/users/list">
+            <q-item clickable v-ripple to="/users/list" v-if="moduleAccess('User Management')">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="manage_accounts" class="q-ml-md q-mr-md" size="24px" />Users
@@ -161,14 +163,14 @@
                 </q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable v-ripple to="/libraries/list">
+            <q-item clickable v-ripple to="/libraries/list" v-if="moduleAccess('Libraries')">
               <q-item-section class="q-ml-sm">
                 <q-item-label class="text-caption">
                   <q-icon name="category" class="q-ml-md q-mr-md" size="24px" />Libraries
                 </q-item-label>
               </q-item-section>
             </q-item>
-            <q-item
+            <!-- <q-item
               clickable
               v-ripple
               @click="
@@ -182,7 +184,7 @@
                   <q-icon name="wifi_off" class="q-ml-md q-mr-md" size="24px" />Offline Mode
                 </q-item-label>
               </q-item-section>
-            </q-item>
+            </q-item> -->
           </q-expansion-item>
         </q-list>
       </q-scroll-area>
@@ -316,7 +318,13 @@ export default {
       await this.userStore.authenticatedUserCheck()
       this.user = this.userStore.user
       this.Credentials = this.userStore.credentials
+
     },
+
+    moduleAccess(label){
+     const access = this.Credentials.find(module => module.module === label);
+      return access? access.view: false;
+    }
 
   },
 

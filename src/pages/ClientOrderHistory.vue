@@ -48,6 +48,7 @@
               icon="add"
               @click="lookforOpen"
               flat
+              v-if="moduleAccess('Releasing','add')"
             />
 
            </div>
@@ -72,6 +73,7 @@
               color="green"
               label="Export"
               icon="import_export"
+              v-if ="moduleAccess('Releasing','export')"
             />
             </template>
 
@@ -109,6 +111,7 @@
                     @click="showClient(props.row.id)"
                     icon="description"
                     to="/customers/profile/current"
+
                   >
                     <q-tooltip> Profile and History </q-tooltip>
                   </q-btn>
@@ -256,6 +259,7 @@ export default {
 
   data() {
     return {
+      Credentials: [],
       rangeText:'',
       selectedDates:{
         from:'',
@@ -355,6 +359,15 @@ export default {
         console.log(error)
       }
     },
+
+    moduleAccess(label,type){
+     const access = this.Credentials.find(module => module.module === label);
+      if(type==='view') return access? access.view: false;
+      if(type==='add') return access? access.add: false;
+      if(type==='edit') return access? access.edit: false;
+      if(type==='delete') return access? access.delete: false;
+      if(type==='export') return access? access.export: false;
+    }
   },
    watch: {
 
