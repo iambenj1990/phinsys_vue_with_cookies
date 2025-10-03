@@ -111,7 +111,7 @@
                     @click="showClient(props.row.id)"
                     icon="description"
                     to="/customers/profile/current"
-
+                   v-if="moduleAccess('Releasing','view')"
                   >
                     <q-tooltip> Profile and History </q-tooltip>
                   </q-btn>
@@ -148,6 +148,7 @@
 <script>
 import { useCustomerStore } from '../stores/customersStore'
 import { useItemStore } from 'src/stores/itemsStore'
+import { useUserStore } from 'src/stores/userStore'
 
 
 function debounce(fn, delay) {
@@ -160,11 +161,13 @@ function debounce(fn, delay) {
 
 export default {
   setup() {
+    const userStore = useUserStore()
     const today = new Date()
     today.toLocaleDateString('en-CA')
      const start = new Date(today.getFullYear(), today.getMonth(),1)
      const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
     return {
+      userStore,
       today,
       start,
       end,
@@ -292,11 +295,17 @@ export default {
         is_solo: false,
         user_id: 0,
       },
-
+      user: {},
 
     }
   },
   methods: {
+     async GetAuthenticatedUser() {
+      await this.userStore.authenticatedUserCheck()
+      this.user = this.userStore.user
+      this.Credentials = this.userStore.credentials
+
+    },
     showDeletepage(id) {
       this.Customers.customer_id = id
       this.DeleteClient = !this.DeleteClient
@@ -362,6 +371,7 @@ export default {
 
     moduleAccess(label,type){
      const access = this.Credentials.find(module => module.module === label);
+     console.log(access)
       if(type==='view') return access? access.view: false;
       if(type==='add') return access? access.add: false;
       if(type==='edit') return access? access.edit: false;
