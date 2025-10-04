@@ -302,8 +302,11 @@ export default {
   methods: {
      async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
+      console.log('user => ',this.user)
+      console.log('user => ',this.user)
       this.user = this.userStore.user
       this.Credentials = this.userStore.credentials
+      console.log('creds => ',this.Credentials)
 
     },
     showDeletepage(id) {
@@ -405,6 +408,7 @@ export default {
   },
   mounted() {
 
+    this.GetAuthenticatedUser()
 
     this.selectedDates= {
       from : this.start.toISOString().split('T')[0],

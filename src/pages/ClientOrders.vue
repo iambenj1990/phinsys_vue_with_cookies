@@ -19,6 +19,7 @@
                 get_MaifpCustomers()
               }
             "
+            v-if="moduleAccess('Customer History','add')"
           />
 
           <q-btn
@@ -31,6 +32,7 @@
             "
             label="Add Client"
             icon="add"
+            v-if="moduleAccess('Customer History','add')"
             @click="$router.push({ path: '/customer/releasing' })"
           />
         </div>
@@ -161,7 +163,7 @@
             <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
               <div class="text-h6 text-blue text-weight-bolder">Order Requests</div>
               <div class="text-caption text-weight-regular" style="color: grey">
-                Transcation ID: {{ this.transaction_id }}
+                Transaction ID: {{ this.transaction_id }}
               </div>
               <q-separator />
               <q-table
@@ -174,12 +176,13 @@
               >
                 <template v-slot:top-right>
                   <q-btn
-                    :disable="this.transaction_id === 0"
+                    :disable="this.transaction_id === 0 || this.transaction_id === ''"
                     color="primary"
                     label="Add Order"
                     icon="add"
                     flat
                     @click="getAvailableMedList()"
+                      v-if="moduleAccess('Releasing','add')"
                   />
                 </template>
                 <template #body="props">
@@ -222,6 +225,7 @@
                   icon="check"
                   @click="clearData()"
                   :disabled="rows.length == 0"
+                    v-if="moduleAccess('Releasing','add')"
                 />
               </div>
             </q-card>
@@ -896,8 +900,9 @@ export default {
   },
   data() {
     return {
+      Credentials:[],
       maif_search: '',
-      user:{},
+      user: {},
       selected_id_customer: 0,
       selectedMaifpCustomer: {},
       itemPrice: 0,
@@ -959,6 +964,16 @@ export default {
     this.get_clients()
   },
   methods: {
+    moduleAccess(label, type) {
+      const access = this.Credentials.find((module) => module.module === label)
+      console.log(access)
+      if (type === 'view') return access ? access.view : false
+      if (type === 'add') return access ? access.add : false
+      if (type === 'edit') return access ? access.edit : false
+      if (type === 'delete') return access ? access.delete : false
+      if (type === 'export') return access ? access.export : false
+    },
+
     async status_done_maif(transaction_id) {
       try {
         const payload = {
@@ -1242,6 +1257,7 @@ export default {
     async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
       this.user = this.userStore.user
+      this.Credentials = this.userStore.credentials
     },
   },
 

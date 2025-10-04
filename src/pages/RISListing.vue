@@ -13,22 +13,25 @@
         <q-card-section>
           <div class="text-h6 text-primary q-my-sm">Requisition and Issuance Slip</div>
           <div class="q-pa-sm row items-center justify-between">
-           <div class="flex justify-start">
-
-
-            <div class="q-my-sm flex flex-wrap q-px-md justify-end">
-              <q-input v-model="rangeText" label="Select Date Range" dense readonly style="width: 250px">
-                <template v-slot:append>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                      <q-date v-model="selectedDates" range mask="YYYY-MM-DD" />
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
+            <div class="flex justify-start">
+              <div class="q-my-sm flex flex-wrap q-px-md justify-end">
+                <q-input
+                  v-model="rangeText"
+                  label="Select Date Range"
+                  dense
+                  readonly
+                  style="width: 250px"
+                >
+                  <template v-slot:append>
+                    <q-icon name="event" class="cursor-pointer">
+                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                        <q-date v-model="selectedDates" range mask="YYYY-MM-DD" />
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+                </q-input>
+              </div>
             </div>
-
-          </div>
             <div class="row items-center">
               <q-btn
                 class="q-mr-sm"
@@ -39,6 +42,7 @@
                 icon="add"
                 @click="lookforOpen()"
                 flat
+                v-if="moduleAccess('RIS','add')"
               />
             </div>
           </div>
@@ -79,6 +83,7 @@
                     @click="showRIS(props.row.ris_id)"
                     icon="description"
                     to="/ris/orders/info"
+                    v-if="moduleAccess('RIS','view')"
                   >
                     <q-tooltip>Show Information</q-tooltip>
                   </q-btn>
@@ -127,7 +132,7 @@
 <script>
 import { useRequisitionIssuanceSlip } from 'src/stores/RequisitionIssuanceSlip'
 import { useItemStore } from 'src/stores/itemsStore'
-
+import { useUserStore } from 'src/stores/userStore'
 
 function debounce(fn, delay) {
   let timeout
@@ -138,19 +143,19 @@ function debounce(fn, delay) {
 }
 
 export default {
-
-
   setup() {
+    const userStore = useUserStore()
     const today = new Date()
     today.toLocaleDateString('en-CA')
     console.log(today)
-    const start = new Date(today.getFullYear(), today.getMonth(),1)
+    const start = new Date(today.getFullYear(), today.getMonth(), 1)
 
-     console.log(start)
+    console.log(start)
 
     const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
     console.log(end)
     return {
+      userStore,
       today,
       start,
       end,
@@ -187,6 +192,7 @@ export default {
 
   data() {
     return {
+      Credentials: [],
       show_date: false,
       selectedDates: {
         from: '',
@@ -201,6 +207,22 @@ export default {
     }
   },
   methods: {
+
+    async GetAuthenticatedUser() {
+      await this.userStore.authenticatedUserCheck()
+      this.user = this.userStore.user
+      this.Credentials = this.userStore.credentials
+    },
+
+    moduleAccess(label, type) {
+      const access = this.Credentials.find((module) => module.module === label)
+      console.log(access)
+      if (type === 'view') return access ? access.view : false
+      if (type === 'add') return access ? access.add : false
+      if (type === 'edit') return access ? access.edit : false
+      if (type === 'delete') return access ? access.delete : false
+      if (type === 'export') return access ? access.export : false
+    },
 
     async get_RIS_List_byDate(payload) {
       await this.risStore.RIS_byDate(payload)
@@ -242,19 +264,16 @@ export default {
     },
   },
   watch: {
-
-      selectedDates: {
+    selectedDates: {
       handler: debounce(function (newRange) {
         this.rangeText = `${newRange.from} to ${newRange.to}`
 
         console.log(newRange)
         this.get_RIS_List_byDate(newRange)
-
       }, 500),
       immediate: true, // Call the handler immediately with the initial value
       deep: true, // Watch for changes in the object properties
     },
-
   },
   computed: {
     risStore() {
@@ -265,15 +284,13 @@ export default {
     },
   },
   mounted() {
-     this.get_RIS_List()
+    this.GetAuthenticatedUser()
+    this.get_RIS_List()
 
-    this.selectedDates= {
-      from : this.start.toISOString().split('T')[0],
-      to : this.end.toISOString().split('T')[0]
-
+    this.selectedDates = {
+      from: this.start.toISOString().split('T')[0],
+      to: this.end.toISOString().split('T')[0],
     }
-
-
   },
 }
 </script>

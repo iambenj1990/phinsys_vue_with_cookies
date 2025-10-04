@@ -63,6 +63,7 @@
               </template>
               <template v-slot:top-right>
                 <q-btn
+                  v-if="moduleAccess('Purchasing','edit')"
                   flat
                   label="Update P.O. #"
                   class="text-subtitle2"
@@ -76,6 +77,7 @@
                 />
 
                 <q-btn
+                 v-if="moduleAccess('Purchasing','add')"
                   flat
                   type="button"
                   label="Add Purchases"
@@ -170,6 +172,7 @@
 
 <script>
 import { useItemStore } from 'src/stores/itemsStore'
+import { useUserStore } from 'src/stores/userStore'
 
 
 
@@ -205,11 +208,13 @@ export default {
     },
   },
   setup() {
+    const userStore = useUserStore();
       const today = new Date()
     today.toLocaleDateString('en-CA')
      const start = new Date(today.getFullYear(), today.getMonth(),1)
      const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
     return {
+      userStore,
       today,
       start,
       end,
@@ -287,6 +292,7 @@ export default {
   },
   data() {
     return {
+      Credentials:[],
       rangeText:'',
       selectedDates:{
         from:'',
@@ -313,6 +319,23 @@ export default {
   },
 
   methods: {
+
+      async GetAuthenticatedUser() {
+      await this.userStore.authenticatedUserCheck()
+      this.user = this.userStore.user
+      this.Credentials = this.userStore.credentials
+    },
+
+      moduleAccess(label,type){
+     const access = this.Credentials.find(module => module.module === label);
+     console.log(access)
+      if(type==='view') return access? access.view: false;
+      if(type==='add') return access? access.add: false;
+      if(type==='edit') return access? access.edit: false;
+      if(type==='delete') return access? access.delete: false;
+      if(type==='export') return access? access.export: false;
+    },
+
     async fetchAllStocks(payload) {
       await this.itemStore.getItems(payload)
       this.rows = this.itemStore.items
@@ -320,6 +343,7 @@ export default {
   },
 
   mounted() {
+    this.GetAuthenticatedUser()
 
   this.selectedDates= {
       from : this.start.toISOString().split('T')[0],

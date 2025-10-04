@@ -42,7 +42,10 @@
                   :rules="[(val) => !!val || 'Brand Name is required']"
                 />
 
-                <q-list class="q-pa-sm flex floating-list text-uppercase" v-if="this.filteredList.length > 0">
+                <q-list
+                  class="q-pa-sm flex floating-list text-uppercase"
+                  v-if="this.filteredList.length > 0"
+                >
                   <q-item
                     v-for="item in this.filteredList"
                     :key="item.id"
@@ -209,10 +212,10 @@
                 style="width: 100px"
                 @click="viewReset()"
               />
-              <q-btn type="submit" label="Update" color="primary" style="width: 100px" />
+              <q-btn type="submit" label="Update" color="primary" style="width: 100px" v-if="moduleAccess('Purchasing','edit')" />
             </div>
             <div align="right" v-else-if="!toUpdate">
-              <q-btn type="submit" label="Add" color="primary" style="width: 100px" />
+              <q-btn type="submit" label="Add" color="primary" style="width: 100px" v-if="moduleAccess('Purchasing','add')" />
             </div>
           </q-card-section>
         </q-form>
@@ -248,8 +251,8 @@
                   </q-td>
 
                   <q-td key="actions" style="font-size: 11px" align="left">
-                    <q-btn flat color="primary" @click="fetchItem(props.row.id)" icon="edit" />
-                    <q-btn flat color="negative" icon="delete" @click="removeItem(props.row.id)" />
+                    <q-btn flat color="primary" @click="fetchItem(props.row.id)" icon="edit" v-if="moduleAccess('Purchasing','edit')" />
+                    <q-btn flat color="negative" icon="delete" @click="removeItem(props.row.id)" v-if="moduleAccess('Purchasing','delete')" />
                   </q-td>
                 </q-tr>
               </template>
@@ -258,8 +261,6 @@
         </q-card-section>
 
         <q-card-actions align="right">
-
-
           <q-btn
             color="red"
             class="q-px-md"
@@ -281,13 +282,9 @@
 
 <script>
 import { useItemStore } from 'src/stores/itemsStore'
-import { useUserStore } from 'src/stores/userStore';
-
-
-
+import { useUserStore } from 'src/stores/userStore'
 
 export default {
-
   watch: {
     New_Po(newvalue) {
       if (newvalue && newvalue.trim() !== '') {
@@ -313,15 +310,12 @@ export default {
     this.GetAuthenticatedUser()
     this.fetch_Medicine_info()
     this.ShowDosageForm()
-
-
   },
 
   computed: {
     itemStore() {
       return useItemStore()
     },
-
   },
   setup() {
     const userStore = useUserStore()
@@ -435,6 +429,7 @@ export default {
   },
   data() {
     return {
+      Credentials: [],
       filteredList: [],
       medMiniInfo: [],
       useTemp: false,
@@ -460,26 +455,32 @@ export default {
       },
       searchTerm: '',
       MedType: [],
-      user: {}
-
+      user: {},
     }
   },
 
   methods: {
-
-
-
-     async GetAuthenticatedUser() {
+    async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
       this.user = this.userStore.user
+      this.Credentials = this.userStore.credentials
     },
 
+    moduleAccess(label, type) {
+      const access = this.Credentials.find((module) => module.module === label)
+      console.log(access)
+      if (type === 'view') return access ? access.view : false
+      if (type === 'add') return access ? access.add : false
+      if (type === 'edit') return access ? access.edit : false
+      if (type === 'delete') return access ? access.delete : false
+      if (type === 'export') return access ? access.export : false
+    },
 
-    async ShowDosageForm(){
+    async ShowDosageForm() {
       try {
         await this.itemStore.getDosageForm()
-        this.MedType = this.itemStore.dosageForm.map(item => item.type)
-        console.log('med type =>',this.MedType)
+        this.MedType = this.itemStore.dosageForm.map((item) => item.type)
+        console.log('med type =>', this.MedType)
       } catch (error) {
         console.error('Error fetching dosage forms:', error)
       }
@@ -545,7 +546,6 @@ export default {
     },
 
     async insertNewItem(payload) {
-
       payload.po_no = this.New_Po
       payload.user_id = this.user.id
 
@@ -617,8 +617,6 @@ export default {
       }, 200)
     },
   },
-
-
 }
 </script>
 

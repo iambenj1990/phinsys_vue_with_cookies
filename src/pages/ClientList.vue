@@ -11,95 +11,99 @@
         </q-card-section>
 
         <q-card-section>
-             <div v-if="loading" class="flex flex-center">
-          <q-circular-progress indeterminate size="50px" color="primary" />
-          <div class="text-h6 text-primary q-ml-sm">Loading data. Please wait...</div>
-        </div>
-        <div v-else class=" q-gutter-md">
-          <q-table
-            flat
-            bordered
+          <div v-if="loading" class="flex flex-center">
+            <q-circular-progress indeterminate size="50px" color="primary" />
+            <div class="text-h6 text-primary q-ml-sm">Loading data. Please wait...</div>
+          </div>
+          <div v-else class="q-gutter-md">
+            <q-table
+              flat
+              bordered
+              :filter="search"
+              :rows="rows"
+              :columns="columns"
+              row-key="id"
+              binary-state-sort
+              no-data-label="No data available"
+              title="Client List/ History"
+              title-class="text-bold text-subtitle1 text-primary"
+              square
+              :rows-per-page-options="[10, 25, 50, 100]"
+              table-header-class="text-white"
+              class="my-sticky-header-table"
+              :loading="loading"
+            >
+              <template v-slot:top-right>
+                <q-btn color="primary" label="New Customer" to="/customer" icon="add" flat v-if="moduleAccess('Customer History','add')" />
+              </template>
 
-            :filter="search"
-            :rows="rows"
-            :columns="columns"
-            row-key="id"
-            binary-state-sort
-            no-data-label="No data available"
-            title="Client List/ History"
-            title-class="text-bold text-subtitle1 text-primary"
-            square
-            :rows-per-page-options="[10, 25, 50, 100]"
+              <template #body="props">
+                <q-tr :v-bind="props">
+                  <q-td key="lastname" style="font-size: 11px" align="left" class="text-uppercase">
+                    {{ props.row.lastname }}
+                  </q-td>
+                  <q-td key="firstname" style="font-size: 11px" align="left" class="text-uppercase">
+                    {{ props.row.firstname }}
+                  </q-td>
+                  <q-td
+                    key="middle_name"
+                    style="font-size: 11px"
+                    align="left"
+                    class="text-uppercase"
+                  >
+                    {{ props.row.middlename }}
+                  </q-td>
+                  <q-td key="ext" style="font-size: 11px" align="left" class="text-uppercase">
+                    {{ props.row.ext }}
+                  </q-td>
+                  <q-td key="birthdate" style="font-size: 11px" align="left" class="text-uppercase">
+                    {{ props.row.birthdate }}
+                  </q-td>
+                  <q-td key="age" style="font-size: 11px" align="left" class="text-uppercase">
+                    {{ props.row.age }}
+                  </q-td>
+                  <q-td
+                    key="contact_number"
+                    style="font-size: 11px"
+                    align="left"
+                    class="text-uppercase"
+                  >
+                    {{ props.row.contact_number }}
+                  </q-td>
+                  <q-td key="barangay" style="font-size: 11px" align="left" class="text-uppercase">
+                    {{ props.row.barangay }}
+                  </q-td>
 
-            table-header-class="text-white"
+                  <q-td key="actions" style="font-size: 11px" align="center">
+                    <q-btn
+                      flat
+                      color="primary"
+                      @click="showClient(props.row.id)"
+                      icon="description"
+                      to="/customers/profile"
+                      v-if="moduleAccess('Customer History','view')"
+                    />
 
-            class="my-sticky-header-table"
-          >
+                    <q-btn
+                      flat
+                      color="amber"
+                      @click="showClient(props.row.id)"
+                      icon="edit"
+                      to="/customer"
+                       v-if="moduleAccess('Customer History','edit')"
+                    />
 
-            <template v-slot:top-right>
-              <q-btn
-                color="primary"
-                label="New Customer"
-                to="/customer"
-                icon="add"
-                flat
-              />
-            </template>
-
-            <template #body="props">
-              <q-tr :v-bind="props">
-                <q-td key="lastname" style="font-size: 11px" align="left" class="text-uppercase">
-                  {{ props.row.lastname }}
-                </q-td>
-                <q-td key="firstname" style="font-size: 11px" align="left" class="text-uppercase">
-                  {{ props.row.firstname }}
-                </q-td>
-                <q-td key="middle_name" style="font-size: 11px" align="left" class="text-uppercase">
-                  {{ props.row.middlename }}
-                </q-td>
-                <q-td key="ext" style="font-size: 11px" align="left" class="text-uppercase">
-                  {{ props.row.ext }}
-                </q-td>
-                <q-td key="birthdate" style="font-size: 11px" align="left" class="text-uppercase">
-                  {{ props.row.birthdate }}
-                </q-td>
-                <q-td key="age" style="font-size: 11px" align="left" class="text-uppercase">
-                  {{ props.row.age }}
-                </q-td>
-                <q-td key="contact_number" style="font-size: 11px" align="left" class="text-uppercase">
-                  {{ props.row.contact_number }}
-                </q-td>
-                <q-td key="barangay" style="font-size: 11px" align="left" class="text-uppercase">
-                  {{ props.row.barangay }}
-                </q-td>
-
-                <q-td key="actions" style="font-size: 11px" align="center">
-                  <q-btn
-                    flat
-                    color="primary"
-                    @click="showClient(props.row.id)"
-                    icon="description"
-                    to="/customers/profile"
-                  />
-
-                  <q-btn
-                    flat
-                    color="amber"
-                    @click="showClient(props.row.id)"
-                    icon="edit"
-                    to="/customer"
-                  />
-
-                  <q-btn
-                    flat
-                    color="negative"
-                    @click="showDeletepage(props.row.id)"
-                    icon="delete"
-                  />
-                </q-td>
-              </q-tr>
-            </template>
-          </q-table>
+                    <q-btn
+                      flat
+                      color="negative"
+                      @click="showDeletepage(props.row.id)"
+                      icon="delete"
+                       v-if="moduleAccess('Customer History','delete')"
+                    />
+                  </q-td>
+                </q-tr>
+              </template>
+            </q-table>
           </div>
         </q-card-section>
       </q-card>
@@ -121,10 +125,12 @@
 </template>
 <script>
 import { useCustomerStore } from '../stores/customersStore'
+import { useUserStore } from 'src/stores/userStore'
 export default {
-
   setup() {
+    const userStore = useUserStore()
     return {
+      userStore,
       columns: [
         {
           name: 'lastname',
@@ -216,8 +222,9 @@ export default {
 
   data() {
     return {
+      Credentials: [],
       loading: false,
-      Selected_ID:0,
+      Selected_ID: 0,
       DeleteClient: false,
       search: '',
       rows: [],
@@ -244,8 +251,22 @@ export default {
       },
     }
   },
-  methods:{
+  methods: {
+    async GetAuthenticatedUser() {
+      await this.userStore.authenticatedUserCheck()
+      this.user = this.userStore.user
+      this.Credentials = this.userStore.credentials
+    },
 
+    moduleAccess(label, type) {
+      const access = this.Credentials.find((module) => module.module === label)
+      console.log(access)
+      if (type === 'view') return access ? access.view : false
+      if (type === 'add') return access ? access.add : false
+      if (type === 'edit') return access ? access.edit : false
+      if (type === 'delete') return access ? access.delete : false
+      if (type === 'export') return access ? access.export : false
+    },
 
     showDeletepage(id) {
       this.Customers.customer_id = id
@@ -258,7 +279,6 @@ export default {
       this.Customers.customer_id = id
     },
 
-
     async get_clients() {
       try {
         this.loading = true
@@ -269,31 +289,34 @@ export default {
       } catch (error) {
         console.log(error)
       }
-
     },
 
     async remove_client() {
       try {
         // await this.ClientStore.removeClient(this.Selected_ID)
-        await this.Customers.removeCustomer( this.Customers.customer_id)
-        this.$q.notify({ type: 'positive', message: 'Deleting record successful!', position: 'center', timeout:1200 });
-        this.get_clients();
+        await this.Customers.removeCustomer(this.Customers.customer_id)
+        this.$q.notify({
+          type: 'positive',
+          message: 'Deleting record successful!',
+          position: 'center',
+          timeout: 1200,
+        })
+        this.get_clients()
         this.DeleteClient = false
       } catch (error) {
-
         console.error(error)
       }
-    }
+    },
   },
-  computed:{
-    Customers(){
-      return useCustomerStore();
-    }
-
+  computed: {
+    Customers() {
+      return useCustomerStore()
+    },
   },
-  mounted(){
-    this.get_clients();
-  }
+  mounted() {
+    this.GetAuthenticatedUser()
+    this.get_clients()
+  },
 }
 </script>
 <style lang="sass">

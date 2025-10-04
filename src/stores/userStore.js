@@ -173,7 +173,6 @@ export const useUserStore = defineStore('users', {
 
         const response = await api.post('/login', credentials)
         if (response.data.success) {
-
           this.user = response.data.user
           this.isAuthenticated = true
           this.credentials = response.data.user.credentials
@@ -197,6 +196,7 @@ export const useUserStore = defineStore('users', {
         this.user = response.data.user
         this.isAuthenticated = response.data.success
         this.credentials = response.data.user.credentials
+         console.log('user store method fired => ',this.user)
         console.log('authentications store method fired => ',this.credentials)
       } catch (error) {
         Notify.create({

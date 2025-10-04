@@ -80,6 +80,7 @@ export default {
         { key: 'Purchasing', title: 'Purchasing', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
         { key: 'Adjustments', title: 'Adjustments', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
         { key: 'RIS', title: 'RIS', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
+         { key: 'Movements', title: 'Stock Movements', permissions:  ['view', 'add', 'export'] },
         {
           key: 'Stocks',
           title: 'Stocks Report',
@@ -87,6 +88,7 @@ export default {
             { key: 'StocksView', title: 'Stocks', permissions: ['view','export'] },
             { key: 'Expiry', title: 'Expiry', permissions:  ['view', 'export'] },
             { key: 'LowStocks', title: 'Low Stocks', permissions:  ['view', 'export'] },
+             { key: 'NoStocks', title: 'No Stocks', permissions:  ['view', 'export'] },
             { key: 'Inventory', title: 'Inventory', permissions:  ['view', 'export']},
             { key: 'Dispensed', title: 'Dispensed', permissions:  ['view', 'export']},
             { key: 'temporary', title: 'Temporary PO#', permissions:  ['view', 'export']},

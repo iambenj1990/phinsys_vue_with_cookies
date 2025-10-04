@@ -9,7 +9,7 @@
         </div> -->
         <!-- <q-separator /> -->
         <div class="q-my-sm q-mx-sm" align="right">
-          <q-btn flat label="Close Stocks" color="grey" @click="closePrompt = true" />
+          <q-btn flat label="Close Stocks" color="grey" @click="closePrompt = true"   v-if="moduleAccess('Stock Movements','add')" />
           <q-btn
             flat
             label="Open Stocks"
@@ -21,6 +21,7 @@
                 openPrompt = true
               }
             "
+              v-if="moduleAccess('Stock Movements','add')"
           />
         </div>
         <div v-if="loading" class="flex flex-center">
@@ -85,6 +86,7 @@
                     icon="import_export"
                     @click="exportToExcel"
                     style="height: 40px"
+                      v-if="moduleAccess('Stock Movements','export')"
                   />
                 </div>
               </template>
@@ -178,7 +180,8 @@
                           passStockCardData(props.row)
                         }
                       "
-                    >
+                        v-if="moduleAccess('Stock Movements','view')"
+                       >
                       <q-tooltip> Stock Card </q-tooltip>
                     </q-btn>
                     <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
@@ -284,6 +287,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
     <q-dialog v-model="closePrompt" persistent>
       <q-card style="max-width: 450px; width: 100%">
         <q-card-section class="text-subtitle1 text-grey text-weight-medium">
@@ -296,7 +300,7 @@
         <q-separator />
         <q-card-actions align="right">
           <q-btn flat label="Cancel" color="grey" @click="closePrompt = false" />
-          <q-btn flat label="Proceed" color="negative" @click="closeStock()" />
+          <q-btn flat label="Proceed" color="negative" @click="closeStock()"   v-if="moduleAccess('Stock Movements','add')"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -315,7 +319,8 @@
           <q-btn flat label="Cancel" color="grey" @click="openPrompt = false" />
           <q-btn flat label="Proceed" color="negative" @click="()=>{
             openStock(this.user.id)
-          }" />
+          }"
+          v-if="moduleAccess('Stock Movements','add')" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -457,6 +462,7 @@ export default {
   },
   data() {
     return {
+      Credentials:[],
       user:{},
       closePrompt: false,
       openDate: false,
@@ -504,9 +510,20 @@ export default {
   },
 
   methods: {
+
+    moduleAccess(label, type) {
+      const access = this.Credentials.find((module) => module.module === label)
+      console.log(access)
+      if (type === 'view') return access ? access.view : false
+      if (type === 'add') return access ? access.add : false
+      if (type === 'edit') return access ? access.edit : false
+      if (type === 'delete') return access ? access.delete : false
+      if (type === 'export') return access ? access.export : false
+    },
     async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
       this.user = this.userStore.user
+      this.Credentials = this.userStore.credentials
     },
     async showStocks(date) {
       try {

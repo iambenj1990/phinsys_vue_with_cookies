@@ -30,6 +30,7 @@
           </template>
           <template #top-right>
             <q-btn
+                v-if="moduleAccess('RIS','add')"
               flat
               type="button"
               label="Items"
@@ -71,6 +72,7 @@
                   color="negative"
                   @click="getSelectedDataToDelete(props.row.table_id_transactions)"
                   icon="delete"
+                    v-if="moduleAccess('RIS','delete')"
                 />
               </q-td>
             </q-tr>
@@ -197,6 +199,7 @@
 
                 <q-td key="actions" style="font-size: 11px" align="center">
                   <q-btn
+                    v-if="moduleAccess('RIS','add')"
                     flat
                     rounded
                     color="primary"
@@ -256,7 +259,7 @@
               }
             "
           />
-          <q-btn flat label="Add" color="primary" @click="add_Order(this.transactionDetails)" />
+          <q-btn flat label="Add" color="primary" @click="add_Order(this.transactionDetails)"   v-if="moduleAccess('RIS','add')" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -273,7 +276,7 @@
             color="blue"
             style="width: 150px"
             @click="remove_order(selected_to_delete)"
-          ></q-btn>
+              v-if="moduleAccess('RIS','delete')" ></q-btn>
           <q-btn
             label="cancel"
             color="red"
@@ -422,6 +425,7 @@ export default {
   },
   data() {
     return {
+      Credentials:[],
       user: {},
       showRemoveItem: false,
       hasOpentransaction: false,
@@ -591,6 +595,18 @@ export default {
    async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
       this.user = this.userStore.user
+      this.Credentials = this.userStore.credentials
+    },
+
+
+    moduleAccess(label, type) {
+      const access = this.Credentials.find((module) => module.module === label)
+      console.log(access)
+      if (type === 'view') return access ? access.view : false
+      if (type === 'add') return access ? access.add : false
+      if (type === 'edit') return access ? access.edit : false
+      if (type === 'delete') return access ? access.delete : false
+      if (type === 'export') return access ? access.export : false
     },
 
     getSelectedDataToDelete(id) {

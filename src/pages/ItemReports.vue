@@ -27,38 +27,38 @@
           <q-separator />
 
           <q-tab-panels v-model="tab" animated>
-            <q-tab-panel name="Inventory">
+            <q-tab-panel name="Inventory" v-if="moduleAccess('Inventory','view')">
               <!-- <div class="text-h6">Mails</div> -->
               <inventory />
             </q-tab-panel>
 
-            <q-tab-panel name="Expired">
+            <q-tab-panel name="Expired"  v-if="moduleAccess('Expiry','view')">
               <!-- <div class="text-h6">Alarms</div> -->
               <expire />
             </q-tab-panel>
 
-            <q-tab-panel name="Low">
+            <q-tab-panel name="Low"  v-if="moduleAccess('Low Stocks','view')">
               <!-- <div class="text-h6">Movies</div> -->
               <low />
             </q-tab-panel>
 
-            <q-tab-panel name="Empty">
+            <q-tab-panel name="Empty"  v-if="moduleAccess('No Stocks','view')">
               <!-- <div class="text-h6">Movies</div> -->
               <Empty />
             </q-tab-panel>
 
 
-            <q-tab-panel name="Dispense">
+            <q-tab-panel name="Dispense"  v-if="moduleAccess('Dispensed','view')">
               <!-- <div class="text-h6">Movies</div> -->
               <dispense />
             </q-tab-panel>
 
-             <q-tab-panel name="Temporary">
+             <q-tab-panel name="Temporary"  v-if="moduleAccess('Temporary PO#','view')">
               <!-- <div class="text-h6">Movies</div> -->
               <tempPO />
             </q-tab-panel>
 
-                <q-tab-panel name="Consumption">
+                <q-tab-panel name="Consumption"  v-if="moduleAccess('Customer Dispensed','view')">
               <!-- <div class="text-h6">Movies</div> -->
               <consumation />
             </q-tab-panel>
@@ -79,6 +79,8 @@ import inventory from './ItemsInventory.vue'
 import tempPO from './ItemsTemporaryPO.vue'
 import consumation from './ItemsCustomerDispense.vue'
 
+import { useUserStore } from 'src/stores/userStore'
+
 export default {
   name: 'ItemReports',
   components: {
@@ -92,10 +94,15 @@ export default {
     // stock,
   },
   setup() {
-    return {}
+    const userStore = useUserStore()
+    return {
+      userStore
+    }
   },
   data() {
     return {
+      Credentials:[],
+      user:{},
       // Add your component data here
       tab: 'Inventory', // Default tab
     }
@@ -105,8 +112,26 @@ export default {
       // Add your action logic here
       console.log('Action triggered')
     },
+
+     async GetAuthenticatedUser() {
+      await this.userStore.authenticatedUserCheck()
+      this.user = this.userStore.user
+      this.Credentials = this.userStore.credentials
+    },
+    moduleAccess(label, type) {
+      const access = this.Credentials.find((module) => module.module === label)
+      console.log(access)
+      if (type === 'view') return access ? access.view : false
+      if (type === 'add') return access ? access.add : false
+      if (type === 'edit') return access ? access.edit : false
+      if (type === 'delete') return access ? access.delete : false
+      if (type === 'export') return access ? access.export : false
+    },
   },
   mounted() {
+
+    this.GetAuthenticatedUser()
+
     const tabFromQuery = this.$route.query.tab
     if (tabFromQuery) {
       this.tab = tabFromQuery

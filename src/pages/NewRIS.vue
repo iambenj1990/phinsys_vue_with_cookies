@@ -18,7 +18,7 @@
             />
           </div>
           <div class="row justify-end">
-            <q-btn type="submit" color="green" label="Proceed" />
+            <q-btn type="submit" color="green" label="Proceed" v-if="moduleAccess('RIS','add')"/>
           </div>
         </q-form>
       </q-card-section>
@@ -30,6 +30,7 @@
           </template>
           <template #top-right>
             <q-btn
+            v-if="moduleAccess('RIS','add')"
               flat
               type="button"
               label="Items"
@@ -66,7 +67,8 @@
               </q-td>
 
               <q-td key="actions" style="font-size: 11px" align="left">
-                <q-btn
+                <q-
+                v-if="moduleAccess('RIS','delete')"
                   flat
                   color="negative"
                   @click="getSelectedDataToDelete(props.row.table_id_transactions)"
@@ -79,6 +81,7 @@
 
         <q-card-actions align="right">
           <q-btn
+            v-if="moduleAccess('RIS','add')"
             color="green"
             type="button"
             label="Save"
@@ -197,6 +200,7 @@
 
                 <q-td key="actions" style="font-size: 11px" align="center">
                   <q-btn
+                  v-if="moduleAccess('RIS','add')"
                     flat
                     rounded
                     color="primary"
@@ -256,7 +260,7 @@
               }
             "
           />
-          <q-btn flat label="Add" color="primary" @click="add_Order(this.transactionDetails)" />
+          <q-btn flat label="Add" color="primary" @click="add_Order(this.transactionDetails)" v-if="moduleAccess('RIS','add')" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -273,6 +277,7 @@
             color="blue"
             style="width: 150px"
             @click="remove_order(selected_to_delete)"
+            v-if="moduleAccess('RIS','delete')"
           ></q-btn>
           <q-btn
             label="cancel"
@@ -290,14 +295,14 @@
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { useRequisitionIssuanceSlip } from 'src/stores/RequisitionIssuanceSlip'
-import { useUserStore } from 'src/stores/userStore';
+import { useUserStore } from 'src/stores/userStore'
 
 export default {
   setup() {
     const risStore = useRequisitionIssuanceSlip()
     const itemStore = useItemStore()
     const TransactionStore = useTransactionStore()
-    const userStore = useUserStore();
+    const userStore = useUserStore()
     return {
       risStore,
       itemStore,
@@ -421,7 +426,8 @@ export default {
   },
   data() {
     return {
-      user:{},
+      Credentials: [],
+      user: {},
       showRemoveItem: false,
       hasOpentransaction: false,
       selected_to_delete: 0,
@@ -576,11 +582,19 @@ export default {
       this.rows = this.TransactionStore.customerTransactions
     },
 
-
-
-     async GetAuthenticatedUser() {
+    async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
       this.user = this.userStore.user
+      this.Credentials = this.userStore.credentials
+    },
+    moduleAccess(label, type) {
+      const access = this.Credentials.find((module) => module.module === label)
+      console.log(access)
+      if (type === 'view') return access ? access.view : false
+      if (type === 'add') return access ? access.add : false
+      if (type === 'edit') return access ? access.edit : false
+      if (type === 'delete') return access ? access.delete : false
+      if (type === 'export') return access ? access.export : false
     },
 
     getSelectedDataToDelete(id) {

@@ -90,6 +90,7 @@
             icon="edit_note"
             style="width: 110px"
             @click="$router.push({ path: '/ris/info/adjust', query: { ris_no: ris_no } })"
+            v-if="moduleAccess('RIS','edit')"
           />
           <q-btn
             color="red"
@@ -279,14 +280,14 @@
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { useRequisitionIssuanceSlip } from 'src/stores/RequisitionIssuanceSlip'
-import { useUserStore } from 'src/stores/userStore';
+import { useUserStore } from 'src/stores/userStore'
 
 export default {
   setup() {
     const risStore = useRequisitionIssuanceSlip()
     const itemStore = useItemStore()
     const TransactionStore = useTransactionStore()
-    const userStore = useUserStore();
+    const userStore = useUserStore()
     return {
       risStore,
       itemStore,
@@ -410,7 +411,8 @@ export default {
   },
   data() {
     return {
-      user:{},
+      Credentials: [],
+      user: {},
       hasOpentransaction: false,
       ris_no: '',
       ris_id: 0,
@@ -439,6 +441,20 @@ export default {
     }
   },
   methods: {
+    async GetAuthenticatedUser() {
+      await this.userStore.authenticatedUserCheck()
+      this.user = this.userStore.user
+      this.Credentials = this.userStore.credentials
+    },
+    moduleAccess(label, type) {
+      const access = this.Credentials.find((module) => module.module === label)
+      console.log(access)
+      if (type === 'view') return access ? access.view : false
+      if (type === 'add') return access ? access.add : false
+      if (type === 'edit') return access ? access.edit : false
+      if (type === 'delete') return access ? access.delete : false
+      if (type === 'export') return access ? access.export : false
+    },
     async get_ris_information(payload) {
       await this.risStore.getRISinfo({ ris_no: payload })
       this.ris_info = this.risStore.ris_info
@@ -574,18 +590,15 @@ export default {
       this.rows = this.TransactionStore.customerTransactions
     },
 
-     async GetAuthenticatedUser() {
-      await this.userStore.authenticatedUserCheck()
-      this.user = this.userStore.user
-    },
+
   },
   mounted() {
-    this.GetAuthenticatedUser();
+    this.GetAuthenticatedUser()
     this.get_ris_information(this.risStore.ris_no)
   },
-  created() {
-    console.log('created => ', this.risStore.ris_no)
-  },
+  // created() {
+  //   console.log('created => ', this.risStore.ris_no)
+  // },
 
   computed: {
     hasRIS_ID() {
