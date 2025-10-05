@@ -87,9 +87,8 @@
               label="Contact Number"
               class="full-width text-caption"
               inputmode="numeric"
-
             />
-              <!-- lazy-rules
+            <!-- lazy-rules
               :rules="[(val) => !!val || 'contact number is required']"
                -->
           </div>
@@ -126,9 +125,8 @@
               v-model="CustomerInfo.purok"
               label="Purok"
               class="full-width text-caption text-uppercase"
-
             />
-             <!-- lazy-rules
+            <!-- lazy-rules
               :rules="[(val) => !!val || 'Purok is required']" -->
           </div>
           <div class="col-12 col-md-4 q-pa-sm">
@@ -137,9 +135,8 @@
               v-model="CustomerInfo.street"
               label="Street"
               class="full-width text-caption text-uppercase"
-
             />
-               <!-- lazy-rules
+            <!-- lazy-rules
               :rules="[(val) => !!val || 'street is required']" -->
           </div>
           <div class="col-12 col-md-3 q-pa-sm">
@@ -177,10 +174,9 @@
               v-model="CustomerInfo.purok"
               label="Purok"
               class="full-width text-caption"
-
             />
 
-                 <!-- lazy-rules
+            <!-- lazy-rules
               :rules="[(val) => !!val || 'purok is required']" -->
           </div>
           <div class="col-12 col-md-4 q-pa-sm">
@@ -189,9 +185,8 @@
               v-model="CustomerInfo.street"
               label="Street"
               class="full-width text-caption"
-
             />
-<!--
+            <!--
                  lazy-rules
               :rules="[(val) => !!val || 'street is required']" -->
           </div>
@@ -289,12 +284,12 @@
           label="Cancel"
           class="q-mr-md q-ml-md text-caption"
           color="red"
-
           @click="clearInputs()"
         />
         <!-- </div> -->
         <!-- <div class="col-12 flex justify-end q-pa-md-lg" v-if="Customer.isSave"> -->
-        <q-btn
+        <q-
+          :loading="loading"
           type="submit"
           label="Save"
           class="q-mr-sm q-ml-md text-caption"
@@ -306,6 +301,7 @@
         <!-- </div> -->
         <!-- <div class="col-12 flex justify-end q-pa-md-lg"  v-else-if="Customer.isEdit" > -->
         <q-btn
+          :loading="loading"
           type="submit"
           label="Update"
           class="q-mr-sm q-ml-md text-caption"
@@ -338,7 +334,6 @@ import { useUserStore } from '../stores/userStore'
 
 export default {
   setup() {
-
     const TagumBarangay = useTagumStore()
     const Customer = useCustomerStore()
     const userStore = useUserStore()
@@ -373,7 +368,8 @@ export default {
   },
   data() {
     return {
-      user:{},
+      loading: false,
+      user: {},
       user_id: 0,
       showError: false,
       errorMsg: [],
@@ -408,14 +404,13 @@ export default {
     }
   },
   methods: {
-     async GetAuthenticatedUser() {
+    async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
       this.user = this.userStore.user
     },
 
-
-
     async submitCustomerForm() {
+      this.loading = true
       const isValid = await this.$refs.customerForm.validate()
 
       if (!isValid) {
@@ -424,11 +419,12 @@ export default {
       }
 
       if (this.Customer.isSave) {
-      console.log(this.CustomerInfo)
+        console.log(this.CustomerInfo)
         this.Insert_Customer(this.CustomerInfo)
       } else if (this.Customer.isEdit) {
         this.updateCustomer(this.Customer.customer_id, this.CustomerInfo)
       }
+      this.loading = false
     },
 
     clearInputs() {
@@ -480,7 +476,7 @@ export default {
     async Insert_Customer(payload) {
       payload.user_id = this.user.id
       try {
-        console.log (payload)
+        console.log(payload)
         this.errorMsg = []
         await this.Customer.newCustomer(payload)
 
@@ -553,21 +549,16 @@ export default {
 
   mounted() {
     this.GetAuthenticatedUser()
-    this.CustomerInfo.city ='TAGUM CITY'
-    this.CustomerInfo.province ='DAVAO DEL NORTE'
+    this.CustomerInfo.city = 'TAGUM CITY'
+    this.CustomerInfo.province = 'DAVAO DEL NORTE'
     this.user_id = this.user.id
-
   },
   unmounted() {
     this.Customer.isEdit = false
     this.Customer.isSave = true
-
-
   },
 
   watch: {
-
-
     'CustomerInfo.birthdate'(newBirthdate) {
       this.CustomerInfo.age = this.calculateAge(newBirthdate)
     },

@@ -292,6 +292,7 @@
         <!-- </div> -->
         <!-- <div class="col-12 flex justify-end q-pa-md-lg" v-if="Customer.isSave"> -->
         <q-btn
+          :loading="loading"
           type="submit"
           label="Save"
           class="q-mr-sm q-ml-md text-caption"
@@ -303,6 +304,7 @@
         <!-- </div> -->
         <!-- <div class="col-12 flex justify-end q-pa-md-lg"  v-else-if="Customer.isEdit" > -->
         <q-btn
+          :loading="loading"
           type="submit"
           label="Update"
           class="q-mr-sm q-ml-md text-caption"
@@ -328,6 +330,7 @@
   </q-page>
 </template>
 <script>
+
 import { useTagumStore } from '../stores/TagumStore'
 import { useCustomerStore } from '../stores/customersStore'
 
@@ -370,6 +373,7 @@ export default {
   },
   data() {
     return {
+      loading:false,
       user:{},
       user_id: 0,
       showError: false,
@@ -412,6 +416,7 @@ export default {
     },
 
     async submitCustomerForm() {
+      this.loading = true
       const isValid = await this.$refs.customerForm.validate()
 
       if (!isValid) {
@@ -424,6 +429,7 @@ export default {
       } else if (this.Customer.isEdit) {
         this.updateCustomer(this.Customer.customer_id, this.CustomerInfo)
       }
+       this.loading = false
     },
 
     clearInputs() {
