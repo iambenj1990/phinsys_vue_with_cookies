@@ -81,6 +81,7 @@ export default {
         { key: 'Adjustments', title: 'Adjustments', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
         { key: 'RIS', title: 'RIS', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
          { key: 'Movements', title: 'Stock Movements', permissions:  ['view', 'add', 'export'] },
+          { key: 'MAIFP', title: 'MAIFP', permissions:  ['view', 'add', 'export'] },
         {
           key: 'Stocks',
           title: 'Stocks Report',

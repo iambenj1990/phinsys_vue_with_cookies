@@ -19,7 +19,7 @@
                 get_MaifpCustomers()
               }
             "
-            v-if="moduleAccess('Customer History','add')"
+            v-if="moduleAccess('MAIFP','view')"
           />
 
           <q-btn
@@ -535,6 +535,7 @@
 
                 <q-td key="actions" style="font-size: 11px" align="center">
                   <q-btn
+                    v-if="moduleAccess('MAIFP','add')"
                     flat
                     rounded
                     color="primary"
@@ -555,6 +556,7 @@
                     <q-tooltip> Save </q-tooltip>
                   </q-btn>
                   <q-btn
+                    v-if="moduleAccess('MAIFP','add')"
                     flat
                     rounded
                     color="green"

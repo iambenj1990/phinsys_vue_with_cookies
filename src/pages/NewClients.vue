@@ -555,11 +555,21 @@ export default {
   },
 
   mounted() {
+
      this.GetAuthenticatedUser()
     this.CustomerInfo = JSON.parse(JSON.stringify(this.CustomerInfoDefault))
 
     this.selected_id = this.Customer.customer_id
     // this.Select_Customer(this.Customer.customer_id)
+    if (this.selected_id !==0){
+      this.Customer.isEdit = true
+      this.Customer.isSave = false
+    }
+      else{
+        this.Customer.isSave = true
+        this.Customer.isEdit = false
+    }
+
   },
   unmounted() {
     this.Customer.customer_id = 0

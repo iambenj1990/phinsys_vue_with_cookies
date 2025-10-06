@@ -113,6 +113,7 @@ export const useTransactionStore = defineStore('transactions', {
 
       async getLatestOrders(payload) {
       try {
+         this.customerTransactions = []
         console.log(payload)
         const response = await api.post('/api/orders/transactions/last',payload)
         this.customerTransactions = response.data.data

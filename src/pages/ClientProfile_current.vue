@@ -122,7 +122,7 @@
           </div>
         </q-card-section>
         <div  align="right">
-        <q-btn color="grey" label="Back" @click="$router.go(-1)" />
+        <q-btn color="grey" label="Back" @click="resetRows()" />
       </div>
       </q-card>
 
@@ -230,12 +230,22 @@ export default {
     }
   },
   mounted() {
+
+
+
     console.log(this.customerStore.customer_id)
     this.get_client(this.customerStore.customer_id)
     //this.getTransactionIds(this.customerStore.customer_id)
     this.getOrders(this.customerStore.customer_id)
   },
   methods: {
+
+     resetRows(){
+      this.rows = []
+      this.transactionStore.$reset()
+      this.customerStore.$reset()
+      this.$router.back()
+    },
 
 
     async getTransactionIds(id){
@@ -247,6 +257,7 @@ export default {
     },
 
     async getOrders(payload){
+      this.rows = []
       await this.transactionStore.getLatestOrders({customer_id: payload})
       this.rows = this.transactionStore.customerTransactions
       console.log(this.rows)
