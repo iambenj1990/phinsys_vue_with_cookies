@@ -124,6 +124,12 @@
                   <q-td key="expiration_date" style="font-size: 11px" align="left">
                     {{ props.row.expiration_date }}
                   </q-td>
+
+                      <q-td key="actions" style="font-size: 11px" align="left">
+                    <q-btn class="text-orange" flat icon="edit" @click="showEdit = true">
+                      <q-tooltip>Edit Item</q-tooltip>
+                    </q-btn>
+                  </q-td>
                 </q-tr>
               </template>
             </q-table>
@@ -167,6 +173,90 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <q-dialog v-model="showEdit" persistent>
+  <q-card style="max-width: 800px; width: 100%; max-height: 90vh; display: flex; flex-direction: column;">
+    <!-- Header -->
+    <q-card-section class="bg-green-1 text-green-10 text-h6 text-weight-medium">
+      Edit Item Information
+    </q-card-section>
+
+    <!-- Form Section -->
+    <q-card-section class="q-pa-lg scroll" style="overflow-y: auto; flex: 1;">
+      <q-form class="q-gutter-md">
+        <!-- Add padding inside form -->
+        <div class="row q-col-gutter-md">
+          <div class="col-12 col-sm-6">
+            <q-input v-model="MedicineInfo.po_no" label="P.O. No." outlined dense />
+          </div>
+
+          <div class="col-12 col-sm-6">
+            <q-input v-model="MedicineInfo.brand_name" label="Brand Name" outlined dense />
+          </div>
+
+          <div class="col-12 col-sm-6">
+            <q-input v-model="MedicineInfo.generic_name" label="Generic Name" outlined dense />
+          </div>
+
+          <div class="col-12 col-sm-6">
+            <q-input v-model="MedicineInfo.dosage" label="Dosage" outlined dense />
+          </div>
+
+          <div class="col-12 col-sm-6">
+            <q-input v-model="MedicineInfo.dosage_form" label="Type" outlined dense />
+          </div>
+
+          <div class="col-12 col-sm-6">
+            <q-input v-model="MedicineInfo.category" label="Category" outlined dense />
+          </div>
+
+          <div class="col-12 col-sm-6">
+            <q-input v-model="MedicineInfo.unit" label="Unit" outlined dense />
+          </div>
+
+          <div class="col-12 col-sm-6">
+            <q-input
+              v-model.number="MedicineInfo.quantity"
+              label="Quantity"
+              type="number"
+              outlined
+              dense
+            />
+          </div>
+
+          <div class="col-12 col-sm-6">
+            <q-input
+              v-model.number="MedicineInfo.price"
+              label="Price"
+              type="number"
+              outlined
+              dense
+            />
+          </div>
+
+          <div class="col-12 col-sm-6">
+            <q-input
+              v-model="MedicineInfo.expiration_date"
+              label="Expiration Date"
+              type="date"
+              outlined
+              dense
+            />
+          </div>
+        </div>
+      </q-form>
+    </q-card-section>
+
+    <!-- Actions -->
+    <q-card-actions align="right" class="bg-grey-2">
+      <q-btn flat color="negative" label="Close" @click="showEdit = false" />
+      <q-btn unelevated color="positive" label="Save Changes" @click="updateMedicineInfo" />
+    </q-card-actions>
+  </q-card>
+</q-dialog>
+
+
+
   </q-page>
 </template>
 
@@ -287,11 +377,19 @@ export default {
           field: 'expiration_date',
           sortable: true,
         },
+
+        {
+          name: 'actions',
+          required: true,
+          label: 'Actions',
+          align: 'left',
+        },
       ],
     }
   },
   data() {
     return {
+      showEdit: false,
       Credentials:[],
       rangeText:'',
       selectedDates:{

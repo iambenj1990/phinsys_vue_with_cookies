@@ -28,18 +28,28 @@ export const useItemStore = defineStore('items', {
 
     item_name: '',
     item_amount: 0,
+    po_list:[],
   }),
 
   actions: {
-    injectToken() {
-      const token = localStorage.getItem('auth_token')
-      // If token exists, set it in the default headers
-      if (token) {
-        const sanitized_object = token.replace('__q_strn|', '')
-        // console.log('Sanitized token:', sanitized_object)
-        api.defaults.headers.common['Authorization'] = `Bearer ${sanitized_object}`
+
+    async get_PO_items(){
+      try {
+        const response = await api.get('/api/items/po/list')
+        console.log('Response PO Items:', response)
+        this.po_list = response.data.po_no
+        console.log('PO Items:', this.po_list)
+
+      } catch (error) {
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
+
 
     async getDosageForm() {
       try {
@@ -497,6 +507,8 @@ export const useItemStore = defineStore('items', {
         })
       }
     },
+
+
   },
 })
 if (import.meta.hot) {
