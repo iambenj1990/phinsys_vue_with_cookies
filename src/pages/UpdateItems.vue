@@ -9,15 +9,16 @@
         <q-form @submit.prevent="handleSubmit" ref="formRef">
           <q-card-section>
             <div>
-              <q-checkbox
+              <!-- <q-checkbox
                 v-model="useTemp"
                 size="xs"
                 label="Use Temporary ID"
                 @update:model-value="get_temp_id"
                 style="color: grey"
-              />
-              <div class="col-12 col-md-2 q-pa-sm">
+              /> -->
+              <div class="col-12 col-md-2 q-pa-sm text-h5 text-weight-bold">
                 <q-input
+                  readonly
                   dense
                   v-model="New_Po"
                   label="Purchase Order Number"
@@ -212,20 +213,58 @@
                 style="width: 100px"
                 @click="viewReset()"
               />
-              <q-btn type="submit" label="Update" color="primary" style="width: 100px" v-if="moduleAccess('Purchasing','edit')" />
+              <q-btn
+                type="submit"
+                label="Update"
+                color="primary"
+                style="width: 100px"
+                v-if="moduleAccess('Purchasing', 'edit')"
+              />
             </div>
             <div align="right" v-else-if="!toUpdate">
-              <q-btn type="submit" label="Add" color="primary" style="width: 100px" v-if="moduleAccess('Purchasing','add')" />
+              <q-btn
+                type="submit"
+                label="Add"
+                color="primary"
+                style="width: 100px"
+                v-if="moduleAccess('Purchasing', 'add')"
+              />
             </div>
           </q-card-section>
         </q-form>
         <q-separator />
         <q-card-section>
           <div>
-            <q-table :rows="rows" :columns="columns" row-key="id">
+            <q-table :rows="rows" :columns="columns" row-key="id" :filter="filter">
+              <template v-slot:top-left>
+                <q-input
+                  borderless
+                  dense
+                  debounce="300"
+                  v-model="filter"
+                  placeholder="Search"
+                  class="full-width"
+                  style="width: 300px"
+                >
+                  <template v-slot:append>
+                    <q-icon name="search" />
+                  </template>
+                </q-input>
+              </template>
               <template #body="props">
                 <q-tr :v-bind="props">
-                  <q-td key="generic_name" style="font-size: 11px" align="left">
+                  <q-td
+                    key="generic_name"
+                    style="
+                      font-size: 10px;
+                      white-space: normal;
+                      word-break: break-word;
+                      max-width: 400px;
+                      width: 100%;
+                    "
+                    align="left"
+                    class="text-wrap"
+                  >
                     {{ props.row.generic_name }}
                   </q-td>
                   <q-td key="brand_name" style="font-size: 11px" align="left">
@@ -251,8 +290,20 @@
                   </q-td>
 
                   <q-td key="actions" style="font-size: 11px" align="left">
-                    <q-btn flat color="primary" @click="fetchItem(props.row.id)" icon="edit" v-if="moduleAccess('Purchasing','edit')" />
-                    <q-btn flat color="negative" icon="delete" @click="removeItem(props.row.id)" v-if="moduleAccess('Purchasing','delete')" />
+                    <q-btn
+                      flat
+                      color="primary"
+                      @click="fetchItem(props.row.id)"
+                      icon="edit"
+                      v-if="moduleAccess('Purchasing', 'edit')"
+                    />
+                    <q-btn
+                      flat
+                      color="negative"
+                      icon="delete"
+                      @click="removeItem(props.row.id)"
+                      v-if="moduleAccess('Purchasing', 'delete')"
+                    />
                   </q-td>
                 </q-tr>
               </template>
@@ -260,16 +311,16 @@
           </div>
         </q-card-section>
 
-        <q-card-actions align="right">
+        <!-- <q-card-actions align="right">
           <q-btn
             color="red"
             class="q-px-md"
             label="Back"
-            to="/items/list"
+            to="/inventory/adjustment"
             style="width: 100px"
             size="md"
           />
-        </q-card-actions>
+        </q-card-actions> -->
       </q-card>
     </div>
     <!-- <pre>{PO Number : {{ this.New_Po }}}</pre>
@@ -294,6 +345,10 @@ export default {
     },
 
     'MedicineInfo.brand_name'(newValue) {
+      if (this.isProgrammaticEdit) {
+        this.isProgrammaticEdit = false
+        return
+      }
       if (newValue) {
         this.filteredList = this.medMiniInfo.filter((item) => {
           const itemName = `${item.brand_name} ${item.generic_name}`.toLowerCase()
@@ -309,6 +364,7 @@ export default {
     // this.itemStore.injectToken() //should be always on top to inject token before any api call
     this.GetAuthenticatedUser()
     this.fetch_Medicine_info()
+    this.New_Po = this.itemStore.selected_po
     this.ShowDosageForm()
   },
 
@@ -354,6 +410,8 @@ export default {
           label: 'Generic Name',
           align: 'left',
           field: 'generic_name',
+          style: 'white-space: normal; word-break: break-word; max-width: 300px; width: 100%;',
+
           sortable: true,
         },
         {
@@ -362,6 +420,7 @@ export default {
           label: 'Brand Name',
           align: 'left',
           field: 'brand_name',
+
           sortable: true,
         },
         {
@@ -429,6 +488,8 @@ export default {
   },
   data() {
     return {
+      isProgrammaticEdit: false,
+      filter: '',
       Credentials: [],
       filteredList: [],
       medMiniInfo: [],
@@ -567,11 +628,14 @@ export default {
     },
 
     async fetchItem(id) {
+      this.isProgrammaticEdit = true
       console.log(id)
       await this.itemStore.getItem(id)
       this.MedicineInfo = this.itemStore.item
+       this.computePrice()
       this.toUpdate = true
       this.selected_id = id
+      console.log(this.MedicineInfo)
     },
 
     async updateItem(id, payload) {

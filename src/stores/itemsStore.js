@@ -29,6 +29,7 @@ export const useItemStore = defineStore('items', {
     item_name: '',
     item_amount: 0,
     po_list:[],
+    selected_po:'',
   }),
 
   actions: {

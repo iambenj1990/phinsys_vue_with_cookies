@@ -3,8 +3,10 @@
     <div class="flex flex-center q-ma-sm">
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
         <div class="row q-gutter-md">
-          <div class="col-12  q-pt-md q-px-md">
-            <div align="left" class="text-h6 text-primary text-weight-regular">Items Information Adjustment</div>
+          <div class="col-12 q-pt-md q-px-md">
+            <div align="left" class="text-h6 text-primary text-weight-regular">
+              Items Information Adjustment
+            </div>
           </div>
         </div>
 
@@ -52,23 +54,34 @@
 
               <template #body="props">
                 <q-tr :v-bind="props">
-                    <q-td key="id" style="font-size: 11px" align="left">
-                     {{ (pagination.page - 1) * pagination.rowsPerPage + props.pageIndex + 1 }}
+                  <q-td key="id" style="font-size: 11px" align="left">
+                    {{ (pagination.page - 1) * pagination.rowsPerPage + props.pageIndex + 1 }}
                   </q-td>
                   <q-td key="po_no" style="font-size: 11px" align="center" class="text-weight-bold">
                     {{ props.row.po_no }}
                   </q-td>
-                  <q-td key="item_count" style="font-size: 11px" align="center" class="text-weight-bold">
+                  <q-td
+                    key="item_count"
+                    style="font-size: 11px"
+                    align="center"
+                    class="text-weight-bold"
+                  >
                     {{ props.row.items_count }}
                   </q-td>
-
 
                   <q-td key="actions" style="font-size: 11px" align="center">
                     <q-btn
                       flat
                       color="primary"
                       icon="list"
-                      @click="()=>{console.log('Adjust items under PO No:', props.row.po_no)}">
+                      @click="
+                        () => {
+                          console.log('Adjust items under PO No:', props.row.po_no)
+                          itemStore.selected_po = props.row.po_no
+                          showListing = true
+                        }
+                      "
+                    >
                       <q-tooltip> Adjustment </q-tooltip>
                     </q-btn>
                     <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
@@ -79,20 +92,36 @@
           </div>
         </div>
       </q-card>
+      <q-dialog persistent v-model="showListing">
+        <q-card style="max-width: 1200px; width: 100%">
+          <updateItems />
+          <q-card-actions align="right">
+            <q-btn
+              color="red"
+              class="q-px-md"
+              label="Back"
+              @click="showListing=false"
+              style="width: 100px"
+              size="md"
+            />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
     </div>
   </q-page>
 </template>
 
 <script>
 import { useItemStore } from 'src/stores/itemsStore'
-
+import updateItems from 'src/pages/UpdateItems.vue'
 
 export default {
-  computed: {
-
+  components: {
+    updateItems,
   },
+  computed: {},
   setup() {
-      const itemStore = useItemStore()
+    const itemStore = useItemStore()
     return {
       itemStore,
 
@@ -111,7 +140,7 @@ export default {
           field: 'po_no',
         },
 
-         {
+        {
           name: 'item_count',
           required: true,
           label: 'No. of Items',
@@ -130,34 +159,28 @@ export default {
   },
   data() {
     return {
-      pagination:{
+      pagination: {
         page: 1,
-      rowsPerPage: 10,
-
+        rowsPerPage: 10,
       },
+      showListing: false,
       loading: false,
       filter: '',
       rows: [],
-
-
     }
   },
 
   methods: {
-
-    async get_items_under_po(){
-      this.loading=true
+    async get_items_under_po() {
+      this.loading = true
       await this.itemStore.get_PO_items()
       this.rows = this.itemStore.po_list
-      this.loading=false
-    }
-
+      this.loading = false
+    },
   },
   mounted() {
     this.get_items_under_po()
   },
-  watch: {
-
-  },
+  watch: {},
 }
 </script>
