@@ -1129,7 +1129,11 @@ export default {
 
     async getAvailableMedList() {
       this.cartPrompt = true
-      await this.itemStore.getJoinedTable_DailyInventor_Items_filtered()
+      //filtered mag una ug gawas ang sayo ma expire
+      //  await this.itemStore.getJoinedTable_DailyInventor_Items_filtered()
+
+      //not filtered, laras gawas tanan pilianan
+      await this.itemStore.getJoinedTable_DailyInventor_Items()
 
       this.availableMedsRow = this.itemStore.items
     },

@@ -190,6 +190,28 @@ export const useUserStore = defineStore('users', {
       }
     },
 
+    async changePassword(payload){
+      try {
+       const response =  await api.post('/api/system/user/changepassword',payload)
+          if (response.data.success) {
+          Notify.create({
+            type: 'positive',
+            message: 'Password Successfully Changed.',
+            position: 'center',
+            timeout: 5000,
+          })
+        }
+
+      } catch (error) {
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
     async authenticatedUserCheck() {
       try {
         const response = await api.get('/api/system/user/authenticated')

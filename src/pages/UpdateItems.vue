@@ -145,7 +145,8 @@
               </div>
               <div class="col-12 col-md-1 q-pa-sm">
                 <q-input
-                  :readonly="MedicineInfo.unit == 'BOX'"
+                  :key="MedicineInfo.unit + '-' + isProgrammaticEdit"
+                  :readonly="MedicineInfo.unit == 'BOX'|| isProgrammaticEdit"
                   dense
                   v-model="MedicineInfo.quantity"
                   label="Quantity"
@@ -660,13 +661,14 @@ export default {
     },
 
     async fetchItem(id) {
-      this.isProgrammaticEdit = true
+
       console.log(id)
       await this.itemStore.getItem(id)
-      this.MedicineInfo = this.itemStore.item
+      this.MedicineInfo = {...this.itemStore.item}
       this.computePrice()
       this.toUpdate = true
       this.selected_id = id
+      this.isProgrammaticEdit = true
       console.log(this.MedicineInfo)
     },
 

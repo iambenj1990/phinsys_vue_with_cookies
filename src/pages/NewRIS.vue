@@ -67,7 +67,7 @@
               </q-td>
 
               <q-td key="actions" style="font-size: 11px" align="left">
-                <q-
+                <q-btn
                 v-if="moduleAccess('RIS','delete')"
                   flat
                   color="negative"
@@ -523,7 +523,8 @@ export default {
 
     async getAvailableMedList() {
       this.cartPrompt = true
-      await this.itemStore.getJoinedTable_DailyInventor_Items_filtered()
+      // await this.itemStore.getJoinedTable_DailyInventor_Items_filtered()
+      await this.itemStore.getJoinedTable_DailyInventor_Items()
 
       this.availableMedsRow = this.itemStore.items
     },

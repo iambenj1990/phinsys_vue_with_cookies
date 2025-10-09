@@ -533,7 +533,7 @@ export default {
 
     async getAvailableMedList() {
       this.cartPrompt = true
-      await this.itemStore.getJoinedTable_DailyInventor_Items_filtered()
+      await this.itemStore.getJoinedTable_DailyInventor_Items()
 
       this.availableMedsRow = this.itemStore.items
     },
