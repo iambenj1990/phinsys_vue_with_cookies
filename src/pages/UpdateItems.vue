@@ -214,7 +214,7 @@
                 @click="viewReset()"
               />
               <q-btn
-                type="submit"
+                @click="showUpdate()"
                 label="Update"
                 color="primary"
                 style="width: 100px"
@@ -245,6 +245,7 @@
                   placeholder="Search"
                   class="full-width"
                   style="width: 300px"
+                  clearable
                 >
                   <template v-slot:append>
                     <q-icon name="search" />
@@ -276,7 +277,7 @@
                   <q-td key="dosage_form" style="font-size: 11px" align="left">
                     {{ props.row.dosage_form }}
                   </q-td>
-                  <q-td key="quantity" style="font-size: 11px" align="left">
+                  <q-td key="quantity" style="font-size: 11px" align="center">
                     {{ props.row.quantity }}
                   </q-td>
                   <q-td key="unit" style="font-size: 11px" align="left">
@@ -301,7 +302,7 @@
                       flat
                       color="negative"
                       icon="delete"
-                      @click="removeItem(props.row.id)"
+                      @click="showDelete(props.row.id)"
                       v-if="moduleAccess('Purchasing', 'delete')"
                     />
                   </q-td>
@@ -310,24 +311,41 @@
             </q-table>
           </div>
         </q-card-section>
-
-        <!-- <q-card-actions align="right">
-          <q-btn
-            color="red"
-            class="q-px-md"
-            label="Back"
-            to="/inventory/adjustment"
-            style="width: 100px"
-            size="md"
-          />
-        </q-card-actions> -->
       </q-card>
     </div>
-    <!-- <pre>{PO Number : {{ this.New_Po }}}</pre>
-    <pre>{Status : {{ this.toUpdate }}}</pre>
-    <pre>{Price: {{ MedicineInfo.price }}}</pre>
-    <pre>{Price: {{ MedicineInfo.box_quantity }}}</pre>
-    <pre>{Price: {{ MedicineInfo.quantity_per_box }}}</pre> -->
+    <q-dialog persistent v-model="toUpdateDialog">
+      <q-card style="max-width: 400px; width: 100%">
+        <q-card-section>
+          <div class="text-h6">Update Item</div>
+        </q-card-section>
+        <q-separator></q-separator>
+        <q-card-section> Are you sure you want to update this item? </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Cancel" color="red" @click="toUpdateDialog = false" style="width: 100px" />
+          <q-btn flat label="Update" color="primary" @click="handleSubmit()" style="width: 100px" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <q-dialog persistent v-model="toDeleteDialog">
+      <q-card style="max-width: 400px; width: 100%">
+        <q-card-section>
+          <div class="text-h6"><q-icon name="delete" class="text-red" size="28px" /> Delete Item</div>
+        </q-card-section>
+        <q-separator></q-separator>
+        <q-card-section> Are you sure you want to delete this item? </q-card-section>
+        <q-card-section> SELECTED ID : {{ itemToDelete }} </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Cancel" color="red" @click="toDeleteDialog = false" style="width: 100px" />
+          <q-btn
+            flat
+            label="Remove"
+            color="primary"
+            @click="removeItem(itemToDelete)"
+            style="width: 100px"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -442,8 +460,8 @@ export default {
         {
           name: 'quantity',
           required: true,
-          label: 'Quantity',
-          align: 'left',
+          label: 'Quantity (pcs)',
+          align: 'center',
           field: 'quantity',
           sortable: true,
         },
@@ -488,6 +506,12 @@ export default {
   },
   data() {
     return {
+      itemToDelete: null,
+      itemToUpdate: null,
+
+      toDeleteDialog: false,
+      toUpdateDialog: false,
+
       isProgrammaticEdit: false,
       filter: '',
       Credentials: [],
@@ -521,6 +545,14 @@ export default {
   },
 
   methods: {
+    showUpdate() {
+      this.toUpdateDialog = true
+
+    },
+    showDelete(id) {
+      this.toDeleteDialog = true
+      this.itemToDelete = id
+    },
     async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
       this.user = this.userStore.user
@@ -632,7 +664,7 @@ export default {
       console.log(id)
       await this.itemStore.getItem(id)
       this.MedicineInfo = this.itemStore.item
-       this.computePrice()
+      this.computePrice()
       this.toUpdate = true
       this.selected_id = id
       console.log(this.MedicineInfo)
@@ -653,12 +685,13 @@ export default {
     async removeItem(id) {
       await this.itemStore.deleteItem(id)
       this.fetchItemsbyPO(this.New_Po)
-      this.$q.notify({
-        type: 'positive',
-        message: 'removing records successful!',
-        position: 'center',
-        timeout: 1000,
-      })
+      this.toDeleteDialog = false
+      // this.$q.notify({
+      //   type: 'positive',
+      //   message: 'removing records successful!',
+      //   position: 'center',
+      //   timeout: 1000,
+      // })
     },
 
     async get_temp_id() {

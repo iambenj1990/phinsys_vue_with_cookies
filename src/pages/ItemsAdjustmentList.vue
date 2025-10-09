@@ -100,7 +100,9 @@
               color="red"
               class="q-px-md"
               label="Back"
-              @click="showListing=false"
+              @click="()=>{showListing=false;
+                this.get_items_under_po()
+              }"
               style="width: 100px"
               size="md"
             />
