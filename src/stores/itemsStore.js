@@ -17,6 +17,7 @@ export const useItemStore = defineStore('items', {
     low_stocks: [],
     stockMiniInfo: [],
     stockCard: [],
+    stockCardbyItem: [],
     temp_id: '',
     hasOpening: false,
     dosageForm: [],
@@ -466,6 +467,22 @@ export const useItemStore = defineStore('items', {
       try {
         const response = await api.post('/api/items/stockcard', payload)
         this.stockCard = response.data.stockCard
+      } catch (error) {
+        console.error(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
+
+     async getStockCardByItem(payload) {
+      try {
+        const response = await api.post('/api/items/stockcard/item', payload)
+        this.stockCardbyItem = response.data.stockCard
       } catch (error) {
         console.error(error)
         Notify.create({

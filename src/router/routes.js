@@ -157,6 +157,12 @@ const routes = [
         component: () => import('pages/ItemsStockCard.vue'),
         meta: { requiresAuth: true },
       },
+       {
+        path: 'inventory/stockcard/item',
+        component: () => import('pages/ItemsStockCardByItem.vue'),
+        meta: { requiresAuth: true },
+      },
+
       {
         path: 'reports/dispense/monthly',
         component: () => import('pages/ItemsMonthlyDispenseReport.vue'),

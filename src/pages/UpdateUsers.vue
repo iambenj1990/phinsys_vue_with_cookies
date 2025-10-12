@@ -246,7 +246,7 @@ export default {
         //   message: 'User registered successfully!',
         // })
         // Optionally clear form
-        console.log(this.form)
+        // console.log(this.form)
         this.userStore.updateUser(this.user.id, this.form)
 
         this.resetForm()

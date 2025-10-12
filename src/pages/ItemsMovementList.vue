@@ -723,9 +723,13 @@ export default {
     },
 
     passStockCardData(data) {
+      console.log(data)
+      this.itemStore.item_id = data.stock_id
       this.itemStore.selected_stockCard.generic_name = data.generic_name
       this.itemStore.selected_stockCard.brand_name = data.brand_name
-      this.$router.push('/inventory/stockcard')
+      // this.$router.push('/inventory/stockcard')
+      this.$router.push('/inventory/stockcard/item')
+
     },
   },
 
