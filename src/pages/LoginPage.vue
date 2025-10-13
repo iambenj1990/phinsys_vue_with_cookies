@@ -296,7 +296,7 @@ export default {
 
       <!-- Right Side (Login Form) -->
       <div class="col-5 q-pa-xl  flex flex-center column rightside">
-        <div class="text-subtitle1 text-white-7 q-mb-lg">Login to your account</div>
+        <div class="text-subtitle1 text-weight-bolder text-grey-8 q-mb-lg">Login to your account</div>
 
         <q-form
           @submit.prevent="handleLogin"
@@ -411,7 +411,7 @@ export default {
 
 <style scoped>
 .rightside {
-  background: linear-gradient(135deg, #52b747 25%, #26bc21 75%);
+  background: linear-gradient(135deg, #abe39b 25%, #38c14aed 75%);
   color: #ffffff;
 }
 
