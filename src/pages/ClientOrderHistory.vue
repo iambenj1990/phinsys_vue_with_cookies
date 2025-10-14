@@ -12,9 +12,9 @@
 
         <q-card-section>
           <div class="text-h6 text-primary q-my-sm">Daily Customers</div>
-          <div class="q-pa-sm row items-center justify-between" >
-           <div class="flex justify-start">
-             <!-- <q-input
+          <div class="q-pa-sm row items-center justify-between">
+            <div class="flex justify-start">
+              <!-- <q-input
               dense
               flat
               type="date"
@@ -26,7 +26,13 @@
               @update:model-value="get_clients(this.Trans_Date)"
             /> -->
 
-              <q-input v-model="rangeText" label="Select Date Range" dense readonly style="width: 250px">
+              <q-input
+                v-model="rangeText"
+                label="Select Date Range"
+                dense
+                readonly
+                style="width: 250px"
+              >
                 <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -35,24 +41,20 @@
                   </q-icon>
                 </template>
               </q-input>
-
-
-           </div>
-           <div class="row items-center">
-            <q-btn
-              class="q-mr-sm"
-              style="font-size: 13px"
-              dense
-              color="primary"
-              label="New Transaction"
-              icon="add"
-              @click="lookforOpen"
-              flat
-              v-if="moduleAccess('Releasing','add')"
-            />
-
-           </div>
-
+            </div>
+            <div class="row items-center">
+              <q-btn
+                class="q-mr-sm"
+                style="font-size: 13px"
+                dense
+                color="primary"
+                label="New Transaction"
+                icon="add"
+                @click="lookforOpen"
+                flat
+                v-if="moduleAccess('Releasing', 'add')"
+              />
+            </div>
           </div>
           <q-table
             flat
@@ -64,17 +66,17 @@
             binary-state-sort
             no-data-label="No data available"
             :rows-per-page-options="[10, 20, 50, 100, 200]"
-           class="my-sticky-header-table"
-           table-header-class="text-white"
+            class="my-sticky-header-table"
+            table-header-class="text-white"
           >
             <template v-slot:top-right>
               <q-btn
-              style="font-size: 12px"
-              color="green"
-              label="Export"
-              icon="import_export"
-              v-if ="moduleAccess('Releasing','export')"
-            />
+                style="font-size: 12px"
+                color="green"
+                label="Export"
+                icon="import_export"
+                v-if="moduleAccess('Releasing', 'export')"
+              />
             </template>
 
             <template #body="props">
@@ -111,7 +113,7 @@
                     @click="showClient(props.row.id)"
                     icon="description"
                     to="/customers/profile/current"
-                   v-if="moduleAccess('Releasing','view')"
+                    v-if="moduleAccess('Releasing', 'view')"
                   >
                     <q-tooltip> Profile and History </q-tooltip>
                   </q-btn>
@@ -141,7 +143,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-<!--
+    <!--
     <pre>{{ this.Trans_Date }}</pre> -->
   </q-page>
 </template>
@@ -149,7 +151,6 @@
 import { useCustomerStore } from '../stores/customersStore'
 import { useItemStore } from 'src/stores/itemsStore'
 import { useUserStore } from 'src/stores/userStore'
-
 
 function debounce(fn, delay) {
   let timeout
@@ -164,8 +165,8 @@ export default {
     const userStore = useUserStore()
     const today = new Date()
     today.toLocaleDateString('en-CA')
-     const start = new Date(today.getFullYear(), today.getMonth(),1)
-     const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+    const start = new Date(today.getFullYear(), today.getMonth(), 1)
+    const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
     return {
       userStore,
       today,
@@ -263,10 +264,10 @@ export default {
   data() {
     return {
       Credentials: [],
-      rangeText:'',
-      selectedDates:{
-        from:'',
-        to:''
+      rangeText: '',
+      selectedDates: {
+        from: '',
+        to: '',
       },
       Trans_Date: this.today,
       hasOpentransaction: false,
@@ -296,18 +297,16 @@ export default {
         user_id: 0,
       },
       user: {},
-
     }
   },
   methods: {
-     async GetAuthenticatedUser() {
+    async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
-      console.log('user => ',this.user)
-      console.log('user => ',this.user)
+      console.log('user => ', this.user)
+      console.log('user => ', this.user)
       this.user = this.userStore.user
       this.Credentials = this.userStore.credentials
-      console.log('creds => ',this.Credentials)
-
+      console.log('creds => ', this.Credentials)
     },
     showDeletepage(id) {
       this.Customers.customer_id = id
@@ -315,13 +314,11 @@ export default {
     },
 
     showClient(id) {
-       console.log(id)
+      console.log(id)
       this.Customers.isEdit = true
       this.Customers.isSave = false
       this.Customers.customer_id = id
-       this.Customers.transactions_id = id.transaction_id
-
-
+      this.Customers.transactions_id = id.transaction_id
     },
 
     async get_clients(payload) {
@@ -372,31 +369,28 @@ export default {
       }
     },
 
-    moduleAccess(label,type){
-     const access = this.Credentials.find(module => module.module === label);
-     console.log(access)
-      if(type==='view') return access? access.view: false;
-      if(type==='add') return access? access.add: false;
-      if(type==='edit') return access? access.edit: false;
-      if(type==='delete') return access? access.delete: false;
-      if(type==='export') return access? access.export: false;
-    }
+    moduleAccess(label, type) {
+      const access = this.Credentials.find((module) => module.module === label)
+      console.log(access)
+      if (type === 'view') return access ? access.view : false
+      if (type === 'add') return access ? access.add : false
+      if (type === 'edit') return access ? access.edit : false
+      if (type === 'delete') return access ? access.delete : false
+      if (type === 'export') return access ? access.export : false
+    },
   },
-   watch: {
-
-      selectedDates: {
+  watch: {
+    selectedDates: {
       handler: debounce(function (newRange) {
         this.rangeText = `${newRange.from} to ${newRange.to}`
 
         console.log(newRange)
         //this.get_RIS_List_byDate(newRange)
         this.get_clients(newRange)
-
       }, 500),
       immediate: true, // Call the handler immediately with the initial value
       deep: true, // Watch for changes in the object properties
     },
-
   },
   computed: {
     Customers() {
@@ -407,16 +401,14 @@ export default {
     },
   },
   mounted() {
-
     this.GetAuthenticatedUser()
 
-    this.selectedDates= {
-      from : this.start.toISOString().split('T')[0],
-      to : this.end.toISOString().split('T')[0]
-
+    this.selectedDates = {
+      from: this.start.toISOString().split('T')[0],
+      to: this.end.toISOString().split('T')[0],
     }
 
-      // this.get_clients(this.selectedDates)
+    // this.get_clients(this.selectedDates)
   },
 }
 </script>

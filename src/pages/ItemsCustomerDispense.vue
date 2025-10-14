@@ -2,127 +2,134 @@
   <q-page>
     <q-card style="width: auto">
       <q-card-section>
-         <div v-if="loading" class="flex flex-center">
+        <div v-if="loading" class="flex flex-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
-              <span class="q-ml-sm">Loading...</span>
+          <span class="q-ml-sm">Loading...</span>
         </div>
         <div v-else class="q-gutter-md">
-        <q-table
-          :rows="items"
-          :columns="cols"
-          row-key="id"
-          :filter="filter"
-          flat
-          bordered
-          class="q-ma-md my-sticky-header-table"
-          style="height: 500px"
-          :rows-per-page-options="[10,20,30]"
-        >
-          <template #top-right>
-            <q-input
-              dense
-              debounce="300"
-              v-model="filter"
-              placeholder="Search"
-              class="q-ml-md"
-              style="max-width: 200px"
-              clearable
-              outlined
-              rounded
-              hide-bottom-space
-              :loading="items.length === 0"
-            >
-              <template v-slot:append>
-                <q-icon name="search" class="cursor-pointer" />
-              </template>
-            </q-input>
-          </template>
-          <template #body="props">
-            <q-tr :v-bind="props">
-              <q-td key="po_no" style="font-size: 11px" align="left">
-                {{ props.row.po_no }}
-              </q-td>
-              <q-td key="generic_name" style="font-size: 11px" align="left">
-                {{ props.row.generic_name }}
-              </q-td>
-              <q-td key="dosage" style="font-size: 11px" align="center">
-                {{ props.row.dosage }}
-              </q-td>
-              <q-td key="dosage_form" style="font-size: 11px" align="center">
-                {{ props.row.dosage_form }}
-              </q-td>
-              <q-td key="expiration_date" style="font-size: 11px" align="center">
-                {{ props.row.expiration_date }}
-              </q-td>
-              <!-- <q-td key="item_quantity" style="font-size: 11px" align="center">
+          <q-table
+            :rows="items"
+            :columns="cols"
+            row-key="id"
+            :filter="filter"
+            flat
+            bordered
+            class="q-ma-md my-sticky-header-table"
+            style="height: 500px"
+            :rows-per-page-options="[10, 20, 30]"
+          >
+            <template #top-right>
+              <q-input
+                dense
+                debounce="300"
+                v-model="filter"
+                placeholder="Search"
+                class="q-ml-md"
+                style="max-width: 200px"
+                clearable
+                outlined
+                rounded
+                hide-bottom-space
+                :loading="items.length === 0"
+              >
+                <template v-slot:append>
+                  <q-icon name="search" class="cursor-pointer" />
+                </template>
+              </q-input>
+            </template>
+            <template #body="props">
+              <q-tr :v-bind="props">
+                <q-td key="po_no" style="font-size: 11px" align="left">
+                  {{ props.row.po_no }}
+                </q-td>
+                <q-td key="generic_name" style="font-size: 11px" align="left">
+                  {{ props.row.generic_name }}
+                </q-td>
+                <q-td key="dosage" style="font-size: 11px" align="center">
+                  {{ props.row.dosage }}
+                </q-td>
+                <q-td key="dosage_form" style="font-size: 11px" align="center">
+                  {{ props.row.dosage_form }}
+                </q-td>
+                <q-td key="expiration_date" style="font-size: 11px" align="center">
+                  {{ props.row.expiration_date }}
+                </q-td>
+                <!-- <q-td key="item_quantity" style="font-size: 11px" align="center">
                 {{ props.row.item_quantity }}
               </q-td> -->
-              <q-td key="transaction_date" style="font-size: 11px" align="center">
-                {{ props.row.last_inventory_date }}
-              </q-td>
-              <q-td key="actions" style="font-size: 11px" align="center">
-                <q-btn flat class="text-green" icon="format_list_numbered" @click="()=>{
-                  // console.log(props.row)
-                  customerUtilization({item_id:props.row.item_id})
-                  showCustomerlist=true
-                }"></q-btn>
-              </q-td>
-            </q-tr>
-          </template>
-        </q-table>
+                <q-td key="transaction_date" style="font-size: 11px" align="center">
+                  {{ props.row.last_inventory_date }}
+                </q-td>
+                <q-td key="actions" style="font-size: 11px" align="center">
+                  <q-btn
+                    flat
+                    class="text-green"
+                    icon="format_list_numbered"
+                    @click="
+                      () => {
+                        // console.log(props.row)
+                        customerUtilization({ item_id: props.row.item_id })
+                        showCustomerlist = true
+                      }
+                    "
+                  ></q-btn>
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
         </div>
       </q-card-section>
       <!-- <q-card-actions align="right" class="q-px-md">
         <q-btn label="Close" flat class="text-subtitle2 text-green" ></q-btn>
       </q-card-actions> -->
-
     </q-card>
 
-    <q-dialog persisten v-model="showCustomerlist"  >
+    <q-dialog persisten v-model="showCustomerlist">
       <q-card style="width: 700px; max-width: 90vw">
         <q-card-section>
-           <q-table
-          :rows="customerList"
-          :columns="Customercols"
-          row-key="id"
-          flat
-          bordered
-          class="q-ma-md my-sticky-header-table"
-          style="height: 600px; width: auto;"
-          :rows-per-page-options="[10,20,30]"
-          v-model:pagination="pagination"
-        >
-          <template #body="props">
-            <q-tr :v-bind="props">
-               <q-td key="no" style="font-size: 11px" align="left">
-               <!-- {{ props.pageIndex + 1 }} -->
-                {{ (pagination.page - 1) * pagination.rowsPerPage + props.pageIndex + 1 }}
-              </q-td>
-              <q-td key="customer" style="font-size: 11px" align="left">
-                {{ props.row.recipient_name }}
-              </q-td>
-              <q-td key="age" style="font-size: 11px" align="left">
-                {{ props.row.age }}
-              </q-td>
-              <q-td key="barangay" style="font-size: 11px" align="center">
-                {{ props.row.barangay }}
-              </q-td>
-              <q-td key="quantity" style="font-size: 11px" align="center">
-                {{ props.row.quantity }}
-              </q-td>
-
-
-            </q-tr>
-          </template>
-        </q-table>
-
+          <q-table
+            :rows="customerList"
+            :columns="Customercols"
+            row-key="id"
+            flat
+            bordered
+            class="q-ma-md my-sticky-header-table"
+            style="height: 600px; width: auto"
+            :rows-per-page-options="[10, 20, 30]"
+            v-model:pagination="pagination"
+          >
+            <template #body="props">
+              <q-tr :v-bind="props">
+                <q-td key="no" style="font-size: 11px" align="left">
+                  <!-- {{ props.pageIndex + 1 }} -->
+                  {{ (pagination.page - 1) * pagination.rowsPerPage + props.pageIndex + 1 }}
+                </q-td>
+                <q-td key="customer" style="font-size: 11px" align="left">
+                  {{ props.row.recipient_name }}
+                </q-td>
+                <q-td key="age" style="font-size: 11px" align="left">
+                  {{ props.row.age }}
+                </q-td>
+                <q-td key="barangay" style="font-size: 11px" align="center">
+                  {{ props.row.barangay }}
+                </q-td>
+                <q-td key="quantity" style="font-size: 11px" align="center">
+                  {{ props.row.quantity }}
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn label="Close" class="text-green text-subtitle2" flat @click="showCustomerlist=false">
+          <q-btn
+            label="Close"
+            class="text-green text-subtitle2"
+            flat
+            @click="showCustomerlist = false"
+          >
           </q-btn>
         </q-card-actions>
       </q-card>
-
     </q-dialog>
   </q-page>
 </template>
@@ -135,7 +142,7 @@ export default {
   name: 'ItemsCustomerDispense',
   setup() {
     const itemStore = useItemStore()
-    const transactionStore = useTransactionStore();
+    const transactionStore = useTransactionStore()
 
     return {
       itemStore,
@@ -210,8 +217,8 @@ export default {
         },
       ],
 
-       Customercols: [
-            {
+      Customercols: [
+        {
           name: 'no',
           required: true,
           label: 'No.',
@@ -250,8 +257,6 @@ export default {
           field: 'quantity',
           sortable: true,
         },
-
-
       ],
     }
   },
@@ -265,14 +270,14 @@ export default {
   data() {
     return {
       loading: false,
-      pagination:{
+      pagination: {
         page: 1,
         rowsPerPage: 10,
       },
       items: [],
-      showCustomerlist:false,
-      customerList:[],
-      filter:'',
+      showCustomerlist: false,
+      customerList: [],
+      filter: '',
     }
   },
 
@@ -285,11 +290,10 @@ export default {
       console.log(this.items)
       this.loading = false
     },
-    async customerUtilization(payload){
+    async customerUtilization(payload) {
       await this.transactionStore.MedicineUtilizationPerCustomer(payload)
       this.customerList = this.transactionStore.MedicineRecipients
-
-    }
+    },
   },
 }
 </script>

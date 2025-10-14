@@ -1,16 +1,16 @@
 <template>
   <q-page>
-    <div class="flex flex-center q-ma-sm" >
+    <div class="flex flex-center q-ma-sm">
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
         <div v-if="loading" class="flex flex-center justify-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
-              <span class="q-ml-sm">Loading...</span>
+          <span class="q-ml-sm">Loading...</span>
         </div>
         <div v-else class="row q-gutter-md">
           <div class="col-12 col-md-12 q-pa-sm">
-          <div class="text-h6 q-pa-md text-green">
-            <q-icon name="assignment" size="md" /> Temporary P.O. List
-          </div>
+            <div class="text-h6 q-pa-md text-green">
+              <q-icon name="assignment" size="md" /> Temporary P.O. List
+            </div>
             <q-table
               :rows="rows"
               :columns="cols"
@@ -21,8 +21,6 @@
               class="q-mr-md my-sticky-header-table"
               :rows-per-page-options="[0]"
               table-header-class="text-white"
-
-
             >
               <template v-slot:top-left>
                 <q-input
@@ -49,36 +47,32 @@
                     {{ props.row.created_at.slice(0, 10) }}
                   </q-td>
                   <q-td key="actions" align="center">
-
                     <q-btn
                       flat
                       color="green"
                       icon="edit"
                       @click="
                         () => {
-
                           editItem(props.row.po_no)
-                           ShowUpdate = true
+                          ShowUpdate = true
                         }
                       "
                     >
-                    <q-tooltip>Edit P.O.</q-tooltip>
-                  </q-btn>
-                     <q-btn
+                      <q-tooltip>Edit P.O.</q-tooltip>
+                    </q-btn>
+                    <q-btn
                       flat
                       color="green"
                       icon="visibility"
-
                       @click="
                         () => {
                           getItemsByTempPO(props.row.po_no)
                           show_list = true
-
                         }
                       "
                     >
-                    <q-tooltip>View</q-tooltip>
-                  </q-btn>
+                      <q-tooltip>View</q-tooltip>
+                    </q-btn>
                   </q-td>
                 </q-tr>
               </template>
@@ -91,7 +85,9 @@
     <q-dialog v-model="ShowUpdate" persistent>
       <q-card>
         <q-card-section class="text-h6">
-          <div class="text-h6 q-pa-md text-green"><q-icon name="edit" size="md" /> Update Temporary P.O. #</div>
+          <div class="text-h6 q-pa-md text-green">
+            <q-icon name="edit" size="md" /> Update Temporary P.O. #
+          </div>
 
           <div>
             <q-input
@@ -107,21 +103,19 @@
               label="Update P.O. #"
               class="full-width q-mb-md"
               @click="UpdateTempPO(this.selected_tempPO, this.po_no)"
-
             />
           </div>
         </q-card-section>
         <q-card-actions>
-          <q-btn flat color="green" label="Close" @click="ShowUpdate = false
-          " />
+          <q-btn flat color="green" label="Close" @click="ShowUpdate = false" />
         </q-card-actions>
       </q-card>
     </q-dialog>
 
     <q-dialog v-model="show_list" persistent>
-      <q-card style="width: 400px;">
+      <q-card style="width: 400px">
         <q-card-section class="text-h6">
-          <div class="text-h6 q-pa-md text-green"> Item Details</div>
+          <div class="text-h6 q-pa-md text-green">Item Details</div>
           <q-table
             :rows="med_rows"
             :columns="med_cols"
@@ -131,16 +125,16 @@
             class="q-mr-md"
             :style="{ height: '400px', width: '100%' }"
           >
-          <template #body="props">
-             <q-tr :v-bind="props" class="text-subtitle1">
-               <q-td key="generic_name" align="left">
-                 {{ props.row.generic_name }}
-               </q-td>
-               <q-td key="brand_name" align="left">
-                 {{ props.row.brand_name }}
-               </q-td>
-             </q-tr>
-          </template>
+            <template #body="props">
+              <q-tr :v-bind="props" class="text-subtitle1">
+                <q-td key="generic_name" align="left">
+                  {{ props.row.generic_name }}
+                </q-td>
+                <q-td key="brand_name" align="left">
+                  {{ props.row.brand_name }}
+                </q-td>
+              </q-tr>
+            </template>
           </q-table>
         </q-card-section>
         <q-card-actions>
@@ -167,7 +161,7 @@ export default {
   },
   setup() {
     return {
-      med_cols:[
+      med_cols: [
         {
           name: 'generic_name',
           required: true,
@@ -175,14 +169,13 @@ export default {
           align: 'left',
           field: 'generic_name',
         },
-       {
+        {
           name: 'brand_name',
           required: true,
           label: 'Brand Name',
           align: 'left',
           field: 'brand_name',
         },
-
       ],
       cols: [
         {
@@ -213,7 +206,7 @@ export default {
   },
   data() {
     return {
-      show_list:false,
+      show_list: false,
       ShowUpdate: false,
       color: '',
       rows: [],
@@ -273,7 +266,7 @@ export default {
     },
 
     editItem(id) {
-       this.po_no = ''
+      this.po_no = ''
       this.selected_tempPO = id
       console.log(this.selected_tempPO)
     },
@@ -296,8 +289,6 @@ export default {
 
     async UpdateTempPO(temp, po_no) {
       try {
-
-
         if (!po_no) {
           Notify.create({
             type: 'negative',
@@ -326,20 +317,18 @@ export default {
 
     async getItemsByTempPO(po_no) {
       this.med_rows = []
-      try{
-
+      try {
         await this.itemStore.getItemsByPO(po_no)
         this.med_rows = this.itemStore.po_items
-
-      }catch(error){
-          Notify.create({
-            type: 'negative',
-            message: error.response.data.message || 'An error occurred while fetching items.',
-            position: 'center',
-            timeout: 5000,
-          })
-        }    },
-
+      } catch (error) {
+        Notify.create({
+          type: 'negative',
+          message: error.response.data.message || 'An error occurred while fetching items.',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
   },
 
   mounted() {

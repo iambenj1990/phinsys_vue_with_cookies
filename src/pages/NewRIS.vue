@@ -18,7 +18,7 @@
             />
           </div>
           <div class="row justify-end">
-            <q-btn type="submit" color="green" label="Proceed" v-if="moduleAccess('RIS','add')"/>
+            <q-btn type="submit" color="green" label="Proceed" v-if="moduleAccess('RIS', 'add')" />
           </div>
         </q-form>
       </q-card-section>
@@ -30,7 +30,7 @@
           </template>
           <template #top-right>
             <q-btn
-            v-if="moduleAccess('RIS','add')"
+              v-if="moduleAccess('RIS', 'add')"
               flat
               type="button"
               label="Items"
@@ -68,7 +68,7 @@
 
               <q-td key="actions" style="font-size: 11px" align="left">
                 <q-btn
-                v-if="moduleAccess('RIS','delete')"
+                  v-if="moduleAccess('RIS', 'delete')"
                   flat
                   color="negative"
                   @click="getSelectedDataToDelete(props.row.table_id_transactions)"
@@ -81,7 +81,7 @@
 
         <q-card-actions align="right">
           <q-btn
-            v-if="moduleAccess('RIS','add')"
+            v-if="moduleAccess('RIS', 'add')"
             color="green"
             type="button"
             label="Save"
@@ -200,7 +200,7 @@
 
                 <q-td key="actions" style="font-size: 11px" align="center">
                   <q-btn
-                  v-if="moduleAccess('RIS','add')"
+                    v-if="moduleAccess('RIS', 'add')"
                     flat
                     rounded
                     color="primary"
@@ -260,7 +260,13 @@
               }
             "
           />
-          <q-btn flat label="Add" color="primary" @click="add_Order(this.transactionDetails)" v-if="moduleAccess('RIS','add')" />
+          <q-btn
+            flat
+            label="Add"
+            color="primary"
+            @click="add_Order(this.transactionDetails)"
+            v-if="moduleAccess('RIS', 'add')"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -277,7 +283,7 @@
             color="blue"
             style="width: 150px"
             @click="remove_order(selected_to_delete)"
-            v-if="moduleAccess('RIS','delete')"
+            v-if="moduleAccess('RIS', 'delete')"
           ></q-btn>
           <q-btn
             label="cancel"

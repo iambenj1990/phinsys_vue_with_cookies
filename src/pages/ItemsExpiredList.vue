@@ -10,7 +10,7 @@
         <q-separator /> -->
         <div v-if="loading" class="flex flex-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
-              <span class="q-ml-sm">Loading...</span>
+          <span class="q-ml-sm">Loading...</span>
         </div>
         <div v-else class="row q-gutter-md">
           <div class="col-12 col-md-12 q-pa-sm">
@@ -23,9 +23,7 @@
               bordered
               class="q-mr-md my-sticky-header-table"
               table-header-class="text-white"
-
               v-model:pagination="pagination"
-
             >
               <template v-slot:top-left>
                 <q-input
@@ -50,7 +48,7 @@
                   label="Export"
                   colors="white"
                   class="q-mr-md q-ml-md text-caption text-white"
-                  style="background-color: #26A65B;"
+                  style="background-color: #26a65b"
                   color="primary"
                   icon="import_export"
                   @click="exportToExcel()"
@@ -62,7 +60,17 @@
                   <q-td key="po_no" style="font-size: 11px" align="left">
                     {{ props.row.po_no }}
                   </q-td>
-                  <q-td key="generic_name" style="font-size: 11px; white-space: normal; word-break: break-word; max-width: 200px;" align="left" class="text-wrap">
+                  <q-td
+                    key="generic_name"
+                    style="
+                      font-size: 11px;
+                      white-space: normal;
+                      word-break: break-word;
+                      max-width: 200px;
+                    "
+                    align="left"
+                    class="text-wrap"
+                  >
                     {{ props.row.generic_name }}
                   </q-td>
                   <q-td key="brand_name" style="font-size: 11px" align="left">
@@ -265,9 +273,9 @@ export default {
       // Add rows
       this.rows.forEach((row) => {
         const rowWithDays = {
-      ...row,
-      daysTillExpire: this.calculateDaysUntilExpiration(row.expiration_date),
-    }
+          ...row,
+          daysTillExpire: this.calculateDaysUntilExpiration(row.expiration_date),
+        }
         worksheet.addRow(rowWithDays)
       })
 

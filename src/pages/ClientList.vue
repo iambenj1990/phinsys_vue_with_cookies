@@ -34,7 +34,14 @@
               :loading="loading"
             >
               <template v-slot:top-right>
-                <q-btn color="primary" label="New Customer" to="/customer" icon="add" flat v-if="moduleAccess('Customer History','add')" />
+                <q-btn
+                  color="primary"
+                  label="New Customer"
+                  to="/customer"
+                  icon="add"
+                  flat
+                  v-if="moduleAccess('Customer History', 'add')"
+                />
               </template>
 
               <template #body="props">
@@ -81,7 +88,7 @@
                       @click="showClient(props.row.id)"
                       icon="description"
                       to="/customers/profile"
-                      v-if="moduleAccess('Customer History','view')"
+                      v-if="moduleAccess('Customer History', 'view')"
                     />
 
                     <q-btn
@@ -90,7 +97,7 @@
                       @click="showClient(props.row.id)"
                       icon="edit"
                       to="/customer"
-                       v-if="moduleAccess('Customer History','edit')"
+                      v-if="moduleAccess('Customer History', 'edit')"
                     />
 
                     <q-btn
@@ -98,7 +105,7 @@
                       color="negative"
                       @click="showDeletepage(props.row.id)"
                       icon="delete"
-                       v-if="moduleAccess('Customer History','delete')"
+                      v-if="moduleAccess('Customer History', 'delete')"
                     />
                   </q-td>
                 </q-tr>

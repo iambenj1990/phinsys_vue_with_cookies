@@ -10,7 +10,7 @@
         <q-separator /> -->
         <div v-if="loading" class="flex flex-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
-              <span class="q-ml-sm">Loading...</span>
+          <span class="q-ml-sm">Loading...</span>
         </div>
         <div v-else class="row q-gutter-md">
           <div class="col-12 col-md-12 q-pa-sm">
@@ -43,13 +43,12 @@
               </template>
 
               <template #top-right>
-
                 <q-btn
                   flat
                   type="button"
                   label="Export"
                   class="q-mr-md q-ml-md text-caption text-white"
-                  style="background-color: #26A65B;"
+                  style="background-color: #26a65b"
                   icon="import_export"
                   @click="exportToExcel()"
                 />
@@ -60,7 +59,17 @@
                   <q-td key="po_no" style="font-size: 11px" align="left">
                     {{ props.row.po_no }}
                   </q-td>
-                  <q-td key="generic_name" style="font-size: 11px; white-space: normal; word-break: break-word; max-width: 200px;" align="left" class="text-wrap">
+                  <q-td
+                    key="generic_name"
+                    style="
+                      font-size: 11px;
+                      white-space: normal;
+                      word-break: break-word;
+                      max-width: 200px;
+                    "
+                    align="left"
+                    class="text-wrap"
+                  >
                     {{ props.row.generic_name }}
                   </q-td>
                   <q-td key="brand_name" style="font-size: 11px" align="left">
@@ -87,10 +96,7 @@
                   </q-td>
 
                   <q-td key="Closing_quantity" style="font-size: 11px" align="left">
-                      {{
-                        props.row.Closing_quantity
-                      }}
-
+                    {{ props.row.Closing_quantity }}
                   </q-td>
 
                   <q-td
@@ -126,9 +132,7 @@ export default {
     },
   },
   setup() {
-
     return {
-
       pagination: {
         page: 1,
         rowsPerPage: 15,
@@ -240,8 +244,6 @@ export default {
         expiration_date: '',
         user_id: 0,
       },
-
-
     }
   },
 
@@ -283,13 +285,13 @@ export default {
         this.rows = this.itemStore.zero_stocks
       } catch (error) {
         Notify.create({
-            type: 'negative',
-            message: error.response.data.message || 'An error occurred.',
-            position: 'center',
-            timeout: 5000,
-          })
-      }finally{
-        this.loading= false
+          type: 'negative',
+          message: error.response.data.message || 'An error occurred.',
+          position: 'center',
+          timeout: 5000,
+        })
+      } finally {
+        this.loading = false
       }
     },
 

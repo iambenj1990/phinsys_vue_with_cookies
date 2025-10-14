@@ -30,7 +30,7 @@
           </template>
           <template #top-right>
             <q-btn
-                v-if="moduleAccess('RIS','add')"
+              v-if="moduleAccess('RIS', 'add')"
               flat
               type="button"
               label="Items"
@@ -72,7 +72,7 @@
                   color="negative"
                   @click="getSelectedDataToDelete(props.row.table_id_transactions)"
                   icon="delete"
-                    v-if="moduleAccess('RIS','delete')"
+                  v-if="moduleAccess('RIS', 'delete')"
                 />
               </q-td>
             </q-tr>
@@ -199,7 +199,7 @@
 
                 <q-td key="actions" style="font-size: 11px" align="center">
                   <q-btn
-                    v-if="moduleAccess('RIS','add')"
+                    v-if="moduleAccess('RIS', 'add')"
                     flat
                     rounded
                     color="primary"
@@ -259,7 +259,13 @@
               }
             "
           />
-          <q-btn flat label="Add" color="primary" @click="add_Order(this.transactionDetails)"   v-if="moduleAccess('RIS','add')" />
+          <q-btn
+            flat
+            label="Add"
+            color="primary"
+            @click="add_Order(this.transactionDetails)"
+            v-if="moduleAccess('RIS', 'add')"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -276,7 +282,8 @@
             color="blue"
             style="width: 150px"
             @click="remove_order(selected_to_delete)"
-              v-if="moduleAccess('RIS','delete')" ></q-btn>
+            v-if="moduleAccess('RIS', 'delete')"
+          ></q-btn>
           <q-btn
             label="cancel"
             color="red"
@@ -290,11 +297,10 @@
 </template>
 
 <script>
-import {useUserStore} from 'src/stores/userStore'
+import { useUserStore } from 'src/stores/userStore'
 import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { useRequisitionIssuanceSlip } from 'src/stores/RequisitionIssuanceSlip'
-
 
 export default {
   setup() {
@@ -425,7 +431,7 @@ export default {
   },
   data() {
     return {
-      Credentials:[],
+      Credentials: [],
       user: {},
       showRemoveItem: false,
       hasOpentransaction: false,
@@ -484,14 +490,12 @@ export default {
     },
 
     async get_purpose(ris_id) {
-    try {
-
-      await this.risStore.getRISinfo(ris_id)
-      this.form.purpose = this.risStore.ris_info.purpose
-    } catch (error) {
-      console.log(error)
-    }
-
+      try {
+        await this.risStore.getRISinfo(ris_id)
+        this.form.purpose = this.risStore.ris_info.purpose
+      } catch (error) {
+        console.log(error)
+      }
     },
 
     clearData() {
@@ -592,12 +596,11 @@ export default {
       this.rows = this.TransactionStore.customerTransactions
     },
 
-   async GetAuthenticatedUser() {
+    async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
       this.user = this.userStore.user
       this.Credentials = this.userStore.credentials
     },
-
 
     moduleAccess(label, type) {
       const access = this.Credentials.find((module) => module.module === label)
@@ -619,7 +622,7 @@ export default {
     this.GetAuthenticatedUser()
     this.ris_no = this.$route.query.ris_no
     this.get_purpose({ ris_no: this.ris_no })
-    this.getOrders(this.ris_no )
+    this.getOrders(this.ris_no)
   },
 
   computed: {

@@ -90,7 +90,7 @@
             icon="edit_note"
             style="width: 110px"
             @click="$router.push({ path: '/ris/info/adjust', query: { ris_no: ris_no } })"
-            v-if="moduleAccess('RIS','edit')"
+            v-if="moduleAccess('RIS', 'edit')"
           />
           <q-btn
             color="red"
@@ -589,8 +589,6 @@ export default {
       await this.TransactionStore.getTransactionOrders(transaction_id)
       this.rows = this.TransactionStore.customerTransactions
     },
-
-
   },
   mounted() {
     this.GetAuthenticatedUser()

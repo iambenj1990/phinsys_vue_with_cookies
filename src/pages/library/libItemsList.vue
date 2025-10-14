@@ -34,6 +34,7 @@
             </q-card-actions>
 
             <q-table
+            
               :rows="medicines"
               :columns="upload_cols"
               virtual-scroll

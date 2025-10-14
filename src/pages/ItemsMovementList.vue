@@ -9,7 +9,13 @@
         </div> -->
         <!-- <q-separator /> -->
         <div class="q-my-sm q-mx-sm" align="right">
-          <q-btn flat label="Close Stocks" color="grey" @click="closePrompt = true"   v-if="moduleAccess('Stock Movements','add')" />
+          <q-btn
+            flat
+            label="Close Stocks"
+            color="grey"
+            @click="closePrompt = true"
+            v-if="moduleAccess('Stock Movements', 'add')"
+          />
           <q-btn
             flat
             label="Open Stocks"
@@ -17,16 +23,15 @@
             color="green"
             @click="
               () => {
-
                 openPrompt = true
               }
             "
-              v-if="moduleAccess('Stock Movements','add')"
+            v-if="moduleAccess('Stock Movements', 'add')"
           />
         </div>
         <div v-if="loading" class="flex flex-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
-              <span class="q-ml-sm">Loading...</span>
+          <span class="q-ml-sm">Loading...</span>
         </div>
         <div v-else class="row q-gutter-md">
           <div class="col-12 col-md-12 q-pa-sm">
@@ -86,7 +91,7 @@
                     icon="import_export"
                     @click="exportToExcel"
                     style="height: 40px"
-                      v-if="moduleAccess('Stock Movements','export')"
+                    v-if="moduleAccess('Stock Movements', 'export')"
                   />
                 </div>
               </template>
@@ -139,8 +144,14 @@
 
                   <q-td key="Closing_quantity" style="font-size: 11px" align="left">
                     <q-badge
-
-                      :style="{ backgroundColor: getStockColor(props.row.total_closing_quantity, props.row.quantity), color: '#000000', width: '100px' }"
+                      :style="{
+                        backgroundColor: getStockColor(
+                          props.row.total_closing_quantity,
+                          props.row.quantity,
+                        ),
+                        color: '#000000',
+                        width: '100px',
+                      }"
                       class="flex flex-center q-pa-xs"
                     >
                       {{
@@ -180,8 +191,8 @@
                           passStockCardData(props.row)
                         }
                       "
-                        v-if="moduleAccess('Stock Movements','view')"
-                       >
+                      v-if="moduleAccess('Stock Movements', 'view')"
+                    >
                       <q-tooltip> Stock Card </q-tooltip>
                     </q-btn>
                     <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
@@ -300,7 +311,13 @@
         <q-separator />
         <q-card-actions align="right">
           <q-btn flat label="Cancel" color="grey" @click="closePrompt = false" />
-          <q-btn flat label="Proceed" color="negative" @click="closeStock()"   v-if="moduleAccess('Stock Movements','add')"/>
+          <q-btn
+            flat
+            label="Proceed"
+            color="negative"
+            @click="closeStock()"
+            v-if="moduleAccess('Stock Movements', 'add')"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -317,10 +334,17 @@
         <q-separator />
         <q-card-actions align="right">
           <q-btn flat label="Cancel" color="grey" @click="openPrompt = false" />
-          <q-btn flat label="Proceed" color="negative" @click="()=>{
-            openStock(this.user.id)
-          }"
-          v-if="moduleAccess('Stock Movements','add')" />
+          <q-btn
+            flat
+            label="Proceed"
+            color="negative"
+            @click="
+              () => {
+                openStock(this.user.id)
+              }
+            "
+            v-if="moduleAccess('Stock Movements', 'add')"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -462,8 +486,8 @@ export default {
   },
   data() {
     return {
-      Credentials:[],
-      user:{},
+      Credentials: [],
+      user: {},
       closePrompt: false,
       openDate: false,
       openPrompt: false,
@@ -510,7 +534,6 @@ export default {
   },
 
   methods: {
-
     moduleAccess(label, type) {
       const access = this.Credentials.find((module) => module.module === label)
       console.log(access)
@@ -644,7 +667,7 @@ export default {
       const normal = this.ConfigStore.configuration.normal_color
       const empty = this.ConfigStore.configuration.empty_color
 
-      if (percentage === 0) return empty// Red = Out of stock
+      if (percentage === 0) return empty // Red = Out of stock
       if (percentage <= 50) return low // Yellow = Medium stock
       return normal // Green = Safe
     },
@@ -729,7 +752,6 @@ export default {
       this.itemStore.selected_stockCard.brand_name = data.brand_name
       // this.$router.push('/inventory/stockcard')
       this.$router.push('/inventory/stockcard/item')
-
     },
   },
 
@@ -737,7 +759,6 @@ export default {
     this.GetAuthenticatedUser()
     this.showStocks(this.today)
     this.ConfigStore.getConfiguration()
-
   },
 
   watch: {

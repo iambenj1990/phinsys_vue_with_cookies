@@ -212,10 +212,22 @@
                 style="width: 100px"
                 @click="viewReset()"
               />
-              <q-btn type="submit" label="Update" color="primary" style="width: 100px" v-if="moduleAccess('Purchasing','edit')" />
+              <q-btn
+                type="submit"
+                label="Update"
+                color="primary"
+                style="width: 100px"
+                v-if="moduleAccess('Purchasing', 'edit')"
+              />
             </div>
             <div align="right" v-else-if="!toUpdate">
-              <q-btn type="submit" label="Add" color="primary" style="width: 100px" v-if="moduleAccess('Purchasing','add')" />
+              <q-btn
+                type="submit"
+                label="Add"
+                color="primary"
+                style="width: 100px"
+                v-if="moduleAccess('Purchasing', 'add')"
+              />
             </div>
           </q-card-section>
         </q-form>
@@ -251,8 +263,20 @@
                   </q-td>
 
                   <q-td key="actions" style="font-size: 11px" align="left">
-                    <q-btn flat color="primary" @click="fetchItem(props.row.id)" icon="edit" v-if="moduleAccess('Purchasing','edit')" />
-                    <q-btn flat color="negative" icon="delete" @click="removeItem(props.row.id)" v-if="moduleAccess('Purchasing','delete')" />
+                    <q-btn
+                      flat
+                      color="primary"
+                      @click="fetchItem(props.row.id)"
+                      icon="edit"
+                      v-if="moduleAccess('Purchasing', 'edit')"
+                    />
+                    <q-btn
+                      flat
+                      color="negative"
+                      icon="delete"
+                      @click="removeItem(props.row.id)"
+                      v-if="moduleAccess('Purchasing', 'delete')"
+                    />
                   </q-td>
                 </q-tr>
               </template>

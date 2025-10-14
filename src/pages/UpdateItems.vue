@@ -146,7 +146,7 @@
               <div class="col-12 col-md-1 q-pa-sm">
                 <q-input
                   :key="MedicineInfo.unit + '-' + isProgrammaticEdit"
-                  :readonly="MedicineInfo.unit == 'BOX'|| isProgrammaticEdit"
+                  :readonly="MedicineInfo.unit == 'BOX' || isProgrammaticEdit"
                   dense
                   v-model="MedicineInfo.quantity"
                   label="Quantity"
@@ -322,7 +322,13 @@
         <q-separator></q-separator>
         <q-card-section> Are you sure you want to update this item? </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" color="red" @click="toUpdateDialog = false" style="width: 100px" />
+          <q-btn
+            flat
+            label="Cancel"
+            color="red"
+            @click="toUpdateDialog = false"
+            style="width: 100px"
+          />
           <q-btn flat label="Update" color="primary" @click="handleSubmit()" style="width: 100px" />
         </q-card-actions>
       </q-card>
@@ -330,13 +336,21 @@
     <q-dialog persistent v-model="toDeleteDialog">
       <q-card style="max-width: 400px; width: 100%">
         <q-card-section>
-          <div class="text-h6"><q-icon name="delete" class="text-red" size="28px" /> Delete Item</div>
+          <div class="text-h6">
+            <q-icon name="delete" class="text-red" size="28px" /> Delete Item
+          </div>
         </q-card-section>
         <q-separator></q-separator>
         <q-card-section> Are you sure you want to delete this item? </q-card-section>
         <q-card-section> SELECTED ID : {{ itemToDelete }} </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" color="red" @click="toDeleteDialog = false" style="width: 100px" />
+          <q-btn
+            flat
+            label="Cancel"
+            color="red"
+            @click="toDeleteDialog = false"
+            style="width: 100px"
+          />
           <q-btn
             flat
             label="Remove"
@@ -548,7 +562,6 @@ export default {
   methods: {
     showUpdate() {
       this.toUpdateDialog = true
-
     },
     showDelete(id) {
       this.toDeleteDialog = true
@@ -661,10 +674,9 @@ export default {
     },
 
     async fetchItem(id) {
-
       console.log(id)
       await this.itemStore.getItem(id)
-      this.MedicineInfo = {...this.itemStore.item}
+      this.MedicineInfo = { ...this.itemStore.item }
       this.computePrice()
       this.toUpdate = true
       this.selected_id = id

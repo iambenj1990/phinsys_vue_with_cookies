@@ -1,119 +1,113 @@
 <template>
   <q-page>
     <!-- <div class="flex flex-center q-ma-sm"> -->
-      <!-- <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%"> -->
-        <!-- <div class="row q-gutter-md">
+    <!-- <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%"> -->
+    <!-- <div class="row q-gutter-md">
           <div class="col-12">
            <div align="left" class="q-ma-md text-h6 text-primary">Medicine Inventory</div>
           </div>
         </div>
         <q-separator /> -->
-        <div v-if="loading" class="flex flex-center">
-          <q-circular-progress indeterminate size="90px" color="primary" />
-          <span class="q-ml-sm">Loading...</span>
-        </div>
-        <div v-else class="row q-gutter-md">
-          <div class="col-12 col-md-12 q-pa-sm">
-            <q-table
-              :rows="rows"
-              :columns="cols"
-              row-key="id"
-              :filter="filter"
-              flat
-              bordered
-             class="my-sticky-header-table"
-             table-header-class="text-white"
-
-              :rows-per-page-options="[0]"
+    <div v-if="loading" class="flex flex-center">
+      <q-circular-progress indeterminate size="90px" color="primary" />
+      <span class="q-ml-sm">Loading...</span>
+    </div>
+    <div v-else class="row q-gutter-md">
+      <div class="col-12 col-md-12 q-pa-sm">
+        <q-table
+          :rows="rows"
+          :columns="cols"
+          row-key="id"
+          :filter="filter"
+          flat
+          bordered
+          class="my-sticky-header-table"
+          table-header-class="text-white"
+          :rows-per-page-options="[0]"
+        >
+          <template v-slot:top-left>
+            <q-input
+              borderless
+              dense
+              debounce="300"
+              v-model="filter"
+              placeholder="Search"
+              style="width: 300px"
             >
-              <template v-slot:top-left>
-                <q-input
-                  borderless
-                  dense
-                  debounce="300"
-                  v-model="filter"
-                  placeholder="Search"
-
-                  style="width: 300px"
-                >
-                  <template v-slot:append>
-                    <q-icon name="search" />
-                  </template>
-                </q-input>
+              <template v-slot:append>
+                <q-icon name="search" />
               </template>
-              <template v-slot:top-right>
-                <div class="q-gutter-sm flex">
+            </q-input>
+          </template>
+          <template v-slot:top-right>
+            <div class="q-gutter-sm flex">
+              <q-input
+                v-model="rangeText"
+                label="Select Date Range"
+                dense
+                readonly
+                style="width: 250px"
+              >
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer" color="gray">
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                      <q-date v-model="selectedDates" range mask="YYYY-MM-DD" />
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
 
+              <q-btn
+                dense
+                flat
+                color="green"
+                label="Export"
+                icon="import_export"
+                @click="exportToExcel"
+                style="height: 40px"
+                class="q-pl-md"
+              />
+            </div>
+          </template>
 
-                  <q-input
-                    v-model="rangeText"
-                    label="Select Date Range"
-                    dense
-                    readonly
-                    style="width: 250px"
+          <template #body="props">
+            <q-tr :v-bind="props">
+              <q-td key="po_no" style="font-size: 11px" align="left">
+                {{ props.row.po_no }}
+              </q-td>
+              <q-td
+                key="generic_name"
+                style="
+                  font-size: 11px;
+                  white-space: normal;
+                  word-break: break-word;
+                  max-width: 250px;
+                "
+                align="left"
+                class="text-wrap"
+              >
+                {{ props.row.generic_name }}
+              </q-td>
+              <q-td key="brand_name" style="font-size: 11px" align="left">
+                {{ props.row.brand_name }}
+              </q-td>
+              <q-td key="dosage" style="font-size: 11px" align="left">
+                {{ props.row.dosage }}
+              </q-td>
+              <q-td key="dosage_form" style="font-size: 11px" align="left">
+                {{ props.row.dosage_form }}
+              </q-td>
 
-                  >
-                    <template v-slot:append >
-                      <q-icon name="event" class="cursor-pointer" color="gray">
-                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="selectedDates" range mask="YYYY-MM-DD" />
-                        </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                  </q-input>
+              <q-td key="unit" style="font-size: 11px" align="left">
+                <!-- {{ props.row.unit }} -->
+                pcs
+              </q-td>
 
-                  <q-btn
-                    dense
-                    flat
-                    color="green"
-                    label="Export"
-                    icon="import_export"
-                    @click="exportToExcel"
-                    style="height: 40px"
-                    class="q-pl-md"
+              <q-td key="current_quantity" style="font-size: 11px" align="left">
+                {{ !props.row.current_quantity ? 0 : props.row.current_quantity }}
+              </q-td>
 
-                  />
-                </div>
-              </template>
-
-              <template #body="props">
-                <q-tr :v-bind="props">
-                  <q-td key="po_no" style="font-size: 11px" align="left">
-                    {{ props.row.po_no }}
-                  </q-td>
-                  <q-td
-                    key="generic_name"
-                    style="
-                      font-size: 11px;
-                      white-space: normal;
-                      word-break: break-word;
-                      max-width: 250px;
-                    "
-                    align="left"
-                    class="text-wrap"
-                  >
-                    {{ props.row.generic_name }}
-                  </q-td>
-                  <q-td key="brand_name" style="font-size: 11px" align="left">
-                    {{ props.row.brand_name }}
-                  </q-td>
-                  <q-td key="dosage" style="font-size: 11px" align="left">
-                    {{ props.row.dosage }}
-                  </q-td>
-                  <q-td key="dosage_form" style="font-size: 11px" align="left">
-                    {{ props.row.dosage_form }}
-                  </q-td>
-
-                  <q-td key="unit" style="font-size: 11px" align="left">
-                    <!-- {{ props.row.unit }} -->
-                    pcs
-                  </q-td>
-
-                  <q-td key="current_quantity" style="font-size: 11px" align="left">
-                    {{ !props.row.current_quantity ? 0 : props.row.current_quantity }}
-                  </q-td>
-
-                  <!-- <q-td key="Closing_quantity" style="font-size: 11px" align="left">
+              <!-- <q-td key="Closing_quantity" style="font-size: 11px" align="left">
                     <q-badge
                       style="width: 100px"
                       :color="getStockColor(props.row.total_closing_quantity, props.row.quantity)"
@@ -123,25 +117,24 @@
                       {{ props.row.total_closing_quantity }}
                     </q-badge>
                   </q-td> -->
-                  <q-td key="opening_quantity" style="font-size: 11px" align="left">
-                    {{ props.row.opening_quantity }}
-                  </q-td>
-                  <q-td key="closing_quantity" style="font-size: 11px" align="left">
-                    {{ props.row.closing_quantity }}
-                  </q-td>
+              <q-td key="opening_quantity" style="font-size: 11px" align="left">
+                {{ props.row.opening_quantity }}
+              </q-td>
+              <q-td key="closing_quantity" style="font-size: 11px" align="left">
+                {{ props.row.closing_quantity }}
+              </q-td>
 
-                  <q-td key="total_out_quantity" style="font-size: 11px" align="left">
+              <q-td key="total_out_quantity" style="font-size: 11px" align="left">
+                {{ !props.row.total_out_quantity ? 0 : props.row.total_out_quantity }}
 
-                       {{ !props.row.total_out_quantity ? 0 : props.row.total_out_quantity }}
+                <!-- {{ props.row.quantity_out }} -->
+              </q-td>
 
-                    <!-- {{ props.row.quantity_out }} -->
-                  </q-td>
+              <q-td key="expiration_date" style="font-size: 11px" align="left">
+                {{ props.row.expiration_date }}
+              </q-td>
 
-                  <q-td key="expiration_date" style="font-size: 11px" align="left">
-                    {{ props.row.expiration_date }}
-                  </q-td>
-
-                  <!-- <q-td key="status" style="font-size: 11px" align="left">
+              <!-- <q-td key="status" style="font-size: 11px" align="left">
                     <q-badge :color="props.row.stock_status=='OPEN'?'green':'red'">
                       {{ props.row.stock_status }}
                     </q-badge>
@@ -150,26 +143,26 @@
                     </q-badge>
                   </q-td> -->
 
-                  <q-td
-                    key="last_inventory_date"
-                    style="font-size: 11px"
-                    class="text-weight-bolder"
-                    align="left"
-                  >
-                    {{ props.row.transaction_date }}
-                  </q-td>
+              <q-td
+                key="last_inventory_date"
+                style="font-size: 11px"
+                class="text-weight-bolder"
+                align="left"
+              >
+                {{ props.row.transaction_date }}
+              </q-td>
 
-                  <!-- <q-td key="actions" style="font-size: 11px" align="center">
+              <!-- <q-td key="actions" style="font-size: 11px" align="center">
                     <q-btn flat color="primary" @click="AdjustItem(props.row)" icon="edit_document">
                       <q-tooltip> Adjustment </q-tooltip>
                     </q-btn>
                   </q-td> -->
-                </q-tr>
-              </template>
-            </q-table>
-          </div>
-        </div>
-      <!-- </q-card> -->
+            </q-tr>
+          </template>
+        </q-table>
+      </div>
+    </div>
+    <!-- </q-card> -->
     <!-- </div> -->
     <q-dialog v-model="showAdjustment" persistent style="max-width: 500px; width: 50%">
       <q-card style="max-width: 800px; width: 100%">
@@ -218,8 +211,6 @@ import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { useIndicatorStore } from 'src/stores/indicatorsStore'
 import ExcelJS from 'exceljs/dist/exceljs.min.js'
-
-
 
 function debounce(fn, delay) {
   let timeout
@@ -548,10 +539,9 @@ export default {
   },
 
   mounted() {
-
-      this.selectedDates= {
-      from : this.start.toISOString().split('T')[0],
-      to : this.end.toISOString().split('T')[0]
+    this.selectedDates = {
+      from: this.start.toISOString().split('T')[0],
+      to: this.end.toISOString().split('T')[0],
     }
     // this.showStocks(this.today)
     // this.Check_OPEN()
@@ -567,7 +557,6 @@ export default {
         // this.get_clients(newRange)
         // this.fetchAllStocks(newRange)
         this.showStocks(newRange)
-
       }, 500),
       immediate: true, // Call the handler immediately with the initial value
       deep: true, // Watch for changes in the object properties

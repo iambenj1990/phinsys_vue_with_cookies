@@ -26,13 +26,13 @@
               class="q-mb-md text-uppercase"
               debounce="300"
               :clearable="true"
-              style="width: 300px;"
+              style="width: 300px"
               dense
             >
-             <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-          </q-input>
+              <template v-slot:append>
+                <q-icon name="search" />
+              </template>
+            </q-input>
           </template>
           <template #body="props">
             <q-tr :v-bind="props">

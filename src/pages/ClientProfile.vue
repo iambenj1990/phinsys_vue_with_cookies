@@ -311,14 +311,13 @@ export default {
   },
 
   mounted() {
-
     console.log(this.customerStore.customer_id)
     this.get_client(this.customerStore.customer_id)
     // this.getTransactionIds(this.customerStore.customer_id)
     this.get_transactions(this.customerStore.customer_id)
   },
 
-  unmounted(){
+  unmounted() {
     this.customerStore.customer_id = 0
   },
   methods: {

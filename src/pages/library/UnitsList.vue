@@ -15,16 +15,9 @@
               dense
               required
               class="q-mt-md"
-
             />
             <div class="flex justify-end">
-               <q-btn
-                label="Cancel"
-                color="red"
-                class="q-mt-md q-mr-md"
-
-                @click="clear()"
-              />
+              <q-btn label="Cancel" color="red" class="q-mt-md q-mr-md" @click="clear()" />
               <q-btn
                 label="Update"
                 color="primary"
@@ -41,7 +34,6 @@
       <q-separator spaced />
 
       <q-card>
-      
         <q-card-section>
           <q-table :rows="units" :columns="columns" row-key="id" flat bordered>
             <template #body="props">
@@ -129,7 +121,7 @@ export default {
     }
   },
   methods: {
-    clear(){
+    clear() {
       this.newUnit.description = ''
       this.newUnit.symbol = ''
       this.toUpdate = false
@@ -138,7 +130,6 @@ export default {
     async getUnits() {
       await this.unitStore.getUnits()
       this.units = this.unitStore.units
-
     },
 
     async getUnit(id) {

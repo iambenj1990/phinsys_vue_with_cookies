@@ -54,7 +54,13 @@
                 </div>
 
                 <div>
-                  <q-input  dense debounce="300" v-model="filter" placeholder="Search" style="width: 500px">
+                  <q-input
+                    dense
+                    debounce="300"
+                    v-model="filter"
+                    placeholder="Search"
+                    style="width: 500px"
+                  >
                     <template v-slot:append>
                       <q-icon name="search" />
                     </template>
@@ -63,7 +69,7 @@
               </template>
               <template v-slot:top-right>
                 <q-btn
-                  v-if="moduleAccess('Purchasing','edit')"
+                  v-if="moduleAccess('Purchasing', 'edit')"
                   flat
                   label="Update P.O. #"
                   class="text-subtitle2"
@@ -77,7 +83,7 @@
                 />
 
                 <q-btn
-                 v-if="moduleAccess('Purchasing','add')"
+                  v-if="moduleAccess('Purchasing', 'add')"
                   flat
                   type="button"
                   label="Add Purchases"
@@ -125,7 +131,7 @@
                     {{ props.row.expiration_date }}
                   </q-td>
 
-                      <q-td key="actions" style="font-size: 11px" align="left">
+                  <q-td key="actions" style="font-size: 11px" align="left">
                     <q-btn class="text-orange" flat icon="edit" @click="showEdit = true">
                       <q-tooltip>Edit Item</q-tooltip>
                     </q-btn>
@@ -175,96 +181,99 @@
     </q-dialog>
 
     <q-dialog v-model="showEdit" persistent>
-  <q-card style="max-width: 800px; width: 100%; max-height: 90vh; display: flex; flex-direction: column;">
-    <!-- Header -->
-    <q-card-section class="bg-green-1 text-green-10 text-h6 text-weight-medium">
-      Edit Item Information
-    </q-card-section>
+      <q-card
+        style="
+          max-width: 800px;
+          width: 100%;
+          max-height: 90vh;
+          display: flex;
+          flex-direction: column;
+        "
+      >
+        <!-- Header -->
+        <q-card-section class="bg-green-1 text-green-10 text-h6 text-weight-medium">
+          Edit Item Information
+        </q-card-section>
 
-    <!-- Form Section -->
-    <q-card-section class="q-pa-lg scroll" style="overflow-y: auto; flex: 1;">
-      <q-form class="q-gutter-md">
-        <!-- Add padding inside form -->
-        <div class="row q-col-gutter-md">
-          <div class="col-12 col-sm-6">
-            <q-input v-model="MedicineInfo.po_no" label="P.O. No." outlined dense />
-          </div>
+        <!-- Form Section -->
+        <q-card-section class="q-pa-lg scroll" style="overflow-y: auto; flex: 1">
+          <q-form class="q-gutter-md">
+            <!-- Add padding inside form -->
+            <div class="row q-col-gutter-md">
+              <div class="col-12 col-sm-6">
+                <q-input v-model="MedicineInfo.po_no" label="P.O. No." outlined dense />
+              </div>
 
-          <div class="col-12 col-sm-6">
-            <q-input v-model="MedicineInfo.brand_name" label="Brand Name" outlined dense />
-          </div>
+              <div class="col-12 col-sm-6">
+                <q-input v-model="MedicineInfo.brand_name" label="Brand Name" outlined dense />
+              </div>
 
-          <div class="col-12 col-sm-6">
-            <q-input v-model="MedicineInfo.generic_name" label="Generic Name" outlined dense />
-          </div>
+              <div class="col-12 col-sm-6">
+                <q-input v-model="MedicineInfo.generic_name" label="Generic Name" outlined dense />
+              </div>
 
-          <div class="col-12 col-sm-6">
-            <q-input v-model="MedicineInfo.dosage" label="Dosage" outlined dense />
-          </div>
+              <div class="col-12 col-sm-6">
+                <q-input v-model="MedicineInfo.dosage" label="Dosage" outlined dense />
+              </div>
 
-          <div class="col-12 col-sm-6">
-            <q-input v-model="MedicineInfo.dosage_form" label="Type" outlined dense />
-          </div>
+              <div class="col-12 col-sm-6">
+                <q-input v-model="MedicineInfo.dosage_form" label="Type" outlined dense />
+              </div>
 
-          <div class="col-12 col-sm-6">
-            <q-input v-model="MedicineInfo.category" label="Category" outlined dense />
-          </div>
+              <div class="col-12 col-sm-6">
+                <q-input v-model="MedicineInfo.category" label="Category" outlined dense />
+              </div>
 
-          <div class="col-12 col-sm-6">
-            <q-input v-model="MedicineInfo.unit" label="Unit" outlined dense />
-          </div>
+              <div class="col-12 col-sm-6">
+                <q-input v-model="MedicineInfo.unit" label="Unit" outlined dense />
+              </div>
 
-          <div class="col-12 col-sm-6">
-            <q-input
-              v-model.number="MedicineInfo.quantity"
-              label="Quantity"
-              type="number"
-              outlined
-              dense
-            />
-          </div>
+              <div class="col-12 col-sm-6">
+                <q-input
+                  v-model.number="MedicineInfo.quantity"
+                  label="Quantity"
+                  type="number"
+                  outlined
+                  dense
+                />
+              </div>
 
-          <div class="col-12 col-sm-6">
-            <q-input
-              v-model.number="MedicineInfo.price"
-              label="Price"
-              type="number"
-              outlined
-              dense
-            />
-          </div>
+              <div class="col-12 col-sm-6">
+                <q-input
+                  v-model.number="MedicineInfo.price"
+                  label="Price"
+                  type="number"
+                  outlined
+                  dense
+                />
+              </div>
 
-          <div class="col-12 col-sm-6">
-            <q-input
-              v-model="MedicineInfo.expiration_date"
-              label="Expiration Date"
-              type="date"
-              outlined
-              dense
-            />
-          </div>
-        </div>
-      </q-form>
-    </q-card-section>
+              <div class="col-12 col-sm-6">
+                <q-input
+                  v-model="MedicineInfo.expiration_date"
+                  label="Expiration Date"
+                  type="date"
+                  outlined
+                  dense
+                />
+              </div>
+            </div>
+          </q-form>
+        </q-card-section>
 
-    <!-- Actions -->
-    <q-card-actions align="right" class="bg-grey-2">
-      <q-btn flat color="negative" label="Close" @click="showEdit = false" />
-      <q-btn unelevated color="positive" label="Save Changes" @click="updateMedicineInfo" />
-    </q-card-actions>
-  </q-card>
-</q-dialog>
-
-
-
+        <!-- Actions -->
+        <q-card-actions align="right" class="bg-grey-2">
+          <q-btn flat color="negative" label="Close" @click="showEdit = false" />
+          <q-btn unelevated color="positive" label="Save Changes" @click="updateMedicineInfo" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script>
 import { useItemStore } from 'src/stores/itemsStore'
 import { useUserStore } from 'src/stores/userStore'
-
-
 
 function debounce(fn, delay) {
   let timeout
@@ -274,7 +283,6 @@ function debounce(fn, delay) {
   }
 }
 
-
 export default {
   computed: {
     itemStore() {
@@ -282,7 +290,7 @@ export default {
     },
   },
 
-  watch:{
+  watch: {
     selectedDates: {
       handler: debounce(function (newRange) {
         this.rangeText = `${newRange.from} to ${newRange.to}`
@@ -291,18 +299,17 @@ export default {
         //this.get_RIS_List_byDate(newRange)
         // this.get_clients(newRange)
         this.fetchAllStocks(newRange)
-
       }, 500),
       immediate: true, // Call the handler immediately with the initial value
       deep: true, // Watch for changes in the object properties
     },
   },
   setup() {
-    const userStore = useUserStore();
-      const today = new Date()
+    const userStore = useUserStore()
+    const today = new Date()
     today.toLocaleDateString('en-CA')
-     const start = new Date(today.getFullYear(), today.getMonth(),1)
-     const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+    const start = new Date(today.getFullYear(), today.getMonth(), 1)
+    const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
     return {
       userStore,
       today,
@@ -390,11 +397,11 @@ export default {
   data() {
     return {
       showEdit: false,
-      Credentials:[],
-      rangeText:'',
-      selectedDates:{
-        from:'',
-        to:''
+      Credentials: [],
+      rangeText: '',
+      selectedDates: {
+        from: '',
+        to: '',
       },
       showNew: false,
       rows: [],
@@ -417,21 +424,20 @@ export default {
   },
 
   methods: {
-
-      async GetAuthenticatedUser() {
+    async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
       this.user = this.userStore.user
       this.Credentials = this.userStore.credentials
     },
 
-      moduleAccess(label,type){
-     const access = this.Credentials.find(module => module.module === label);
-     console.log(access)
-      if(type==='view') return access? access.view: false;
-      if(type==='add') return access? access.add: false;
-      if(type==='edit') return access? access.edit: false;
-      if(type==='delete') return access? access.delete: false;
-      if(type==='export') return access? access.export: false;
+    moduleAccess(label, type) {
+      const access = this.Credentials.find((module) => module.module === label)
+      console.log(access)
+      if (type === 'view') return access ? access.view : false
+      if (type === 'add') return access ? access.add : false
+      if (type === 'edit') return access ? access.edit : false
+      if (type === 'delete') return access ? access.delete : false
+      if (type === 'export') return access ? access.export : false
     },
 
     async fetchAllStocks(payload) {
@@ -443,10 +449,9 @@ export default {
   mounted() {
     this.GetAuthenticatedUser()
 
-  this.selectedDates= {
-      from : this.start.toISOString().split('T')[0],
-      to : this.end.toISOString().split('T')[0]
-
+    this.selectedDates = {
+      from: this.start.toISOString().split('T')[0],
+      to: this.end.toISOString().split('T')[0],
     }
   },
 }

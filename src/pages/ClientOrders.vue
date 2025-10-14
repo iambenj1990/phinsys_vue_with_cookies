@@ -19,7 +19,7 @@
                 get_MaifpCustomers()
               }
             "
-            v-if="moduleAccess('MAIFP','view')"
+            v-if="moduleAccess('MAIFP', 'view')"
           />
 
           <q-btn
@@ -32,7 +32,7 @@
             "
             label="Add Client"
             icon="add"
-            v-if="moduleAccess('Customer History','add')"
+            v-if="moduleAccess('Customer History', 'add')"
             @click="$router.push({ path: '/customer/releasing' })"
           />
         </div>
@@ -182,7 +182,7 @@
                     icon="add"
                     flat
                     @click="getAvailableMedList()"
-                      v-if="moduleAccess('Releasing','add')"
+                    v-if="moduleAccess('Releasing', 'add')"
                   />
                 </template>
                 <template #body="props">
@@ -225,7 +225,7 @@
                   icon="check"
                   @click="clearData()"
                   :disabled="rows.length == 0"
-                    v-if="moduleAccess('Releasing','add')"
+                  v-if="moduleAccess('Releasing', 'add')"
                 />
               </div>
             </q-card>
@@ -535,7 +535,7 @@
 
                 <q-td key="actions" style="font-size: 11px" align="center">
                   <q-btn
-                    v-if="moduleAccess('MAIFP','add')"
+                    v-if="moduleAccess('MAIFP', 'add')"
                     flat
                     rounded
                     color="primary"
@@ -556,7 +556,7 @@
                     <q-tooltip> Save </q-tooltip>
                   </q-btn>
                   <q-btn
-                    v-if="moduleAccess('MAIFP','add')"
+                    v-if="moduleAccess('MAIFP', 'add')"
                     flat
                     rounded
                     color="green"
@@ -902,7 +902,7 @@ export default {
   },
   data() {
     return {
-      Credentials:[],
+      Credentials: [],
       maif_search: '',
       user: {},
       selected_id_customer: 0,

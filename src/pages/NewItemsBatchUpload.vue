@@ -35,15 +35,15 @@
       </q-card-section>
       <q-card-section>
         <q-card-actions>
-           <q-btn
-              class="text-white text-subtitle2 text-weight-regular"
-                icon="save"
-                color="green"
-                label="Save"
-                @click="batchNewItems({ medicines: rows })"
-                :disable="rows.length === 0"
-                style="width: 120px;"
-              />
+          <q-btn
+            class="text-white text-subtitle2 text-weight-regular"
+            icon="save"
+            color="green"
+            label="Save"
+            @click="batchNewItems({ medicines: rows })"
+            :disable="rows.length === 0"
+            style="width: 120px"
+          />
         </q-card-actions>
       </q-card-section>
     </q-card>
@@ -52,7 +52,7 @@
 
 <script>
 import { useItemStore } from 'src/stores/itemsStore'
-import { useUserStore } from 'src/stores/userStore';
+import { useUserStore } from 'src/stores/userStore'
 import * as XLSX from 'xlsx'
 
 export default {
@@ -66,10 +66,9 @@ export default {
     itemStore() {
       return useItemStore()
     },
-
   },
   setup() {
-    const userStore = useUserStore();
+    const userStore = useUserStore()
     return {
       userStore,
       defaultValues: {
@@ -199,7 +198,7 @@ export default {
   },
   data() {
     return {
-      user:{},
+      user: {},
       rows: [],
       excelPathModel: null,
 
@@ -279,8 +278,7 @@ export default {
       return `${year}-${month}-${day}`
     },
 
-
-     async GetAuthenticatedUser() {
+    async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
       this.user = this.userStore.user
     },
@@ -292,8 +290,8 @@ export default {
           item.user_id = this.user.id
         })
 
-          console.log('Batch insert payload:', payload)
-         await this.itemStore.batchInsert(payload)
+        console.log('Batch insert payload:', payload)
+        await this.itemStore.batchInsert(payload)
         this.$q.notify({
           type: 'positive',
           message: 'Items successfully added to the catalog.',

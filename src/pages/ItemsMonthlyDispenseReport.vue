@@ -4,7 +4,7 @@
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
         <div v-if="loading" class="flex flex-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
-              <span class="q-ml-sm">Loading...</span>
+          <span class="q-ml-sm">Loading...</span>
         </div>
         <div v-else class="row q-gutter-md">
           <div class="col-12 col-md-12 q-pa-sm">
@@ -16,7 +16,6 @@
               flat
               bordered
               class="q-mr-md q-table--grid my-sticky-header-table"
-
               :rows-per-page-options="[0]"
               table-header-class="text-white"
               table-header-style="background-color: #f5f5f5"
@@ -37,13 +36,7 @@
                 </q-input>
               </template>
               <template v-slot:top-right>
-                <q-btn
-                  color="green"
-                  label="Export"
-                  icon="import_export"
-                  @click="exportToExcel"
-
-                />
+                <q-btn color="green" label="Export" icon="import_export" @click="exportToExcel" />
               </template>
             </q-table>
           </div>
@@ -110,7 +103,6 @@ export default {
       cols,
       months,
       pagination: {
-
         rowsPerPage: 15,
         sortBy: null,
         descending: false,
@@ -128,7 +120,6 @@ export default {
       rows: [],
       filter: '',
       loading: false,
-
     }
   },
 
@@ -163,7 +154,7 @@ export default {
     async getMontlyDispenseReport() {
       this.loading = true
       try {
-         await this.reportStore.MonthlyDispenseReports()
+        await this.reportStore.MonthlyDispenseReports()
         const data = this.reportStore.monthly_dispense
         // console.table( data)
 
@@ -188,7 +179,7 @@ export default {
           pivot[row.stock_id].dispensed += row.total_dispensed
         })
 
-        this.rows =  Object.values(pivot)
+        this.rows = Object.values(pivot)
         // console.table( this.rows)
         this.loading = false
       } catch (error) {
@@ -200,9 +191,7 @@ export default {
   mounted() {
     this.getMontlyDispenseReport()
   },
-  watch: {
-
-  },
+  watch: {},
 }
 </script>
 <style lang="sass">

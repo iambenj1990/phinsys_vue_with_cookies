@@ -437,8 +437,8 @@ export default {
       this.range = {
         // from: this.start.toISOString().split('T')[0],
         // to: this.end.toISOString().split('T')[0],
-        from :this.formatLocale(this.start),
-        to: this.formatLocale(this.end)
+        from: this.formatLocale(this.start),
+        to: this.formatLocale(this.end),
       }
 
       // console.log('Initial date range:', this.range)
