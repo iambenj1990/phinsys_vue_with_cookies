@@ -474,7 +474,7 @@ export default {
           await this.risStore.newRIS(this.form)
           this.ris_no = this.risStore.return_ris_id
           this.ris_id = this.risStore.return_id
-          console.log('ris_no => ', this.ris_no, '    ris_id => ', this.ris_id)
+          // console.log('ris_no => ', this.ris_no, '    ris_id => ', this.ris_id)
         } else {
           this.$q.notify({
             type: 'negative',
@@ -486,7 +486,13 @@ export default {
           return
         }
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+           this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1200,
+        })
       }
     },
 
@@ -570,8 +576,8 @@ export default {
 
       this.selectedMedicineQty = payload.Closing_quantity ? payload.Closing_quantity : 0
 
-      console.log('show quantity => ', this.selectedMedicineQty)
-      console.log('ris_no => ', this.ris_no, '    ris_id => ', this.ris_id)
+      // console.log('show quantity => ', this.selectedMedicineQty)
+      // console.log('ris_no => ', this.ris_no, '    ris_id => ', this.ris_id)
 
       this.transactionDetails.transaction_id = this.ris_no
       this.transactionDetails.customer_id = parseInt(this.ris_id)
@@ -596,7 +602,7 @@ export default {
     },
     moduleAccess(label, type) {
       const access = this.Credentials.find((module) => module.module === label)
-      console.log(access)
+      // console.log(access)
       if (type === 'view') return access ? access.view : false
       if (type === 'add') return access ? access.add : false
       if (type === 'edit') return access ? access.edit : false
@@ -605,7 +611,7 @@ export default {
     },
 
     getSelectedDataToDelete(id) {
-      console.log(id)
+      // console.log(id)
       this.selected_to_delete = id
       this.showRemoveItem = true
     },

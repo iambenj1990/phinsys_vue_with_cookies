@@ -20,11 +20,11 @@ class AuthService {
 
       //   return response.data
       await api.get('/sanctum/csrf-cookie');
-      console.log('CSRF cookie set');
-      console.log('Logging in with credentials:', credentials);
+      // console.log('CSRF cookie set');
+      // console.log('Logging in with credentials:', credentials);
       const response = await api.post('/login', credentials);
 
-      console.log('response =>', response);
+      // console.log('response =>', response);
 
     return response.data.user;
 

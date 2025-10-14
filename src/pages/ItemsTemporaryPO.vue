@@ -268,7 +268,7 @@ export default {
     editItem(id) {
       this.po_no = ''
       this.selected_tempPO = id
-      console.log(this.selected_tempPO)
+      // console.log(this.selected_tempPO)
     },
     async fetchAlltempPO() {
       try {

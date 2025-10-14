@@ -166,7 +166,7 @@ export default {
   },
   methods: {
     async getStockCardbyID(payload) {
-      console.log(payload)
+      // console.log(payload)
 
       await this.itemsStore.getStockCardByItem(payload)
       this.row = this.itemsStore.stockCardbyItem

@@ -523,7 +523,7 @@ export default {
           this.errorMsg.push(error.message)
         }
         this.showError = true
-        console.log(error)
+        // console.log(error)
       }
     },
 
@@ -549,7 +549,7 @@ export default {
           this.errorMsg.push(error.message)
         }
         this.showError = true
-        console.log(error)
+        // console.log(error)
       }
     },
   },

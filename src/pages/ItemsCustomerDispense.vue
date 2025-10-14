@@ -262,7 +262,7 @@ export default {
   },
   mounted() {
     this.getItems()
-    console.log(this.items)
+    // console.log(this.items)
   },
 
   created() {},
@@ -285,9 +285,9 @@ export default {
     async getItems() {
       this.loading = true
       await this.itemStore.getJoinedTable_DailyInventor_Items()
-      console.log('items => ', this.itemStore.items)
+      // console.log('items => ', this.itemStore.items)
       this.items = this.itemStore.items
-      console.log(this.items)
+      // console.log(this.items)
       this.loading = false
     },
     async customerUtilization(payload) {

@@ -286,14 +286,16 @@ export default {
         this.showAllowChange =false
         this.showChangepassword = false
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         this.loading = false
         this.$q.notify({
           type: 'negative',
-          message: error.message,
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
           timeout: 1200,
         })
+
+
       }
     },
   },

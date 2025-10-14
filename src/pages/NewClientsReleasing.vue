@@ -419,7 +419,7 @@ export default {
       }
 
       if (this.Customer.isSave) {
-        console.log(this.CustomerInfo)
+        // console.log(this.CustomerInfo)
         this.Insert_Customer(this.CustomerInfo)
       } else if (this.Customer.isEdit) {
         this.updateCustomer(this.Customer.customer_id, this.CustomerInfo)
@@ -476,7 +476,7 @@ export default {
     async Insert_Customer(payload) {
       payload.user_id = this.user.id
       try {
-        console.log(payload)
+        // console.log(payload)
         this.errorMsg = []
         await this.Customer.newCustomer(payload)
 
@@ -516,7 +516,13 @@ export default {
           this.errorMsg.push(error.message)
         }
         this.showError = true
-        console.log(error)
+        // console.log(error)
+        //    this.$q.notify({
+        //   type: 'negative',
+        //   message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+        //   position: 'center',
+        //   timeout: 1200,
+        // })
       }
     },
 
@@ -542,7 +548,7 @@ export default {
           this.errorMsg.push(error.message)
         }
         this.showError = true
-        console.log(error)
+        // console.log(error)
       }
     },
   },

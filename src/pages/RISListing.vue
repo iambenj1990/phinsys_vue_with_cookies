@@ -259,7 +259,12 @@ export default {
             timeout: 2200,
           })
       } catch (error) {
-        console.log(error)
+          this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1200,
+        })
       }
     },
   },
@@ -268,7 +273,7 @@ export default {
       handler: debounce(function (newRange) {
         this.rangeText = `${newRange.from} to ${newRange.to}`
 
-        console.log(newRange)
+        // console.log(newRange)
         this.get_RIS_List_byDate(newRange)
       }, 500),
       immediate: true, // Call the handler immediately with the initial value

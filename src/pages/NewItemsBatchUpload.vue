@@ -290,7 +290,7 @@ export default {
           item.user_id = this.user.id
         })
 
-        console.log('Batch insert payload:', payload)
+        // console.log('Batch insert payload:', payload)
         await this.itemStore.batchInsert(payload)
         this.$q.notify({
           type: 'positive',

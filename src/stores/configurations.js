@@ -36,7 +36,7 @@ export const useConfigurationsStore = defineStore('configurations', {
 
 
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
@@ -58,7 +58,7 @@ export const useConfigurationsStore = defineStore('configurations', {
         }
 
         this.configuration = response.data.configuration
-        console.log('response => ', this.configuration)
+        // console.log('response => ', this.configuration)
       } catch (error) {
         Notify.create({
           type: 'negative',

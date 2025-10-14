@@ -211,6 +211,7 @@ import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import { useIndicatorStore } from 'src/stores/indicatorsStore'
 import ExcelJS from 'exceljs/dist/exceljs.min.js'
+import { Notify } from 'quasar'
 
 function debounce(fn, delay) {
   let timeout
@@ -437,7 +438,13 @@ export default {
         await this.itemStore.getStocksListbyDate(date)
         this.rows = this.itemStore.items
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -479,12 +486,12 @@ export default {
       this.showAdjustment = true
       // this.getDailyForAdjustment(id)
 
-      console.log('Data => ', data)
-      console.log('Holder => ', this.holder)
+      // console.log('Data => ', data)
+      // console.log('Holder => ', this.holder)
     },
-    editItem(id) {
-      console.log(id)
-    },
+    // editItem(id) {
+    //   console.log(id)
+    // },
     async fetchAllStocks() {
       this.loading = true
       await this.itemStore.getJoinedTable_DailyInventor_Items()

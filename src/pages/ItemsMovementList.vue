@@ -536,7 +536,7 @@ export default {
   methods: {
     moduleAccess(label, type) {
       const access = this.Credentials.find((module) => module.module === label)
-      console.log(access)
+      // console.log(access)
       if (type === 'view') return access ? access.view : false
       if (type === 'add') return access ? access.add : false
       if (type === 'edit') return access ? access.edit : false
@@ -553,7 +553,12 @@ export default {
         await this.itemStore.getStocksList(date)
         this.rows = this.itemStore.items
       } catch (error) {
-        console.log(error)
+           this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1200,
+        })
       }
     },
 
@@ -609,7 +614,7 @@ export default {
       this.inventoryAdjustment = this.transactionStore.SelecteddailyInventory[0]
       this.adjusted = this.transactionStore.SelecteddailyInventory[0]
 
-      console.log('Adjustment data => ', this.inventoryAdjustment)
+      // console.log('Adjustment data => ', this.inventoryAdjustment)
     },
 
     async GetAdjustItem(data) {
@@ -617,9 +622,9 @@ export default {
       this.showAdjustment = true
       await this.getDailyForAdjustment(data.inventory_id)
     },
-    editItem(id) {
-      console.log(id)
-    },
+    // editItem(id) {
+    //   // console.log(id)
+    // },
     async fetchAllStocks() {
       await this.itemStore.getJoinedTable_DailyInventor_Items()
       this.rows = this.itemStore.items
@@ -632,7 +637,13 @@ export default {
         await this.showStocks(this.today)
         this.openPrompt = false
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+           this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1200,
+        })
       }
     },
 
@@ -643,7 +654,13 @@ export default {
         await this.showStocks(this.today)
         this.closePrompt = false
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+           this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1200,
+        })
       }
     },
 
@@ -712,7 +729,13 @@ export default {
       try {
         await this.transactionStore.updateDailyInvetory(id, payload)
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+           this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1200,
+        })
       }
     },
 
@@ -720,7 +743,13 @@ export default {
       try {
         await this.transactionStore.newDailyInventory(payload)
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+           this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1200,
+        })
       }
     },
 
@@ -741,12 +770,18 @@ export default {
         await this.newDailyInventory(this.adjusted)
         await this.fetchAllStocks()
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+           this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1200,
+        })
       }
     },
 
     passStockCardData(data) {
-      console.log(data)
+      // console.log(data)
       this.itemStore.item_id = data.stock_id
       this.itemStore.selected_stockCard.generic_name = data.generic_name
       this.itemStore.selected_stockCard.brand_name = data.brand_name

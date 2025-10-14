@@ -14,7 +14,7 @@ export const useCatalogStore = defineStore('catalog', {
       // If token exists, set it in the default headers
       if (token) {
         const sanitized_object = token.replace('__q_strn|', '')
-        console.log('Sanitized token:', sanitized_object)
+        // console.log('Sanitized token:', sanitized_object)
         api.defaults.headers.common['Authorization'] = `Bearer ${sanitized_object}`
       }
     },
@@ -22,7 +22,7 @@ export const useCatalogStore = defineStore('catalog', {
       try {
         const response = await api.get('/api/system/library/medlist')
         this.catalog_list = response.data.items
-        console.log('Catalog fetched successfully:', this.catalog_list)
+        // console.log('Catalog fetched successfully:', this.catalog_list)
       } catch (error) {
         console.error(error)
         Notify.create({

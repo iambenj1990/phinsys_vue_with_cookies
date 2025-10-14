@@ -313,7 +313,7 @@ export default {
     New_Po(newvalue) {
       if (newvalue && newvalue.trim() !== '') {
         this.fetchItemsbyPO(newvalue)
-        console.log(newvalue)
+        // console.log(newvalue)
       }
     },
 
@@ -492,7 +492,7 @@ export default {
 
     moduleAccess(label, type) {
       const access = this.Credentials.find((module) => module.module === label)
-      console.log(access)
+      // console.log(access)
       if (type === 'view') return access ? access.view : false
       if (type === 'add') return access ? access.add : false
       if (type === 'edit') return access ? access.edit : false
@@ -504,9 +504,15 @@ export default {
       try {
         await this.itemStore.getDosageForm()
         this.MedType = this.itemStore.dosageForm.map((item) => item.type)
-        console.log('med type =>', this.MedType)
+        // console.log('med type =>', this.MedType)
       } catch (error) {
-        console.error('Error fetching dosage forms:', error)
+        // console.error('Error fetching dosage forms:', error)
+           this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1200,
+        })
       }
     },
 
@@ -587,11 +593,11 @@ export default {
     async fetch_Medicine_info() {
       await this.itemStore.getStockMiniInfo()
       this.medMiniInfo = this.itemStore.stockMiniInfo
-      console.log(this.medMiniInfo)
+      // console.log(this.medMiniInfo)
     },
 
     async fetchItem(id) {
-      console.log(id)
+      // console.log(id)
       await this.itemStore.getItem(id)
       this.MedicineInfo = this.itemStore.item
       this.toUpdate = true
@@ -630,7 +636,13 @@ export default {
           this.New_Po = ''
         }
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+           this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1200,
+        })
       }
     },
 

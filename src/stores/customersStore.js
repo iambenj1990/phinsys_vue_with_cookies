@@ -28,31 +28,53 @@ export const useCustomerStore = defineStore('customers', {
   actions: {
     async latest_Maifp_trx(payload) {
       try {
-        console.log(payload)
+        // console.log(payload)
         const response = await api.post('/api/maif/transactions/latest', payload)
         this.customer_maifp_latest_trx = response.data.trx_num
-        console.log(response.data.trx_num)
+        // console.log(response.data.trx_num)
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+          Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+
       }
     },
     async ShowMaifpCustomers() {
       try {
         const response = await api.get('/api/maif/patients/medication')
-        console.log(response.data.patients)
+        // console.log(response.data.patients)
         this.customer_maifp = response.data.patients
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+          Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+
+
       }
     },
 
     async store_bulk_customers(payload) {
       try {
         const response = await api.post('/api/customers/bulk', payload)
-        console.log(response.data)
+        // console.log(response.data)
         this.customers = response.data.customers
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+          Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -62,7 +84,13 @@ export const useCustomerStore = defineStore('customers', {
         const response = await api.get('/api/customers/transactions/' + id)
         this.customer_transactions_list = response.data.result
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+           Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -72,20 +100,31 @@ export const useCustomerStore = defineStore('customers', {
         const response = await api.get('/api/customers/transactions/' + id + '/list/' + trans_id)
         this.customer_transactions_list_exploded = response.data.result
       } catch (error) {
-        console.log(error)
+          Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
     async getCustomersByDate(payload) {
-      console.log(payload)
+      // console.log(payload)
       try {
         const response = await api.post('/api/customers/list/dates', payload)
         // console.log(response.data.customers)
-        console.log(response.data)
+        // console.log(response.data)
         this.customers = response.data.customers
         // console.log(response.data.customers)
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -96,7 +135,13 @@ export const useCustomerStore = defineStore('customers', {
         this.customers = response.data.customers
         // console.log(response.data.customers)
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -128,8 +173,8 @@ export const useCustomerStore = defineStore('customers', {
             timeout: 1200,
           })
         }else{
-          console.log('existing name => ',response.data.existing_name)
-          console.log('existing id => ',response.data.existing_name[0].id)
+          // console.log('existing name => ',response.data.existing_name)
+          // console.log('existing id => ',response.data.existing_name[0].id)
           this.customer_id = response.data.existing_name[0].id ? response.data.existing_name[0].id : '0'
         }
       } catch (error) {
@@ -152,7 +197,13 @@ export const useCustomerStore = defineStore('customers', {
         const response = await api.put('/api/customers/' + id, payload)
         this.customer = response.data.customers
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -160,7 +211,13 @@ export const useCustomerStore = defineStore('customers', {
       try {
         await api.delete('/customers/' + id)
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -169,11 +226,16 @@ export const useCustomerStore = defineStore('customers', {
         const response = await api.get('/api/orders/transaction/latest/' + payload)
         this.customersOftheDay = response.data.data
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
-  },
-})
+  },)
 
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useCustomerStore, import.meta.hot))

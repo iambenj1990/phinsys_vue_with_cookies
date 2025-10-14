@@ -81,7 +81,7 @@ export default {
   methods: {
     onAction() {
       // Add your action logic here
-      console.log('Action triggered')
+      // console.log('Action triggered')
     },
   },
 }

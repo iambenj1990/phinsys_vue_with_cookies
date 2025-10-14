@@ -110,7 +110,7 @@ export default {
   methods: {
     onAction() {
       // Add your action logic here
-      console.log('Action triggered')
+      // console.log('Action triggered')
     },
 
      async GetAuthenticatedUser() {
@@ -120,7 +120,7 @@ export default {
     },
     moduleAccess(label, type) {
       const access = this.Credentials.find((module) => module.module === label)
-      console.log(access)
+      // console.log(access)
       if (type === 'view') return access ? access.view : false
       if (type === 'add') return access ? access.add : false
       if (type === 'edit') return access ? access.edit : false

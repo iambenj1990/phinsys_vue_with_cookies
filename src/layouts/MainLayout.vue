@@ -249,6 +249,7 @@
 
 <script>
 
+import { Notify } from 'quasar'
 import { useUserStore } from 'src/stores/userStore'
 export default {
   name: 'MyLayout',
@@ -310,7 +311,12 @@ export default {
         await this.userStore.logoutUser()
         this.$router.push('/login')
       } catch (error) {
-        console.log(error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 

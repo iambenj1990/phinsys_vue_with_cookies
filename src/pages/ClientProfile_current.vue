@@ -222,7 +222,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.customerStore.customer_id)
+    // console.log(this.customerStore.customer_id)
     this.get_client(this.customerStore.customer_id)
     //this.getTransactionIds(this.customerStore.customer_id)
     this.getOrders(this.customerStore.customer_id)
@@ -246,13 +246,13 @@ export default {
       this.rows = []
       await this.transactionStore.getLatestOrders({ customer_id: payload })
       this.rows = this.transactionStore.customerTransactions
-      console.log(this.rows)
+      // console.log(this.rows)
     },
 
     async get_client(id) {
       await this.customerStore.getCustomer(id)
       this.costumer = this.customerStore.customer
-      console.log(this.costumer)
+      // console.log(this.costumer)
     },
 
     show_id(id) {
@@ -262,7 +262,7 @@ export default {
         position: 'center',
         timeout: 1200,
       })
-      console.log(id)
+      // console.log(id)
       this.searchTerm = ''
     },
   },

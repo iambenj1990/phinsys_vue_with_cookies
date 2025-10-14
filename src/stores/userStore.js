@@ -57,7 +57,7 @@ export const useUserStore = defineStore('users', {
           })
         }
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
@@ -69,14 +69,14 @@ export const useUserStore = defineStore('users', {
 
     async updateUser(id, payload) {
       try {
-        console.log(payload)
+        // console.log(payload)
         // Add password_confirmation if password is being updated
         if (payload.password) {
           payload.password_confirmation = payload.confirm_password
         }
         // Remove confirm_password from payload before sending to API
 
-        console.log('Payload sent to API:', payload)
+        // console.log('Payload sent to API:', payload)
         const response = await api.put('/api/system/user/profile-update/' + id, {
           ...payload,
           password_confirmation: payload.confirm_password,
@@ -92,7 +92,7 @@ export const useUserStore = defineStore('users', {
           })
         }
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
@@ -176,7 +176,7 @@ export const useUserStore = defineStore('users', {
           this.user = response.data.user
           this.isAuthenticated = true
           this.credentials = response.data.user.credentials
-          console.log('authentications store method fired => ',this.credentials)
+          // console.log('authentications store method fired => ',this.credentials)
           return true
         }
         return false
@@ -218,8 +218,8 @@ export const useUserStore = defineStore('users', {
         this.user = response.data.user
         this.isAuthenticated = response.data.success
         this.credentials = response.data.user.credentials
-         console.log('user store method fired => ',this.user)
-        console.log('authentications store method fired => ',this.credentials)
+        //  console.log('user store method fired => ',this.user)
+        // console.log('authentications store method fired => ',this.credentials)
       } catch (error) {
         Notify.create({
           type: 'negative',

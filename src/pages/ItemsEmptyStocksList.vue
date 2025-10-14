@@ -275,9 +275,9 @@ export default {
       window.URL.revokeObjectURL(url)
     },
 
-    editItem(id) {
-      console.log(id)
-    },
+    // editItem(id) {
+    //   // console.log(id)
+    // },
     async fetchAllStocks() {
       try {
         this.loading = true
@@ -301,7 +301,7 @@ export default {
     },
 
     getStockColor(remaining, total) {
-      console.log('remaining =>', remaining, ' total=> ', total)
+      // console.log('remaining =>', remaining, ' total=> ', total)
       const percentage = this.getStockPercentage(remaining, total)
 
       if (percentage === 0) return 'red' // Out of stock (0%)

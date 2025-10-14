@@ -23,7 +23,7 @@ export const useTransactionStore = defineStore('transactions', {
         const response = await api.post('/api/maif/medication/status', transaction)
         console.log(response.data)
       } catch (error) {
-         console.log(error)
+        //  console.log(error)
         Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
@@ -38,11 +38,11 @@ export const useTransactionStore = defineStore('transactions', {
       try {
         const response = await api.post('/api/maif/medication/new', transaction)
         this.maifp_transactions = response.data
-        console.log(response.data)
+        // console.log(response.data)
 
 
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
@@ -86,7 +86,7 @@ export const useTransactionStore = defineStore('transactions', {
       try {
         await api.post('/api/orders/new', payload)
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
@@ -114,7 +114,7 @@ export const useTransactionStore = defineStore('transactions', {
       async getLatestOrders(payload) {
       try {
          this.customerTransactions = []
-        console.log(payload)
+        // console.log(payload)
         const response = await api.post('/api/orders/transactions/last',payload)
         this.customerTransactions = response.data.data
         // console.log(this.customerTransactions)
@@ -143,7 +143,7 @@ export const useTransactionStore = defineStore('transactions', {
 
     async remove_maifp_order(payload) {
       try {
-        console.log('removing maifp order for payload:', payload)
+        // console.log('removing maifp order for payload:', payload)
         await api.post('/api/maif/medication/order', payload)
       } catch (error) {
         Notify.create({
@@ -200,12 +200,18 @@ export const useTransactionStore = defineStore('transactions', {
     async MedicineUtilizationPerCustomer(payload) {
       try {
         const response = await api.post('/api/reports/dispense/recipient', payload)
-        console.log(response.data.recipients)
+        // console.log(response.data.recipients)
         this.MedicineRecipients = response.data.recipients
 
       }
       catch (error) {
-        console.log(error)
+        // console.log(error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     }
 

@@ -162,7 +162,7 @@ export default {
       try {
        await this.userCredentialStore.getUserCredential(userId)
         const loadedData = this.userCredentialStore.credentials
-        console.log('loaded data :', loadedData)
+        // console.log('loaded data :', loadedData)
 
         this.initCredentials();
 

@@ -33,7 +33,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
   const authenticated = useUserStore()
 
    if (authenticated.user === null) {
-    console.log('Authenticated user check performed in router')
+    // console.log('Authenticated user check performed in router')
     await authenticated.authenticatedUserCheck()
   }
 
@@ -43,7 +43,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
   if (to.meta.requiresAuth && !isAuthenticated) {
       next('/login')
     } else if (to.path === '/login' && isAuthenticated) {
-    
+
       // Already logged in → redirect to dashboard
       next('/dashboard')
     } else {

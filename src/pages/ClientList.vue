@@ -133,6 +133,7 @@
 <script>
 import { useCustomerStore } from '../stores/customersStore'
 import { useUserStore } from 'src/stores/userStore'
+import { Notify } from 'quasar'
 export default {
   setup() {
     const userStore = useUserStore()
@@ -267,7 +268,7 @@ export default {
 
     moduleAccess(label, type) {
       const access = this.Credentials.find((module) => module.module === label)
-      console.log(access)
+      // console.log(access)
       if (type === 'view') return access ? access.view : false
       if (type === 'add') return access ? access.add : false
       if (type === 'edit') return access ? access.edit : false
@@ -294,7 +295,13 @@ export default {
         //console.log(this.rows)
         this.loading = false
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 

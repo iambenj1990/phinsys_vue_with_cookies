@@ -1,5 +1,6 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { api } from 'src/boot/axios'
+import { Notify } from 'quasar'
 
 export const useDashboardStore = defineStore('dashboard', {
   state: () => ({
@@ -35,7 +36,7 @@ export const useDashboardStore = defineStore('dashboard', {
     // If token exists, set it in the default headers
     if (token) {
       const sanitized_object = token.replace('__q_strn|', '')
-      console.log('Sanitized token:', sanitized_object)
+      // console.log('Sanitized token:', sanitized_object)
       api.defaults.headers.common['Authorization'] = `Bearer ${sanitized_object}`
     }
     },
@@ -55,7 +56,13 @@ export const useDashboardStore = defineStore('dashboard', {
 
           //console.log('Barangay data:', data)
         } else {
-          console.log('No barangay data found for the given parameters.')
+           Notify.create({
+          type: 'negative',
+          message:'No barangay data found for the given parameters.' ,
+          position: 'center',
+          timeout: 5000,
+        })
+          // console.log('No barangay data found for the given parameters.')
           // console.error('Failed to fetch barangay data:', response.statusText)
         }
       } catch (error) {
@@ -203,7 +210,7 @@ export const useDashboardStore = defineStore('dashboard', {
         const response = await api.get('/api/dashboard/medicines/LowStocks/' + threshold)
         if (response.status === 200) {
           const data = response.data.stocks
-          console.log('Low stock medicines:', data)
+          // console.log('Low stock medicines:', data)
           this.lowStock = data ? data : 0
           // console.log('Out of stock medicines:', this.noStock)
           // Assuming data contains the in-stock information you need

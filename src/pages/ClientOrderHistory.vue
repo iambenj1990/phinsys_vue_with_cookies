@@ -151,6 +151,7 @@
 import { useCustomerStore } from '../stores/customersStore'
 import { useItemStore } from 'src/stores/itemsStore'
 import { useUserStore } from 'src/stores/userStore'
+import { Notify } from 'quasar'
 
 function debounce(fn, delay) {
   let timeout
@@ -302,11 +303,11 @@ export default {
   methods: {
     async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
-      console.log('user => ', this.user)
-      console.log('user => ', this.user)
+      // console.log('user => ', this.user)
+      // console.log('user => ', this.user)
       this.user = this.userStore.user
       this.Credentials = this.userStore.credentials
-      console.log('creds => ', this.Credentials)
+      // console.log('creds => ', this.Credentials)
     },
     showDeletepage(id) {
       this.Customers.customer_id = id
@@ -314,7 +315,7 @@ export default {
     },
 
     showClient(id) {
-      console.log(id)
+      // console.log(id)
       this.Customers.isEdit = true
       this.Customers.isSave = false
       this.Customers.customer_id = id
@@ -328,7 +329,13 @@ export default {
         this.rows = this.Customers.customers //fetch all clients from array
         //console.log(this.rows)
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -365,13 +372,19 @@ export default {
             timeout: 2200,
           })
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
     moduleAccess(label, type) {
       const access = this.Credentials.find((module) => module.module === label)
-      console.log(access)
+      // console.log(access)
       if (type === 'view') return access ? access.view : false
       if (type === 'add') return access ? access.add : false
       if (type === 'edit') return access ? access.edit : false
@@ -384,7 +397,7 @@ export default {
       handler: debounce(function (newRange) {
         this.rangeText = `${newRange.from} to ${newRange.to}`
 
-        console.log(newRange)
+        // console.log(newRange)
         //this.get_RIS_List_byDate(newRange)
         this.get_clients(newRange)
       }, 500),

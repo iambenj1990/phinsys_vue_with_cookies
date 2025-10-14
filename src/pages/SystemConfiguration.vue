@@ -127,7 +127,13 @@ export default {
         await this.configStore.updateConfiguration(payload)
         this.settings = this.configStore.configuration
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+           this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1200,
+        })
       }
     },
     async newConfiguration(payload) {
@@ -135,7 +141,13 @@ export default {
         await this.configStore.newConfig(payload)
         this.settings = this.configStore.configuration
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+           this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1200,
+        })
       }
     },
     async getConfig() {
@@ -143,7 +155,13 @@ export default {
         await this.configStore.getConfiguration()
         this.settings = this.configStore.configuration
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+           this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1200,
+        })
       }
     },
     async onSubmit() {
@@ -159,7 +177,13 @@ export default {
         }
         this.settings = this.configStore.configuration
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+           this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1200,
+        })
       }
     },
   },

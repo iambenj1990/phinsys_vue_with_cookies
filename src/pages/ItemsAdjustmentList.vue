@@ -76,7 +76,7 @@
                       icon="list"
                       @click="
                         () => {
-                          console.log('Adjust items under PO No:', props.row.po_no)
+                          // console.log('Adjust items under PO No:', props.row.po_no)
                           itemStore.selected_po = props.row.po_no
                           showListing = true
                         }

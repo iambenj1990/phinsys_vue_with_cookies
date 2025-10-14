@@ -176,7 +176,7 @@ export default {
         type: this.newdosage.type,
       }
 
-      console.log('New dosage type:', new_dosage)
+      // console.log('New dosage type:', new_dosage)
 
       await this.dosageStore.newDosageType(new_dosage)
       this.getDosageTypes()

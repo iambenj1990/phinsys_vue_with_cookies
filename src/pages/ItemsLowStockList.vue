@@ -280,19 +280,19 @@ export default {
       window.URL.revokeObjectURL(url)
     },
 
-    editItem(id) {
-      console.log(id)
-    },
+    // editItem(id) {
+    //   // console.log(id)
+    // },
 
     async fetchAllStocks() {
       try {
         await this.getConfigurations()
-        console.log('Fetching all stocks with low count:', this.threshold)
+        // console.log('Fetching all stocks with low count:', this.threshold)
         this.loading = true
         await this.itemStore.LowStocks(this.threshold)
         this.rows = this.itemStore.low_stocks
-        console.log('Low stocks fetched:', this.itemStore.low_stocks)
-        console.log('Low stocks fetched:', this.rows)
+        // console.log('Low stocks fetched:', this.itemStore.low_stocks)
+        // console.log('Low stocks fetched:', this.rows)
       } catch (error) {
         Notify.create({
           type: 'negative',
@@ -311,7 +311,7 @@ export default {
     },
 
     getStockColor(remaining, total) {
-      console.log('remaining =>', remaining, ' total=> ', total)
+      // console.log('remaining =>', remaining, ' total=> ', total)
       const percentage = this.getStockPercentage(remaining, total)
 
       if (percentage === 0) return 'red' // Out of stock (0%)
@@ -325,7 +325,7 @@ export default {
       try {
         await this.configurationsStore.getConfiguration()
         this.threshold = this.configurationsStore.configuration.low_count
-        console.log('Threshold:', this.threshold)
+        // console.log('Threshold:', this.threshold)
       } catch (error) {
         Notify.create({
           type: 'negative',

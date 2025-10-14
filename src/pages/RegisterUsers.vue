@@ -121,7 +121,7 @@ export default {
 
           this.insertNewUser(this.form)
           // Handle successful registration here
-          console.log('Registration successful:', this.form)
+          // console.log('Registration successful:', this.form)
           // Optionally clear form
           this.resetForm()
           this.$router.go(-1)
@@ -153,7 +153,13 @@ export default {
       try {
         await this.userStore.newUser(payload)
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+           this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1200,
+        })
       }
     },
   },

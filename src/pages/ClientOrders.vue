@@ -548,7 +548,7 @@
                           maifp_id: props.row.patient_id.toString(),
                         }
                         this.selectedMaifpCustomer = clicked_data
-                        console.log('clicked maifp customer => ', this.selectedMaifpCustomer)
+                        // console.log('clicked maifp customer => ', this.selectedMaifpCustomer)
                         this.add_maifp_individual(this.selectedMaifpCustomer)
                       }
                     "
@@ -588,6 +588,7 @@ import { useItemStore } from 'src/stores/itemsStore'
 import { useTransactionStore } from 'src/stores/transactionStore'
 import newClients from 'src/pages/NewClientsReleasing.vue'
 import { useUserStore } from 'src/stores/userStore'
+import { Notify } from 'quasar'
 export default {
   components: {
     newClients,
@@ -968,7 +969,7 @@ export default {
   methods: {
     moduleAccess(label, type) {
       const access = this.Credentials.find((module) => module.module === label)
-      console.log(access)
+      // console.log(access)
       if (type === 'view') return access ? access.view : false
       if (type === 'add') return access ? access.add : false
       if (type === 'edit') return access ? access.edit : false
@@ -982,24 +983,36 @@ export default {
           transaction_id: transaction_id,
           status: 'Done',
         }
-        console.log('setting maif transaction status to done for payload:', payload)
+        // console.log('setting maif transaction status to done for payload:', payload)
         await this.transactionStore.maif_medication_status(payload)
         await this.get_MaifpCustomers()
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
     async show_stock_name_amount(payload) {
       try {
-        console.log('getting stock name and amount for id:', payload)
+        // console.log('getting stock name and amount for id:', payload)
         await this.itemStore.get_Name_Amount(payload)
         this.itemsData.item_name = this.itemStore.item_name
         this.itemsData.item_amount = parseFloat(Number(this.itemStore.item_amount).toFixed(2))
 
-        console.log('stock name and amount retrieved:', this.itemsData)
+        // console.log('stock name and amount retrieved:', this.itemsData)
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -1035,7 +1048,7 @@ export default {
     },
 
     async remove_order(payload) {
-      console.log('removing order with payload => ', payload)
+      // console.log('removing order with payload => ', payload)
 
       await this.transactionStore.remove_order(payload.table_id_transactions)
       if (this.selectedMaifpCustomer.origin === 'MAIFP') {
@@ -1053,12 +1066,12 @@ export default {
         this.$q.notify({ type: 'negative', message: 'Cannot add item Stocks still closed!' })
         return
       }
-      console.log(
-        'injected maifp data',
-        this.selectedMaifpCustomer.origin,
-        ' ------ ',
-        this.selectedMaifpCustomer.maifp_id,
-      )
+      //  console.log(
+      //   'injected maifp data',
+      //   this.selectedMaifpCustomer.origin,
+      //   ' ------ ',
+      //   this.selectedMaifpCustomer.maifp_id,
+      // )
 
       this.selectedMedicineQty = payload.Closing_quantity ? payload.Closing_quantity : 0
       this.transactionDetails.transaction_id = this.transaction_id
@@ -1092,12 +1105,12 @@ export default {
         this.$refs.searchInput?.focus()
         return
       }
-      console.log('order payload => ', payload)
+      // console.log('order payload => ', payload)
       await this.transactionStore.newTransaction(payload)
 
       if (this.selectedMaifpCustomer.origin === 'MAIFP') {
-        console.log('selected item id: ', payload.item_id)
-        console.log('selected medicine: => ', this.selectedMedicine)
+        // console.log('selected item id: ', payload.item_id)
+        // console.log('selected medicine: => ', this.selectedMedicine)
         await this.show_stock_name_amount({ id: payload.item_id })
 
         const medication_details = {
@@ -1110,7 +1123,7 @@ export default {
           transaction_id: this.transaction_id,
           item_id: payload.item_id,
         }
-        console.log('medication details to be sent to maifp db => ', medication_details)
+        // console.log('medication details to be sent to maifp db => ', medication_details)
         await this.transactionStore.throw_maif_medication_to_db(medication_details)
       }
       this.getAvailableMedList()
@@ -1139,16 +1152,16 @@ export default {
     },
     async get_client(id) {
       this.selectedClient_id = id
-      console.log('selected client_ID =>', id)
+      // console.log('selected client_ID =>', id)
       await this.customerStore.getCustomer(id)
       this.costumer = this.customerStore.customer
       this.searchTerm = ''
 
       if (this.selectedMaifpCustomer.origin === 'MAIFP') {
         await this.get_maif_latest_transaction({ patient_id: this.selectedMaifpCustomer.maifp_id })
-        console.log('get client transaction id => ', this.maif_latest_transaction)
+        // console.log('get client transaction id => ', this.maif_latest_transaction)
         this.transaction_id = this.maif_latest_transaction
-        console.log(this.transaction_id)
+        // console.log(this.transaction_id)
       } else {
         this.getNewTransactionID(id)
       }
@@ -1158,9 +1171,15 @@ export default {
       try {
         await this.customerStore.getCustomers()
         this.customerList = this.customerStore.customers //fetch all clients from array
-        console.log(this.customerList)
+        // console.log(this.customerList)
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
     show_id(id) {
@@ -1170,7 +1189,7 @@ export default {
         position: 'center',
         timeout: 1200,
       })
-      console.log(id)
+      // console.log(id)
       this.searchTerm = ''
     },
 
@@ -1216,9 +1235,15 @@ export default {
         await this.customerStore.latest_Maifp_trx(payload)
 
         this.maif_latest_transaction = this.customerStore.customer_maifp_latest_trx
-        console.log('get maifp latest transaction => ', this.maif_latest_transaction)
+        // console.log('get maifp latest transaction => ', this.maif_latest_transaction)
       } catch (error) {
-        console.error('Error fetching MAIFP latest transaction:', error)
+        // console.error('Error fetching MAIFP latest transaction:', error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
       }
     },
 
@@ -1226,9 +1251,15 @@ export default {
       try {
         await this.customerStore.ShowMaifpCustomers()
         this.maifpDataRows = this.customerStore.customer_maifp
-        console.log('sent to table => ', this.maifpDataRows)
+        // console.log('sent to table => ', this.maifpDataRows)
       } catch (error) {
-        console.error('Error fetching MAIFP customers:', error)
+         Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+        // console.error('Error fetching MAIFP customers:', error)
       }
     },
 

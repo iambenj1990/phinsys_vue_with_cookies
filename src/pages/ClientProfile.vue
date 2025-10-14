@@ -311,7 +311,7 @@ export default {
   },
 
   mounted() {
-    console.log(this.customerStore.customer_id)
+    // console.log(this.customerStore.customer_id)
     this.get_client(this.customerStore.customer_id)
     // this.getTransactionIds(this.customerStore.customer_id)
     this.get_transactions(this.customerStore.customer_id)
@@ -353,7 +353,7 @@ export default {
         position: 'center',
         timeout: 1200,
       })
-      console.log(id)
+      // console.log(id)
       this.searchTerm = ''
     },
   },

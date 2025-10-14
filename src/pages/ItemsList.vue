@@ -295,7 +295,7 @@ export default {
       handler: debounce(function (newRange) {
         this.rangeText = `${newRange.from} to ${newRange.to}`
 
-        console.log(newRange)
+        // console.log(newRange)
         //this.get_RIS_List_byDate(newRange)
         // this.get_clients(newRange)
         this.fetchAllStocks(newRange)
@@ -432,7 +432,7 @@ export default {
 
     moduleAccess(label, type) {
       const access = this.Credentials.find((module) => module.module === label)
-      console.log(access)
+      // console.log(access)
       if (type === 'view') return access ? access.view : false
       if (type === 'add') return access ? access.add : false
       if (type === 'edit') return access ? access.edit : false
