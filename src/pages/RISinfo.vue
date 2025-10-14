@@ -71,7 +71,7 @@
                   color="red"
                   @click="
                     () => {
-                      <!-- console.log(props.row) -->
+                       console.log(props.row)
                     }
                   "
                   icon="remove_shopping_cart"

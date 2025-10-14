@@ -288,7 +288,7 @@
         />
         <!-- </div> -->
         <!-- <div class="col-12 flex justify-end q-pa-md-lg" v-if="Customer.isSave"> -->
-        <q-
+        <q-btn
           :loading="loading"
           type="submit"
           label="Save"
@@ -435,6 +435,23 @@ export default {
       this.Customer.closeNewCustomer = false
       this.$router.back()
     },
+
+    // calculateAge(birthdate) {
+    //   if (!birthdate) return 0
+
+    //   const today = new Date()
+    //   const birthDate = new Date(birthdate)
+
+    //   let age = today.getFullYear() - birthDate.getFullYear()
+    //   const monthDifference = today.getMonth() - birthDate.getMonth()
+
+    //   // Adjust for cases where the birthday hasn't occurred yet this year
+    //   if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+    //     age--
+    //   }
+    //   return age
+    // },
+
     calculateAge(birthdate) {
       if (!birthdate) return 0
 
@@ -444,10 +461,14 @@ export default {
       let age = today.getFullYear() - birthDate.getFullYear()
       const monthDifference = today.getMonth() - birthDate.getMonth()
 
-      // Adjust for cases where the birthday hasn't occurred yet this year
+      // Adjust if the birthday hasn't happened yet this year
       if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
         age--
       }
+
+      // Prevent negative ages
+      if (age < 0) age = 0
+
       return age
     },
 

@@ -87,9 +87,8 @@
               label="Contact Number"
               class="full-width text-caption"
               inputmode="numeric"
-
             />
-             <!-- lazy-rules
+            <!-- lazy-rules
               :rules="[(val) => !!val || 'contact number is required']" -->
           </div>
         </div>
@@ -125,9 +124,8 @@
               v-model="CustomerInfo.purok"
               label="Purok"
               class="full-width text-caption text-uppercase"
-
             />
-                <!-- lazy-rules
+            <!-- lazy-rules
               :rules="[(val) => !!val || 'Purok is required']" -->
           </div>
           <div class="col-12 col-md-4 q-pa-sm">
@@ -136,9 +134,8 @@
               v-model="CustomerInfo.street"
               label="Street"
               class="full-width text-caption text-uppercase"
-
             />
-              <!-- lazy-rules
+            <!-- lazy-rules
               :rules="[(val) => !!val || 'street is required']" -->
           </div>
           <div class="col-12 col-md-3 q-pa-sm">
@@ -176,9 +173,8 @@
               v-model="CustomerInfo.purok"
               label="Purok"
               class="full-width text-caption"
-
             />
-               <!-- lazy-rules
+            <!-- lazy-rules
               :rules="[(val) => !!val || 'purok is required']" -->
           </div>
           <div class="col-12 col-md-4 q-pa-sm">
@@ -187,9 +183,8 @@
               v-model="CustomerInfo.street"
               label="Street"
               class="full-width text-caption"
-
             />
-                 <!-- lazy-rules
+            <!-- lazy-rules
               :rules="[(val) => !!val || 'street is required']" -->
           </div>
           <div class="col-12 col-md-2 q-pa-sm">
@@ -330,7 +325,6 @@
   </q-page>
 </template>
 <script>
-
 import { useTagumStore } from '../stores/TagumStore'
 import { useCustomerStore } from '../stores/customersStore'
 
@@ -338,7 +332,6 @@ import { useUserStore } from 'src/stores/userStore'
 
 export default {
   setup() {
-
     const TagumBarangay = useTagumStore()
     const Customer = useCustomerStore()
     const userStore = useUserStore()
@@ -373,8 +366,8 @@ export default {
   },
   data() {
     return {
-      loading:false,
-      user:{},
+      loading: false,
+      user: {},
       user_id: 0,
       showError: false,
       errorMsg: [],
@@ -429,7 +422,7 @@ export default {
       } else if (this.Customer.isEdit) {
         this.updateCustomer(this.Customer.customer_id, this.CustomerInfo)
       }
-       this.loading = false
+      this.loading = false
     },
 
     clearInputs() {
@@ -439,6 +432,9 @@ export default {
       this.CustomerInfo = JSON.parse(JSON.stringify(this.CustomerInfoDefault))
       this.Customer.closeNewCustomer = false
     },
+
+    //
+
     calculateAge(birthdate) {
       if (!birthdate) return 0
 
@@ -448,13 +444,17 @@ export default {
       let age = today.getFullYear() - birthDate.getFullYear()
       const monthDifference = today.getMonth() - birthDate.getMonth()
 
-      // Adjust for cases where the birthday hasn't occurred yet this year
+      // Adjust if the birthday hasn't happened yet this year
       if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
         age--
       }
+
+      // Prevent negative ages
+      if (age < 0) age = 0
+
       return age
     },
-
+    
     clearLocation() {
       if (this.isChecked) {
         this.CustomerInfo.city = ''
@@ -555,21 +555,18 @@ export default {
   },
 
   mounted() {
-
-     this.GetAuthenticatedUser()
+    this.GetAuthenticatedUser()
     this.CustomerInfo = JSON.parse(JSON.stringify(this.CustomerInfoDefault))
 
     this.selected_id = this.Customer.customer_id
     // this.Select_Customer(this.Customer.customer_id)
-    if (this.selected_id !==0){
+    if (this.selected_id !== 0) {
       this.Customer.isEdit = true
       this.Customer.isSave = false
+    } else {
+      this.Customer.isSave = true
+      this.Customer.isEdit = false
     }
-      else{
-        this.Customer.isSave = true
-        this.Customer.isEdit = false
-    }
-
   },
   unmounted() {
     this.Customer.customer_id = 0
@@ -579,7 +576,7 @@ export default {
   },
 
   watch: {
-    'selected_id'(has_id) {
+    selected_id(has_id) {
       this.Select_Customer(has_id)
     },
     'CustomerInfo.birthdate'(newBirthdate) {
