@@ -15,8 +15,8 @@
         </q-input>
       </div>
 
-      <div class="row q-gutter-md">
-        <div class="col col-lg-6">
+      <div class="row q-col-gutter-md q-mb-md">
+        <div class="col-12 col-md-6">
           <div class="text-h6 q-ma-xs text-green">
             Medicines
             <q-separator spaced />
@@ -196,7 +196,7 @@
       </div>
 
       <div class="row-span-12">
-        <div class="col-9">
+        <div class="col-12 q-mb-md">
           <q-card>
             <q-card-section>
               <div class="text-h6 text-green">Patient Requests per Barangay</div>
@@ -211,8 +211,8 @@
             </q-card-section>
           </q-card>
         </div>
-        <div class="row q-pt-md flex flex-center">
-          <div class="col-lg-6">
+        <div class="row q-col-gutter-md q-mb-md">
+          <div class="col-12 col-md-6">
             <q-card class="flex flex-center">
               <q-card-section class="text-h6 text-green">
                 Patients per Age Classification
@@ -230,7 +230,7 @@
               </q-card-section>
             </q-card>
           </div>
-          <div class="col-lg-5 q-ml-md">
+          <div class="col-12 col-md-6">
             <q-card class="flex flex-center">
               <q-card-section class="text-h6 text-green">
                 Patients per Gender Classification

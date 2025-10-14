@@ -171,7 +171,7 @@ export const useUserStore = defineStore('users', {
       try {
         await api.get('/sanctum/csrf-cookie')
 
-        const response = await api.post('/login', credentials)
+        const response = await api.post('api/login', credentials)
         if (response.data.success) {
           this.user = response.data.user
           this.isAuthenticated = true
@@ -231,7 +231,7 @@ export const useUserStore = defineStore('users', {
     },
     async logoutUser() {
     try {
-      await api.post('/logout')
+      await api.post('api/logout')
       this.$reset()
     } catch (error) {
       Notify.create({
