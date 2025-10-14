@@ -92,7 +92,7 @@
             >
               <q-card-section>
                 <div class="text-subtitle2 text-weight-medium">
-                  <q-icon name="description" color="green" size="30px" class="q-mr-sm" />
+                  <q-icon name="running_with_errors" color="green" size="30px" class="q-mr-sm" />
                   Low Stocks
                 </div>
                 <div class="text-h4" align="right">{{ lowstock }}</div>
@@ -169,7 +169,7 @@
       <div class="row q-pb-lg">
         <div class="col col-lg-12">
           <div class="text-h6 q-ma-xs text-green">
-            Top 10 Most Released Medicines
+           <q-icon name="trending_up" size="24" /> Top 10 Most Released Medicines
             <q-separator spaced label="Section Title" />
           </div>
           <q-table
