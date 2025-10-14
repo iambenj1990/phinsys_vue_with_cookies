@@ -3,7 +3,7 @@
     <div class="q-pa-md flex justify-center">
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
         <q-card-section>
-          <q-input filled v-model="search" label="Search Clients" class="text-h11">
+          <q-input filled v-model="search" label="Search RIS" class="text-h11" clearable>
             <template v-slot:append>
               <q-icon name="search" />
             </template>
@@ -59,12 +59,20 @@
             style="height: 600px"
           >
             <!-- <template v-slot:top-right>
-              <q-btn
-              style="font-size: 12px"
-              color="green"
-              label="Export"
-              icon="import_export"
-            />
+            <q-input
+                borderless
+                dense
+                debounce="300"
+                v-model="search"
+                placeholder="Search"
+                class="full-width q-px-md"
+                style="background-color: lightgrey"
+
+              >
+                <template v-slot:append>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
             </template> -->
 
             <template #body="props">

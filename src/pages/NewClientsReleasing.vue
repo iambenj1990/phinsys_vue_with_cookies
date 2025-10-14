@@ -17,6 +17,8 @@
               class="full-width text-caption"
               lazy-rules
               :rules="[(val) => !!val || 'Surname is required']"
+              @input="(val) => CustomerInfo.lastname = val ? val.toUpperCase() : ''"
+
             />
           </div>
           <div class="col-12 col-md-3 q-pa-sm">
@@ -27,6 +29,7 @@
               class="full-width text-caption"
               lazy-rules
               :rules="[(val) => !!val || 'Firstname is required']"
+              @input="(val) => CustomerInfo.firstname = val ? val.toUpperCase() : ''"
             />
           </div>
           <div class="col-12 col-md-3 q-pa-sm">
@@ -35,6 +38,7 @@
               v-model="CustomerInfo.middlename"
               label="Middlename"
               class="full-width text-caption"
+              @input="(val) => CustomerInfo.middlename = val ? val.toUpperCase() : ''"
             />
           </div>
           <div class="col-12 col-md-1 q-pa-sm">
@@ -43,6 +47,7 @@
               v-model="CustomerInfo.ext"
               label="Ext."
               class="full-width text-caption"
+              @input="(val) => CustomerInfo.ext = val ? val.toUpperCase() : ''"
             />
           </div>
         </div>
@@ -415,11 +420,14 @@ export default {
 
       if (!isValid) {
         this.$q.notify({ type: 'negative', message: 'Please complete all required fields' })
+        this.loading = false
         return
       }
 
       if (this.Customer.isSave) {
         // console.log(this.CustomerInfo)
+           if(this.CustomerInfo.purok=='') this.CustomerInfo.purok='N/A'
+        if (this.CustomerInfo.street=='') this.CustomerInfo.street='N/A'
         this.Insert_Customer(this.CustomerInfo)
       } else if (this.Customer.isEdit) {
         this.updateCustomer(this.Customer.customer_id, this.CustomerInfo)

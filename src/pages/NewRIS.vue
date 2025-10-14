@@ -142,9 +142,9 @@
 
             <template #body="props">
               <q-tr :v-bind="props">
-                <!-- <q-td key="po_no" style="font-size: 11px" align="center">
+                <q-td key="po_no" style="font-size: 11px" align="center">
                 {{ props.row.po_no }}
-              </q-td> -->
+              </q-td>
                 <q-td
                   key="generic_name"
                   style="
@@ -350,6 +350,14 @@ export default {
         },
       ],
       cartCols: [
+         {
+          name: 'po_no',
+          required: true,
+          label: 'PO #',
+          align: 'left',
+          field: 'po_no',
+
+        },
         {
           name: 'generic_name',
           required: true,
