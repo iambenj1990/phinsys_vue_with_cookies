@@ -189,6 +189,11 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
+        path: 'users/audit/logs',
+        component: () => import('src/pages/AuditTrail.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
         path: 'libraries/units',
         component: () => import('src/pages/library/UnitsList.vue'),
         meta: { requiresAuth: true },
