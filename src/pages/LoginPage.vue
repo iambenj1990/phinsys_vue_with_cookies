@@ -249,37 +249,38 @@ export default {
   border-radius: 24px;
 }
 </style> -->
-
 <template>
   <div class="flex flex-center bg-grey-2" style="min-height: 100vh">
-    <q-card class="row no-wrap shadow-3" style="max-width: 900px; width: 90%; border-radius: 24px">
+    <q-card
+      class="row no-wrap shadow-3 login-card"
+      style="max-width: 900px; width: 95%; border-radius: 24px"
+    >
       <!-- Left Side (Logos and Department Info) -->
       <div
-        class="col-7 flex flex-center column bg-white text-white q-pa-xl"
-        style="border-top-left-radius: 24px; border-bottom-left-radius: 24px"
+        class="col-7 flex flex-center column bg-white left-panel"
       >
-        <q-avatar size="160px" class="q-mb-md bg-white">
-          <img src="../assets/cho_logo.png" alt="City Logo" />
+        <q-avatar size="120px" class="q-mb-md bg-white logo-avatar">
+          <img src="../assets/cho_logo.png" alt="City Logo" class="avatar-img"/>
         </q-avatar>
 
-        <div class="text-h5 text-weight-bold text-green q-mb-sm">Pharmacy Inventory System</div>
-        <q-separator class=" text-black"></q-separator>
+        <div class="text-h5 text-weight-bold text-green q-mb-sm text-center">
+          Pharmacy Inventory System
+        </div>
+        <q-separator class="text-black" style="width: 60%" />
 
-        <div class="text-subtitle1 text-center text-black text-weight-bold text-primary">
+        <div class="text-subtitle1 text-center text-black text-weight-bold q-mt-md">
           Office of the City Health Officer
         </div>
-        <div class="text-subtitle2 text-weight-light  text-black text-center q-mb-lg">
+        <div class="text-subtitle2 text-center text-black text-weight-light q-mb-lg">
           Mabini Street, Tagum City, Davao del Norte
         </div>
 
-        <q-separator dark inset style="width: 60%" class="q-mb-lg" />
-        <div class="flex flex-between q-gutter-lg">
-          <q-avatar size="100px" class="q-mb-sm">
+        <div class="flex flex-center q-gutter-lg logo-row">
+          <q-avatar size="80px" class="q-mb-sm">
             <img src="../assets/tagumlogo.png" alt="LGU Logo" />
           </q-avatar>
           <div
-            class="q-mt-md q-pa-sm bg-white flex flex-center"
-            style="border-radius: 12px; width: 120px"
+            class="q-pa-sm bg-white flex flex-center bagong-logo"
           >
             <img
               src="../assets/bagongpilipinas.png"
@@ -288,15 +289,13 @@ export default {
             />
           </div>
         </div>
-
-        <!-- <div class="text-subtitle2 text-center">
-         Office of the City Infomation and Communication Technology Management Office
-        </div> -->
       </div>
 
       <!-- Right Side (Login Form) -->
-      <div class="col-5 q-pa-xl  flex flex-center column rightside">
-        <div class="text-subtitle1 text-weight-bolder text-grey-8 q-mb-lg">Login to your account</div>
+      <div class="col-5 q-pa-xl flex flex-center column rightside">
+        <div class="text-subtitle1 text-weight-bolder text-grey-8 q-mb-lg text-center">
+          Login to your account
+        </div>
 
         <q-form
           @submit.prevent="handleLogin"
@@ -305,14 +304,14 @@ export default {
           style="max-width: 350px"
         >
           <q-input
-          dense
+            dense
             outlined
             v-model.trim="userLogin.username"
             label="Username"
             type="text"
             lazy-rules
             :rules="[(val) => !!val || 'Username is required']"
-            class="q-mb-md "
+            class="q-mb-md"
           >
             <template v-slot:prepend>
               <q-icon name="person" />
@@ -364,13 +363,10 @@ export default {
 import { useUserStore } from 'src/stores/userStore'
 import { useQuasar } from 'quasar'
 
-
 export default {
   setup() {
     const loginStore = useUserStore()
     const $q = useQuasar()
-
-
     return { loginStore, $q }
   },
   data() {
@@ -386,7 +382,6 @@ export default {
   methods: {
     async handleLogin() {
       if (!this.userLogin.username || !this.userLogin.password) return
-
       this.loading = true
       try {
         const success = await this.loginStore.loginUser(this.userLogin)
@@ -412,22 +407,102 @@ export default {
 <style scoped>
 .rightside {
   background: linear-gradient(135deg, #abe39b 25%, #38c14aed 75%);
-  color: #ffffff;
+  color: #ca0606;
+  border-top-right-radius: 24px;
+  border-bottom-left-radius: 24px;
+
 }
 
-@media (max-width: 768px) {
+.left-panel {
+  border-top-left-radius: 24px;
+  border-bottom-left-radius: 24px;
+  padding: 2rem;
+  text-align: center;
+}
 
+.bagong-logo {
+  border-radius: 12px;
+  width: 100px;
+}
 
-  .q-card {
+.logo-row {
+  justify-content: center;
+}
+
+@media (max-width: 1024px) {
+  .login-card {
     flex-direction: column !important;
+    width: 95%;
   }
 
-  .q-card > .col-5 {
+  .left-panel,
+  .rightside {
+    width: 100% !important;
+    border-radius: 0 !important;
+
+  }
+
+  .left-panel {
     border-radius: 24px 24px 0 0 !important;
   }
 
-  .q-card > .col-7 {
+  .rightside {
     border-radius: 0 0 24px 24px !important;
+  }
+
+  .logo-avatar {
+    size: 100px !important;
+  }
+
+  .text-h5 {
+    font-size: 1.2rem;
+  }
+
+  .text-subtitle1,
+  .text-subtitle2 {
+    font-size: 0.9rem;
+  }
+
+  .q-pa-xl {
+    padding: 1.5rem !important;
+  }
+
+  .bagong-logo {
+    width: 80px !important;
+  }
+
+  .logo-row {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* ✅ keeps aspect ratio */
+  object-position: center;
+}
+  .text-h5 {
+    font-size: 1rem;
+  }
+
+  .text-subtitle1,
+  .text-subtitle2 {
+    font-size: 0.8rem;
+  }
+
+  .q-card {
+    width: 100% !important;
+  }
+
+  .q-avatar img {
+    max-width: 80px;
+  }
+
+  .q-pa-xl {
+    padding: 1rem !important;
   }
 }
 </style>
