@@ -256,11 +256,9 @@ export default {
       style="max-width: 900px; width: 95%; border-radius: 24px"
     >
       <!-- Left Side (Logos and Department Info) -->
-      <div
-        class="col-7 flex flex-center column bg-white left-panel"
-      >
+      <div class="col-7 flex flex-center column bg-white left-panel">
         <q-avatar size="120px" class="q-mb-md bg-white logo-avatar">
-          <img src="../assets/cho_logo.png" alt="City Logo" class="avatar-img"/>
+          <img src="../assets/cho_logo.png" alt="City Logo" class="avatar-img" />
         </q-avatar>
 
         <div class="text-h5 text-weight-bold text-green q-mb-sm text-center">
@@ -279,9 +277,7 @@ export default {
           <q-avatar size="80px" class="q-mb-sm">
             <img src="../assets/tagumlogo.png" alt="LGU Logo" />
           </q-avatar>
-          <div
-            class="q-pa-sm bg-white flex flex-center bagong-logo"
-          >
+          <div class="q-pa-sm bg-white flex flex-center bagong-logo">
             <img
               src="../assets/bagongpilipinas.png"
               alt="Bagong Pilipinas Logo"
@@ -351,7 +347,12 @@ export default {
           />
 
           <div class="text-caption text-white text-center q-mt-md">
-            Powered by CICTMO - BPM Division
+            <div class="text-bold">Powered by CICTMO - SPM Section</div>
+
+            <div class="row justify-center items-center q-gutter-xs q-mt-xs">
+              <q-icon name="info" size="16px" />
+              <span>NR {{ version }}</span>
+            </div>
           </div>
         </q-form>
       </div>
@@ -360,6 +361,7 @@ export default {
 </template>
 
 <script>
+import packageJson from '../../package.json'
 import { useUserStore } from 'src/stores/userStore'
 import { useQuasar } from 'quasar'
 
@@ -371,6 +373,7 @@ export default {
   },
   data() {
     return {
+      version: packageJson.version,
       userLogin: {
         username: '',
         password: '',
@@ -410,7 +413,6 @@ export default {
   color: #ca0606;
   border-top-right-radius: 24px;
   border-bottom-left-radius: 24px;
-
 }
 
 .left-panel {
@@ -439,7 +441,6 @@ export default {
   .rightside {
     width: 100% !important;
     border-radius: 0 !important;
-
   }
 
   .left-panel {
@@ -477,13 +478,12 @@ export default {
 }
 
 @media (max-width: 600px) {
-
   .avatar-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* ✅ keeps aspect ratio */
-  object-position: center;
-}
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* ✅ keeps aspect ratio */
+    object-position: center;
+  }
   .text-h5 {
     font-size: 1rem;
   }
