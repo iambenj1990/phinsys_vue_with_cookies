@@ -8,7 +8,7 @@
       <q-card-section>
         <q-table
           :rows="rows"
-          :columns="columns"
+          :columns="cols"
           row-key="id"
           flat
           dense
@@ -23,19 +23,20 @@
 <script>
 export default {
   name: 'AuditTrail',
+
+  setup(){
+    const cols =[
+        { name: 'user', label: 'User', field: 'user', align: 'left'  },
+        { name: 'action', label: 'Action', field: 'action', align: 'center' },
+        { name: 'date', label: 'Date', field: 'date', align: 'center' }
+    ]
+    return{
+      cols,
+    }
+  },
   data() {
     return {
-      columns: [
-        { name: 'id', label: 'ID', field: 'id', align: 'left' },
-        { name: 'action', label: 'Action', field: 'action', align: 'left' },
-        { name: 'user', label: 'User', field: 'user', align: 'left' },
-        { name: 'date', label: 'Date', field: 'date', align: 'left' }
-      ],
-      rows: [
-        // Example data
-        { id: 1, action: 'Login', user: 'John Doe', date: '2024-06-01' },
-        { id: 2, action: 'Update Profile', user: 'Jane Smith', date: '2024-06-02' }
-      ],
+      rows:[],
       pagination: {
         rowsPerPage: 5
       }
