@@ -21,19 +21,25 @@
 </template>
 
 <script>
+ import { Notify } from 'quasar';
+import { useAuditStore } from 'src/stores/AuditTrail';
 export default {
   name: 'AuditTrail',
 
   setup(){
+    const auditStore = useAuditStore();
     const cols =[
         { name: 'user', label: 'User', field: 'user', align: 'left'  },
         { name: 'action', label: 'Action', field: 'action', align: 'center' },
+         { name: 'changes', label: 'changes', field: 'changes', align: 'center' },
         { name: 'date', label: 'Date', field: 'date', align: 'center' }
     ]
     return{
       cols,
+      auditStore
     }
   },
+  
   data() {
     return {
       rows:[],
@@ -41,7 +47,27 @@ export default {
         rowsPerPage: 5
       }
     }
-  }
+  },
+  mounted() {
+    this.fetchAuditLogs();
+  },
+
+  methods: {
+    async fetchAuditLogs() {
+      try {
+        await this.auditStore.AllLogs();
+        console.log(this.auditStore.logs);
+        this.rows = this.auditStore.logs;
+      } catch (error) {
+       Notify.create({
+          type: 'negative',
+          message: 'Failed to fetch audit logs.' + error.message
+        });
+      }
+    }
+  },
+
+
 }
 </script>
 
