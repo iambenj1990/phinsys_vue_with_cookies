@@ -124,6 +124,14 @@
                   <q-td key="dosage_form" style="font-size: 11px" align="left">
                     {{ props.row.dosage_form }}
                   </q-td>
+                  <q-td key="price_pcs" style="font-size: 11px" align="left">
+                    {{
+                      props.row.price_per_pcs.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'PHP',
+                      })
+                    }}
+                  </q-td>
                   <!-- <q-td key="Openning_quantity" style="font-size: 11px" align="left">
                     {{ !props.row.quantity ? '0' : props.row.quantity }}
                   </q-td> -->
@@ -424,6 +432,14 @@ export default {
           field: 'dosage_form',
           sortable: true,
         },
+        {
+          name: 'price_pcs',
+          required: true,
+          label: 'Price/Pcs',
+          align: 'center',
+          field: 'price_per_pcs',
+          sortable: true,
+        },
         // {
         //   name: 'Openning_quantity',
         //   required: true,
@@ -554,7 +570,7 @@ export default {
         await this.itemStore.getStocksList(date)
         this.rows = this.itemStore.items
       } catch (error) {
-           this.$q.notify({
+        this.$q.notify({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
@@ -573,6 +589,8 @@ export default {
 
       const excludedFields = ['actions']
       const selectedColumns = this.cols.filter((col) => !excludedFields.includes(col.field))
+      // 👇 Define which columns should be formatted to 2 decimals
+      const decimalFields = ['Price/Pcs']
 
       // Define columns
       worksheet.columns = selectedColumns.map((col) => ({
@@ -582,8 +600,34 @@ export default {
       }))
 
       // Add rows
+      // this.rows.forEach((row) => {
+      //   worksheet.addRow(row)
+      // })
+
+      // Add rows with formatting
       this.rows.forEach((row) => {
-        worksheet.addRow(row)
+        const formattedRow = {}
+
+        selectedColumns.forEach((col) => {
+          let value = row[col.field]
+
+          // If field is in decimalFields and value is a number, round to 2 decimals
+          if (decimalFields.includes(col.field) && typeof value === 'number') {
+            value = parseFloat(value.toFixed(2))
+          }
+
+          formattedRow[col.field] = value
+        })
+
+        worksheet.addRow(formattedRow)
+      })
+
+      // Apply Excel number format only to those specific columns
+      selectedColumns.forEach((col, index) => {
+        if (decimalFields.includes(col.field)) {
+          const column = worksheet.getColumn(index + 1)
+          column.numFmt = '#,##0.00'
+        }
       })
 
       // Save the file
@@ -639,7 +683,7 @@ export default {
         this.openPrompt = false
       } catch (error) {
         // console.log(error)
-           this.$q.notify({
+        this.$q.notify({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
@@ -656,7 +700,7 @@ export default {
         this.closePrompt = false
       } catch (error) {
         // console.log(error)
-           this.$q.notify({
+        this.$q.notify({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
@@ -731,7 +775,7 @@ export default {
         await this.transactionStore.updateDailyInvetory(id, payload)
       } catch (error) {
         // console.log(error)
-           this.$q.notify({
+        this.$q.notify({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
@@ -745,7 +789,7 @@ export default {
         await this.transactionStore.newDailyInventory(payload)
       } catch (error) {
         // console.log(error)
-           this.$q.notify({
+        this.$q.notify({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
@@ -772,7 +816,7 @@ export default {
         await this.fetchAllStocks()
       } catch (error) {
         // console.log(error)
-           this.$q.notify({
+        this.$q.notify({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
