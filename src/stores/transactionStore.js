@@ -128,9 +128,9 @@ export const useTransactionStore = defineStore('transactions', {
       }
     },
 
-    async remove_order(id) {
+    async remove_order(payload) {
       try {
-        await api.delete('/api/orders/order/' + id)
+        await api.post('/api/orders/order/', payload)
       } catch (error) {
         Notify.create({
           type: 'negative',
