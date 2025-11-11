@@ -697,7 +697,7 @@ export default {
     },
 
     async removeItem(id) {
-      await this.itemStore.deleteItem(id)
+      await this.itemStore.deleteItem({id: id})
       this.fetchItemsbyPO(this.New_Po)
       this.toDeleteDialog = false
       // this.$q.notify({

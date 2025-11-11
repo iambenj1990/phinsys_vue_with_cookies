@@ -83,9 +83,9 @@ export const useUnitStore = defineStore('units', {
       }
     },
 
-    async removeUnit(id) {
+    async removeUnit(payload) {
     try {
-      await api.delete('/api/system/library/units/'+ id)
+      await api.post('/api/system/library/units/remove', payload)
       this.getUnits()
       Notify.create({
         type: 'positive',

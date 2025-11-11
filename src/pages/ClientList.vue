@@ -308,7 +308,7 @@ export default {
     async remove_client() {
       try {
         // await this.ClientStore.removeClient(this.Selected_ID)
-        await this.Customers.removeCustomer(this.Customers.customer_id)
+        await this.Customers.removeCustomer({id:this.Customers.customer_id})
         this.$q.notify({
           type: 'positive',
           message: 'Deleting record successful!',

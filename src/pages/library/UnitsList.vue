@@ -178,9 +178,9 @@ export default {
       this.selected_id = id
     },
 
-    async deleteUnit(id) {
+    async deleteUnit(Unit_id) {
       try {
-        await this.unitStore.removeUnit(id)
+        await this.unitStore.removeUnit({id:Unit_id})
         this.getUnits()
         this.newUnit.description = ''
         this.newUnit.symbol = ''

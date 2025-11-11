@@ -617,14 +617,8 @@ export default {
     },
 
     async removeItem(id) {
-      await this.itemStore.deleteItem(id)
+      await this.itemStore.deleteItem({id: id})
       this.fetchItemsbyPO(this.New_Po)
-      this.$q.notify({
-        type: 'positive',
-        message: 'removing records successful!',
-        position: 'center',
-        timeout: 1000,
-      })
     },
 
     async get_temp_id() {

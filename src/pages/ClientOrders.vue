@@ -284,8 +284,8 @@
             <template #body="props">
               <q-tr :v-bind="props">
                 <q-td key="po_no" style="font-size: 11px" align="center">
-                {{ props.row.po_no }}
-              </q-td>
+                  {{ props.row.po_no }}
+                </q-td>
                 <q-td
                   key="generic_name"
                   style="
@@ -827,7 +827,6 @@ export default {
           label: 'PO #',
           align: 'left',
           field: 'po_no',
-
         },
         {
           name: 'generic_name',
@@ -996,7 +995,7 @@ export default {
         await this.get_MaifpCustomers()
       } catch (error) {
         // console.log(error)
-         Notify.create({
+        Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
@@ -1015,7 +1014,7 @@ export default {
         // console.log('stock name and amount retrieved:', this.itemsData)
       } catch (error) {
         // console.log(error)
-         Notify.create({
+        Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
@@ -1056,7 +1055,7 @@ export default {
     },
 
     async remove_order(payload) {
-       console.log('removing order with payload => ', payload)
+      console.log('removing order with payload => ', payload)
 
       await this.transactionStore.remove_order({ id: payload.table_id_transactions })
       if (this.selectedMaifpCustomer.origin === 'MAIFP') {
@@ -1066,7 +1065,12 @@ export default {
         })
       }
       this.getOrders(this.transaction_id)
-      this.$q.notify({ type: 'positive', message: 'order removed successful!', position: 'center', timeout: 1000 })
+      this.$q.notify({
+        type: 'positive',
+        message: 'order removed successful!',
+        position: 'center',
+        timeout: 1000,
+      })
     },
 
     showData(payload) {
@@ -1182,7 +1186,7 @@ export default {
         // console.log(this.customerList)
       } catch (error) {
         // console.log(error)
-         Notify.create({
+        Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
@@ -1246,7 +1250,7 @@ export default {
         // console.log('get maifp latest transaction => ', this.maif_latest_transaction)
       } catch (error) {
         // console.error('Error fetching MAIFP latest transaction:', error)
-         Notify.create({
+        Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
@@ -1261,7 +1265,7 @@ export default {
         this.maifpDataRows = this.customerStore.customer_maifp
         // console.log('sent to table => ', this.maifpDataRows)
       } catch (error) {
-         Notify.create({
+        Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',

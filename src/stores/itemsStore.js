@@ -246,9 +246,15 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async deleteItem(id) {
+    async deleteItem(payload) {
       try {
-        await api.delete('/api/items/' + id)
+        await api.post('/api/items/remove',payload)
+          Notify.create({
+          type: 'positive',
+          message: `Item Deleted Successfully`,
+          position: 'center',
+          timeout: 5000,
+        })
         //  console.log(response.data.success, ' --- ', response.data.message)
       } catch (error) {
         // console.log(error)
@@ -261,9 +267,9 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async deletePOItems(po_no) {
+    async deletePOItems(payload) {
       try {
-        await api.delete('/api/items/po/' + po_no)
+        await api.post('/api/items/po/remove', payload)
         //  console.log(response.data.success, ' --- ', response.data.message)
         Notify.create({
           type: 'positive',
