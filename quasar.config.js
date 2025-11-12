@@ -76,8 +76,11 @@ export default defineConfig((/* ctx */) => {
       open: true, // opens browser window automatically
       // host: '10.0.1.23'  ,
       // port: 90,
-      host: '192.168.8.11'  , // Your OFFICE local IP
+      // host: `${process.env.VITE_HOST}`  , // Your OFFICE local IP
       // host: '192.168.50.98', // Your HOME local IP
+      // port: `${process.env.VITE_PORT}`,
+
+      host: '192.168.8.11'  ,
       port: 9000,
       https: false,
     },

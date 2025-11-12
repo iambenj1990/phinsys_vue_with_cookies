@@ -19,7 +19,8 @@ export const useCustomerStore = defineStore('customers', {
     customer_transactions_list: [],
     customer_transactions_list_exploded: [],
 
-    customer_maifp: [],
+    customer_maifp_medication: [],
+    ustomer_maifp_laboratory: [],
     customer_maifp_latest_trx: '',
 
     cust_response: {},
@@ -43,9 +44,34 @@ export const useCustomerStore = defineStore('customers', {
       }
     },
 
-    async ShowMaifpCustomers() {
+    async ShowMaifpCustomers_medication(value) {
       try {
-        const response = await api.get('/api/maif/patients/medication')
+        var response = null
+        if (value==='medication'){
+             response = await api.get('/api/maif/patients/medication')
+              this.customer_maifp_medication = response.data.patients
+        }
+        if (value==='laboratory'){
+           response = await api.get('/api/maif/patients/laboratory')
+            this.customer_maifp_laboratory = response.data.patients
+        }
+
+        // console.log(response.data.patients)
+
+      } catch (error) {
+        // console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
+       async ShowMaifpCustomers_laboratory() {
+      try {
+        const response = await api.get('/api/maif/patients/laboratory')
         // console.log(response.data.patients)
         this.customer_maifp = response.data.patients
       } catch (error) {
