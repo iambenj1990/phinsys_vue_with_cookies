@@ -90,7 +90,7 @@
                   class="q-mr-md q-ml-md"
                   color="primary"
                   icon="add"
-                  @click="showNew = true"
+                  @click="lookforOpen()"
                 />
               </template>
               <template #body="props">
@@ -396,6 +396,7 @@ export default {
   },
   data() {
     return {
+      hasOpentransaction: false,
       showEdit: false,
       Credentials: [],
       rangeText: '',
@@ -424,6 +425,37 @@ export default {
   },
 
   methods: {
+
+
+    async lookforOpen() {
+      try {
+        await this.itemStore.openLookup()
+        this.hasOpentransaction = this.itemStore.hasOpening
+
+        if (this.hasOpentransaction == false) {
+          // this.$router.push({ path: '/customers/orders/new' })
+          this.showNew = true
+        } else
+          this.$q.notify({
+            type: 'negative',
+            message:
+              'Unable to proceed, Please Coordinate with personnel incharge to open Inventory!',
+            position: 'center',
+            timeout: 1200,
+          })
+      } catch (error) {
+        // console.log(error)
+        this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1000,
+        })
+      }
+    },
+
+
+
     async GetAuthenticatedUser() {
       await this.userStore.authenticatedUserCheck()
       this.user = this.userStore.user

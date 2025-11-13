@@ -514,7 +514,7 @@
                               maifp_id: props.row.patient_id.toString(),
                             }
                             selectedMaifpCustomer = clicked_data
-                            console.log('clicked maifp customer => ', selectedMaifpCustomer)
+                           // console.log('clicked maifp customer => ', selectedMaifpCustomer)
                              this.add_maifp_individual(selectedMaifpCustomer)
                           }
                         "
@@ -632,7 +632,7 @@
                               maifp_id: props.row.patient_id.toString(),
                             }
                             selectedMaifpCustomer = clicked_data
-                            console.log('clicked maifp customer => ', selectedMaifpCustomer)
+                           // console.log('clicked maifp customer => ', selectedMaifpCustomer)
                              this.add_maifp_individual(selectedMaifpCustomer)
                           }
                         "

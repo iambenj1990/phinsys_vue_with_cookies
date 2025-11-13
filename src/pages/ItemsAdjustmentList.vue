@@ -70,18 +70,7 @@
                   </q-td>
 
                   <q-td key="actions" style="font-size: 11px" align="center">
-                    <q-btn
-                      flat
-                      color="primary"
-                      icon="list"
-                      @click="
-                        () => {
-                          // console.log('Adjust items under PO No:', props.row.po_no)
-                          itemStore.selected_po = props.row.po_no
-                          showListing = true
-                        }
-                      "
-                    >
+                    <q-btn flat color="primary" icon="list" @click="lookforOpen(props.row.po_no)">
                       <q-tooltip> Adjustment </q-tooltip>
                     </q-btn>
                     <!-- <q-btn flat color="negative" @click="show_deletePrompt(props.row)" icon="delete" /> -->
@@ -164,6 +153,7 @@ export default {
   },
   data() {
     return {
+      hasOpentransaction: false,
       pagination: {
         page: 1,
         rowsPerPage: 10,
@@ -181,6 +171,34 @@ export default {
       await this.itemStore.get_PO_items()
       this.rows = this.itemStore.po_list
       this.loading = false
+    },
+
+    async lookforOpen(po_number) {
+      try {
+        await this.itemStore.openLookup()
+        this.hasOpentransaction = this.itemStore.hasOpening
+
+        if (this.hasOpentransaction == false) {
+          // this.$router.push({ path: '/customers/orders/new' })
+          this.itemStore.selected_po = po_number
+          this.showListing = true
+        } else
+          this.$q.notify({
+            type: 'negative',
+            message:
+              'Unable to proceed, Please Coordinate with personnel incharge to open Inventory!',
+            position: 'center',
+            timeout: 1000,
+          })
+      } catch (error) {
+        // console.log(error)
+        this.$q.notify({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 1000,
+        })
+      }
     },
   },
   mounted() {
