@@ -233,8 +233,12 @@ export const useItemStore = defineStore('items', {
 
     async updateItem(id, payload) {
       try {
-        const response = await api.put('/api/items/' + id, payload)
-        this.item = response.data.item[0]
+
+        var newPayload = { Item_id: id, ...payload } // Merge id into payload
+        console.log('Updated Payload:', newPayload)
+        // const response = await api.post('/api/items/update/', payload)
+        // const response = await api.put('/api/items/' + id, payload)
+        // this.item = response.data.item[0]
       } catch (error) {
         // console.log(error)
         Notify.create({
