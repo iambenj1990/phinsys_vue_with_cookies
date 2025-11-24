@@ -688,6 +688,8 @@ export default {
       await this.itemStore.updateItem(id, payload)
       this.fetchItemsbyPO(this.New_Po)
       this.inputReset()
+      this.toUpdate = false
+      this.toUpdateDialog = false
       this.$q.notify({
         type: 'positive',
         message: 'Updating records successful!',

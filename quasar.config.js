@@ -77,10 +77,10 @@ export default defineConfig((/* ctx */) => {
       // host: '10.0.1.23'  ,
       // port: 90,
       // host: `${process.env.VITE_HOST}`  , // Your OFFICE local IP
-      host: '192.168.50.98', // Your HOME local IP
+      // host: '192.168.50.98', // Your HOME local IP
       // port: `${process.env.VITE_PORT}`,
 
-      // host: '192.168.8.11'  ,
+      host: '192.168.8.11'  ,
       port: 9000,
       https: false,
     },
