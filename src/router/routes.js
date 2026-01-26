@@ -47,6 +47,11 @@ const routes = [
         component: () => import('pages/ClientOrders.vue'),
         meta: { requiresAuth: true },
       },
+       {
+        path: 'customers/orders/update',
+        component: () => import('pages/ClientModifyOrders.vue'),
+        meta: { requiresAuth: true },
+      },
       {
         path: 'ris/orders/new',
         component: () => import('pages/NewRIS.vue'),
