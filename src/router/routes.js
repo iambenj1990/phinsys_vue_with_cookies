@@ -48,8 +48,9 @@ const routes = [
         meta: { requiresAuth: true },
       },
        {
-        path: 'customers/orders/update',
+        path: 'customers/:id/orders/:trx_id/update',
         component: () => import('pages/ClientModifyOrders.vue'),
+        name: 'client-modify-orders',
         meta: { requiresAuth: true },
       },
       {

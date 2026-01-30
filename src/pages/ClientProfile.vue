@@ -120,6 +120,24 @@
                           }
                         "
                       />
+                          <q-btn
+                        icon="edit"
+                        flat
+                        class="text-orange"
+                        @click="
+                          () => {
+                            // get_transactions_exploded(
+                            //   props.row.customer_id,
+                            //   props.row.transaction_id,
+                            // )
+                            // dialog_open = true
+                            $router.push({
+                              name: 'client-modify-orders',
+                              params: { id: props.row.customer_id, trx_id: props.row.transaction_id },
+                            })
+                          }
+                        "
+                      />
                     </q-td>
                   </q-tr>
                 </template>

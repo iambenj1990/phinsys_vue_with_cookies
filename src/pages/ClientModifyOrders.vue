@@ -2,74 +2,6 @@
   <q-page>
     <div class="q-pa-md flex justify-center">
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
-        <div align="right">
-          <q-btn
-            class="q-ma-sm q-pa-sm"
-            style="
-              background-color: lightskyblue;
-              font-size: x-small;
-              font-weight: bold;
-              width: 130px;
-            "
-            label="Maifp Client"
-            icon="add"
-            @click="
-              () => {
-                show_maifp = true
-                get_MaifpCustomers('medication')
-                 get_MaifpCustomers('laboratory')
-              }
-            "
-            v-if="moduleAccess('MAIFP', 'view')"
-          />
-
-          <q-btn
-            class="q-my-sm q-pa-sm"
-            style="
-              background-color: lightskyblue;
-              font-size: x-small;
-              font-weight: bold;
-              width: 130px;
-            "
-            label="Add Client"
-            icon="add"
-            v-if="moduleAccess('Customer History', 'add')"
-            @click="$router.push({ path: '/customer/releasing' })"
-          />
-        </div>
-        <div>
-          <q-input
-            ref="searchInput"
-            v-model="searchTerm"
-            label="Search by Name or Lastname"
-            outlined
-            @input="filterList"
-          >
-          </q-input>
-
-          <q-list class="q-pa-sm flex" style="width: 400px">
-            <q-item
-              v-for="item in filteredList"
-              :key="item.id"
-              clickable
-              @click="get_client(item.id)"
-            >
-              <q-item-section>
-                <q-item-label>
-                  {{ item.firstname }} {{ item.lastname }} {{ item.ext }}
-                </q-item-label>
-                <q-item-label caption
-                  >Date of Birth: {{ item.birthdate }} | Gender: {{ item.gender }} | Category:
-                  {{ item.category }}</q-item-label
-                >
-                <q-item-label caption
-                  >Location: {{ item.city }} | Province: {{ item.province }}</q-item-label
-                >
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </div>
-
         <q-card-section>
           <div class="q-pa-sm flex">
             <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
@@ -684,6 +616,7 @@ export default {
   components: {
     newClients,
   },
+
   setup() {
     const customerStore = useCustomerStore()
     const userStore = useUserStore()
@@ -1055,7 +988,10 @@ export default {
         quantity: 0,
         user_id: 0,
       },
-
+      recieve_params:{
+        transaction_id: '',
+        customer_id: '',
+      },
       itemsData: {
         item_name: '',
         item_amount: 0,
@@ -1064,7 +1000,11 @@ export default {
   },
   mounted() {
     this.GetAuthenticatedUser()
-    this.get_clients()
+    this.recieve_params.transaction_id = this.$route.params.trx_id
+    this.recieve_params.customer_id = this.$route.params.id
+    this.transaction_id = this.recieve_params.transaction_id
+    this.get_client(this.recieve_params.customer_id)
+    this.getOrders(this.recieve_params.transaction_id)
   },
   methods: {
     moduleAccess(label, type) {
@@ -1192,6 +1132,7 @@ export default {
 
     async getOrders(transaction_id) {
       await this.transactionStore.getTransactionOrders(transaction_id)
+
       this.rows = this.transactionStore.customerTransactions
     },
 
@@ -1257,19 +1198,10 @@ export default {
     },
     async get_client(id) {
       this.selectedClient_id = id
-      // console.log('selected client_ID =>', id)
+      //  console.log('selected client_ID =>', id)
       await this.customerStore.getCustomer(id)
       this.costumer = this.customerStore.customer
-      this.searchTerm = ''
 
-      if (this.selectedMaifpCustomer.origin === 'MAIFP') {
-        await this.get_maif_latest_transaction({ patient_id: this.selectedMaifpCustomer.maifp_id })
-        // console.log('get client transaction id => ', this.maif_latest_transaction)
-        this.transaction_id = this.maif_latest_transaction
-        // console.log(this.transaction_id)
-      } else {
-        this.getNewTransactionID(id)
-      }
     },
 
     async get_clients() {
@@ -1369,17 +1301,17 @@ export default {
       }
     },
 
-    filterList() {
-      if (!this.searchTerm) {
-        this.filteredList = this.customerList
-      } else {
-        this.filteredList = this.customerList.filter((person) => {
-          const fullName =
-            `${person.firstname} ${person.middlename} ${person.lastname} ${person.ext}`.toLowerCase()
-          return fullName.includes(this.searchTerm.toLowerCase())
-        })
-      }
-    },
+    // filterList() {
+    //   if (!this.searchTerm) {
+    //     this.filteredList = this.customerList
+    //   } else {
+    //     this.filteredList = this.customerList.filter((person) => {
+    //       const fullName =
+    //         `${person.firstname} ${person.middlename} ${person.lastname} ${person.ext}`.toLowerCase()
+    //       return fullName.includes(this.searchTerm.toLowerCase())
+    //     })
+    //   }
+    // },
 
     calculateAge(birthdate) {
       if (!birthdate) return 0
@@ -1409,17 +1341,17 @@ export default {
     //   this.get_client(value)
     // },
 
-    searchTerm(newValue) {
-      if (newValue) {
-        this.filteredList = this.customerList.filter((person) => {
-          const fullName =
-            `${person.firstname} ${person.middlename} ${person.lastname} ${person.ext}`.toLowerCase()
-          return fullName.includes(newValue.toLowerCase())
-        })
-      } else {
-        this.filteredList = []
-      }
-    },
+    // searchTerm(newValue) {
+    //   if (newValue) {
+    //     this.filteredList = this.customerList.filter((person) => {
+    //       const fullName =
+    //         `${person.firstname} ${person.middlename} ${person.lastname} ${person.ext}`.toLowerCase()
+    //       return fullName.includes(newValue.toLowerCase())
+    //     })
+    //   } else {
+    //     this.filteredList = []
+    //   }
+    // },
 
     'costumer.birthdate'(newBirthdate) {
       this.costumer.age = this.calculateAge(newBirthdate)
