@@ -123,7 +123,7 @@ export const useTransactionStore = defineStore('transactions', {
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
-          timeout: 5000,
+          timeout: 2000,
         })
       }
     },
@@ -136,7 +136,7 @@ export const useTransactionStore = defineStore('transactions', {
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
-          timeout: 5000,
+          timeout: 2000,
         })
       }
     },

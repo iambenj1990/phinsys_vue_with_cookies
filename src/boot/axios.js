@@ -13,10 +13,10 @@ const port = import.meta.env.VITE_API_PORT
 // for each client)
 const api = axios.create({
               // baseURL:`https://${host}:${port}`,
-              baseURL: 'http://192.168.8.11:8000',
+              // baseURL: 'http://192.168.8.11:8000',
               // baseURL: 'http://10.0.1.23:89/api',
               // baseURL: process.env.API_URL, //office
-              // baseURL: 'http://192.168.50.98:8000', //Home
+              baseURL: 'http://192.168.50.98:8000', //Home
               withCredentials: true,
               withXSRFToken: true,
               xsrfCookieName: 'XSRF-TOKEN',
