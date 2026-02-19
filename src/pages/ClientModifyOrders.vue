@@ -1088,7 +1088,7 @@ export default {
     },
 
     async remove_order(payload) {
-      console.log('removing order with payload => ', payload)
+      console.log('removing order => ', payload)
 
       await this.transactionStore.remove_order({ id: payload.table_id_transactions })
       if (this.selectedMaifpCustomer.origin === 'MAIFP') {
