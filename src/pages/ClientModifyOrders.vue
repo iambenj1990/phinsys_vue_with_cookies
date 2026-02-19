@@ -96,11 +96,7 @@
             <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
               <div class="text-h6 text-blue text-weight-bolder">Order Requests</div>
               <div class="text-caption text-weight-regular" style="color: grey">
-                <q-input
-                  dense
-                  v-model="transaction_id"
-                  label="Transaction ID"
-                />
+                <q-input dense v-model="transaction_id" label="Transaction ID" />
                 <!-- Transaction ID: {{ this.transaction_id }} -->
               </div>
               <q-separator />
@@ -451,8 +447,8 @@
                               maifp_id: props.row.patient_id.toString(),
                             }
                             selectedMaifpCustomer = clicked_data
-                           // console.log('clicked maifp customer => ', selectedMaifpCustomer)
-                             this.add_maifp_individual(selectedMaifpCustomer)
+                            // console.log('clicked maifp customer => ', selectedMaifpCustomer)
+                            this.add_maifp_individual(selectedMaifpCustomer)
                           }
                         "
                       >
@@ -569,8 +565,8 @@
                               maifp_id: props.row.patient_id.toString(),
                             }
                             selectedMaifpCustomer = clicked_data
-                           // console.log('clicked maifp customer => ', selectedMaifpCustomer)
-                             this.add_maifp_indiexvidual(selectedMaifpCustomer)
+                            // console.log('clicked maifp customer => ', selectedMaifpCustomer)
+                            this.add_maifp_indiexvidual(selectedMaifpCustomer)
                           }
                         "
                       >
@@ -988,7 +984,7 @@ export default {
         quantity: 0,
         user_id: 0,
       },
-      recieve_params:{
+      recieve_params: {
         transaction_id: '',
         customer_id: '',
       },
@@ -1088,6 +1084,7 @@ export default {
     },
 
     async remove_order(payload) {
+<<<<<<< HEAD
       console.log('removing order => ', payload)
 
       await this.transactionStore.remove_order({ id: payload.table_id_transactions })
@@ -1095,15 +1092,26 @@ export default {
         await this.transactionStore.remove_maifp_order({
           transaction_id: this.transaction_id,
           item_id: payload.item_id,
+=======
+      //console.log('removing order with payload => ', payload)
+      try {
+        await this.transactionStore.remove_order({ id: payload.table_id_transactions })
+        if (this.selectedMaifpCustomer.origin === 'MAIFP') {
+          await this.transactionStore.remove_maifp_order({
+            transaction_id: this.transaction_id,
+            item_id: payload.item_id,
+          })
+        }
+        this.getOrders(this.transaction_id)
+      } catch (error) {
+        this.$q.notify({
+          type: 'positive',
+          message: error,
+          position: 'center',
+          timeout: 1000,
+>>>>>>> 5f847a52e0c054d2912c64dd6435922f24672516
         })
       }
-      this.getOrders(this.transaction_id)
-      this.$q.notify({
-        type: 'positive',
-        message: 'order removed successful!',
-        position: 'center',
-        timeout: 1000,
-      })
     },
 
     showData(payload) {
@@ -1201,7 +1209,6 @@ export default {
       //  console.log('selected client_ID =>', id)
       await this.customerStore.getCustomer(id)
       this.costumer = this.customerStore.customer
-
     },
 
     async get_clients() {
@@ -1287,8 +1294,10 @@ export default {
     async get_MaifpCustomers(value) {
       try {
         await this.customerStore.ShowMaifpCustomers_medication(value)
-       if (value == 'medication') this.maifpDataRows_medication = this.customerStore.customer_maifp_medication
-       if (value == 'laboratory') this.maifpDataRows_laboratory = this.customerStore.customer_maifp_laboratory
+        if (value == 'medication')
+          this.maifpDataRows_medication = this.customerStore.customer_maifp_medication
+        if (value == 'laboratory')
+          this.maifpDataRows_laboratory = this.customerStore.customer_maifp_laboratory
         // console.log('sent to table => ', this.maifpDataRows)
       } catch (error) {
         Notify.create({
