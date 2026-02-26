@@ -1084,7 +1084,6 @@ export default {
     },
 
     async remove_order(payload) {
-<<<<<<< HEAD
       console.log('removing order => ', payload)
 
       await this.transactionStore.remove_order({ id: payload.table_id_transactions })
@@ -1092,24 +1091,6 @@ export default {
         await this.transactionStore.remove_maifp_order({
           transaction_id: this.transaction_id,
           item_id: payload.item_id,
-=======
-      //console.log('removing order with payload => ', payload)
-      try {
-        await this.transactionStore.remove_order({ id: payload.table_id_transactions })
-        if (this.selectedMaifpCustomer.origin === 'MAIFP') {
-          await this.transactionStore.remove_maifp_order({
-            transaction_id: this.transaction_id,
-            item_id: payload.item_id,
-          })
-        }
-        this.getOrders(this.transaction_id)
-      } catch (error) {
-        this.$q.notify({
-          type: 'positive',
-          message: error,
-          position: 'center',
-          timeout: 1000,
->>>>>>> 5f847a52e0c054d2912c64dd6435922f24672516
         })
       }
     },

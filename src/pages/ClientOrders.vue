@@ -16,8 +16,8 @@
             @click="
               () => {
                 show_maifp = true
-                get_MaifpCustomers('medication')
-                 get_MaifpCustomers('laboratory')
+                get_MaifpCustomers()
+                //  get_MaifpCustomers('laboratory')
               }
             "
             v-if="moduleAccess('MAIFP', 'view')"
@@ -417,13 +417,13 @@
     <q-dialog v-model="show_maifp" style="height: 600px" persistent>
       <q-card style="max-width: 900px; width: 100%; overflow: hidden">
         <q-card-section>
-          <q-tabs v-model="tabs" in active-color="primary" indicator-color="red" align="justify">
-            <q-tab name="meds" label="Medication" icon="people" />
-            <q-tab name="lab" label="Laboratory" icon="people" />
-          </q-tabs>
+          <!-- <q-tabs v-model="tabs" in active-color="primary" indicator-color="red" align="justify"> -->
+            <!-- <q-tab name="meds" label="Medication" icon="people" /> -->
+            <!-- <q-tab name="lab" label="Laboratory" icon="people" /> -->
+          <!-- </q-tabs>
           <q-tab-panels v-model="tabs" animated>
-            <q-tab-panel name="meds">
-              <div class="text-h6 text-green">MAIFIP Medication Customer</div>
+            <q-tab-panel name="meds"> -->
+              <div class="text-h6 text-green">MAIFP Clients Customer</div>
               <q-separator class="q-mb-md"></q-separator>
               <q-table
                 :filter="maif_search"
@@ -514,8 +514,8 @@
                               maifp_id: props.row.patient_id.toString(),
                             }
                             selectedMaifpCustomer = clicked_data
-                           // console.log('clicked maifp customer => ', selectedMaifpCustomer)
-                             this.add_maifp_individual(selectedMaifpCustomer)
+                            console.log('clicked maifp customer => ', selectedMaifpCustomer)
+                              this.add_maifp_individual(selectedMaifpCustomer)
                           }
                         "
                       >
@@ -539,8 +539,8 @@
                   </q-tr>
                 </template>
               </q-table>
-            </q-tab-panel>
-            <q-tab-panel name="lab">
+            <!-- </q-tab-panel> -->
+            <!-- <q-tab-panel name="lab">
               <div class="text-h6 text-green">MAIFIP Laboratory Customer</div>
               <q-separator class="q-mb-md"></q-separator>
               <q-table
@@ -657,8 +657,8 @@
                   </q-tr>
                 </template>
               </q-table>
-            </q-tab-panel>
-          </q-tab-panels>
+            </q-tab-panel> -->
+          <!-- </q-tab-panels> -->
         </q-card-section>
         <q-card-actions align="right">
           <q-btn class="q-mx-md" @click="show_maifp = false" label="Close" color="negative" />
@@ -1347,11 +1347,11 @@ export default {
       }
     },
 
-    async get_MaifpCustomers(value) {
+    async get_MaifpCustomers() {
       try {
-        await this.customerStore.ShowMaifpCustomers_medication(value)
-       if (value == 'medication') this.maifpDataRows_medication = this.customerStore.customer_maifp_medication
-       if (value == 'laboratory') this.maifpDataRows_laboratory = this.customerStore.customer_maifp_laboratory
+        await this.customerStore.ShowMaifpCustomers_medication()
+      this.maifpDataRows_medication = this.customerStore.customer_maifp_medication
+      //  if (value == 'laboratory') this.maifpDataRows_laboratory = this.customerStore.customer_maifp_laboratory
         // console.log('sent to table => ', this.maifpDataRows)
       } catch (error) {
         Notify.create({

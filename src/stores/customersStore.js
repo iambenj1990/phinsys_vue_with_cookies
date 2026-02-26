@@ -44,17 +44,17 @@ export const useCustomerStore = defineStore('customers', {
       }
     },
 
-    async ShowMaifpCustomers_medication(value) {
+    async ShowMaifpCustomers_medication() {
       try {
         var response = null
-        if (value==='medication'){
+
              response = await api.get('/api/maif/patients/medication')
               this.customer_maifp_medication = response.data.patients
-        }
-        if (value==='laboratory'){
-           response = await api.get('/api/maif/patients/laboratory')
-            this.customer_maifp_laboratory = response.data.patients
-        }
+
+        // if (value==='laboratory'){
+        //    response = await api.get('/api/maif/patients/laboratory')
+        //     this.customer_maifp_laboratory = response.data.patients
+        // }
 
         // console.log(response.data.patients)
 
