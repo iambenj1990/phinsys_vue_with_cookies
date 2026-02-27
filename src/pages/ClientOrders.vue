@@ -3,7 +3,7 @@
     <div class="q-pa-md flex justify-center">
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
         <div align="right">
-          <q-btn
+          <!-- <q-btn
             class="q-ma-sm q-pa-sm"
             style="
               background-color: lightskyblue;
@@ -21,7 +21,7 @@
               }
             "
             v-if="moduleAccess('MAIFP', 'view')"
-          />
+          /> -->
 
           <q-btn
             class="q-my-sm q-pa-sm"
@@ -154,6 +154,31 @@
                     readonly
                   />
                 </div>
+              </div>
+            </q-card>
+          </div>
+        </q-card-section>
+
+        <q-card-section>
+          <div class="q-pa-sm flex">
+            <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
+              <div  class="text-h6 text-green text-weight-bolder">
+                <q-checkbox
+                  v-model="isMaifpClient"
+                  :label="isMaifpClient ? 'WITH MAIFIP' : 'WITHOUT MAIFIP'"
+                  checked-icon="task_alt"
+                  unchecked-icon="highlight_off"
+                  size="xl"
+                 :style="isMaifpClient ? 'color: green;' : 'color: red;'"
+               />
+
+                   <p  v-if="isMaifpClient" class="text-caption q-pl-md" style="color: grey">
+                     * Client originated from MAIFIP system
+                  </p>
+                     <p  v-if="!isMaifpClient" class="text-caption q-pl-md" style="color: grey">
+                    * Client is not from MAIFIP system
+                  </p>
+
               </div>
             </q-card>
           </div>
@@ -418,129 +443,129 @@
       <q-card style="max-width: 900px; width: 100%; overflow: hidden">
         <q-card-section>
           <!-- <q-tabs v-model="tabs" in active-color="primary" indicator-color="red" align="justify"> -->
-            <!-- <q-tab name="meds" label="Medication" icon="people" /> -->
-            <!-- <q-tab name="lab" label="Laboratory" icon="people" /> -->
+          <!-- <q-tab name="meds" label="Medication" icon="people" /> -->
+          <!-- <q-tab name="lab" label="Laboratory" icon="people" /> -->
           <!-- </q-tabs>
           <q-tab-panels v-model="tabs" animated>
             <q-tab-panel name="meds"> -->
-              <div class="text-h6 text-green">MAIFP Clients Customer</div>
-              <q-separator class="q-mb-md"></q-separator>
-              <q-table
-                :filter="maif_search"
-                :rows="maifpDataRows_medication"
-                :columns="maifpCols"
-                row-key="id"
-                class="q-ma-xs my-sticky-header-table"
-                style="height: 500px"
-                :visible-columns="[
-                  'lastname',
-                  'firstname',
-                  'middlename',
-                  'ext',
-                  'birthdate',
-                  'contact_number',
-                  'age',
-                  'gender',
-                  'barangay',
-                  'actions',
-                ]"
+          <div class="text-h6 text-green">MAIFP Clients Customer</div>
+          <q-separator class="q-mb-md"></q-separator>
+          <q-table
+            :filter="maif_search"
+            :rows="maifpDataRows_medication"
+            :columns="maifpCols"
+            row-key="id"
+            class="q-ma-xs my-sticky-header-table"
+            style="height: 500px"
+            :visible-columns="[
+              'lastname',
+              'firstname',
+              'middlename',
+              'ext',
+              'birthdate',
+              'contact_number',
+              'age',
+              'gender',
+              'barangay',
+              'actions',
+            ]"
+          >
+            <template v-slot:top>
+              <q-input
+                borderless
+                dense
+                debounce="300"
+                v-model="maif_search"
+                placeholder="Search"
+                class="full-width q-px-md"
+                style="background-color: lightgrey"
               >
-                <template v-slot:top>
-                  <q-input
-                    borderless
-                    dense
-                    debounce="300"
-                    v-model="maif_search"
-                    placeholder="Search"
-                    class="full-width q-px-md"
-                    style="background-color: lightgrey"
+                <template v-slot:append>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
+            </template>
+            <template #body="props">
+              <q-tr :v-bind="props">
+                <q-td
+                  key="lastname"
+                  style="
+                    font-size: 11px;
+                    white-space: normal;
+                    word-break: break-word;
+                    max-width: 300px;
+                  "
+                  align="left"
+                  class="text-wrap"
+                >
+                  {{ props.row.lastname }}
+                </q-td>
+                <q-td key="firstname" style="font-size: 11px" align="left">
+                  {{ props.row.firstname }}
+                </q-td>
+                <q-td key="middlename" style="font-size: 11px" align="left">
+                  {{ props.row.middlename }}
+                </q-td>
+                <q-td key="ext" style="font-size: 11px" align="left">
+                  {{ props.row.ext }}
+                </q-td>
+                <q-td key="birthdate" style="font-size: 11px" align="left">
+                  {{ props.row.birthdate }}
+                </q-td>
+                <q-td key="contact_number" style="font-size: 11px" align="left">
+                  {{ props.row.contact_number }}
+                </q-td>
+                <q-td key="age" style="font-size: 11px" align="left">
+                  {{ props.row.age }}
+                </q-td>
+                <q-td key="gender" style="font-size: 11px" align="left">
+                  {{ props.row.gender }}
+                </q-td>
+                <q-td key="barangay" style="font-size: 11px" align="left">
+                  {{ props.row.barangay }}
+                </q-td>
+                <q-td key="actions" style="font-size: 11px" align="center">
+                  <q-btn
+                    v-if="moduleAccess('MAIFP', 'add')"
+                    flat
+                    rounded
+                    color="primary"
+                    icon="save"
+                    @click="
+                      () => {
+                        const clicked_data = {
+                          ...props.row,
+                          origin: 'MAIFP',
+                          maifp_id: props.row.patient_id.toString(),
+                        }
+                        selectedMaifpCustomer = clicked_data
+                        console.log('clicked maifp customer => ', selectedMaifpCustomer)
+                        this.add_maifp_individual(selectedMaifpCustomer)
+                      }
+                    "
                   >
-                    <template v-slot:append>
-                      <q-icon name="search" />
-                    </template>
-                  </q-input>
-                </template>
-                <template #body="props">
-                  <q-tr :v-bind="props">
-                    <q-td
-                      key="lastname"
-                      style="
-                        font-size: 11px;
-                        white-space: normal;
-                        word-break: break-word;
-                        max-width: 300px;
-                      "
-                      align="left"
-                      class="text-wrap"
-                    >
-                      {{ props.row.lastname }}
-                    </q-td>
-                    <q-td key="firstname" style="font-size: 11px" align="left">
-                      {{ props.row.firstname }}
-                    </q-td>
-                    <q-td key="middlename" style="font-size: 11px" align="left">
-                      {{ props.row.middlename }}
-                    </q-td>
-                    <q-td key="ext" style="font-size: 11px" align="left">
-                      {{ props.row.ext }}
-                    </q-td>
-                    <q-td key="birthdate" style="font-size: 11px" align="left">
-                      {{ props.row.birthdate }}
-                    </q-td>
-                    <q-td key="contact_number" style="font-size: 11px" align="left">
-                      {{ props.row.contact_number }}
-                    </q-td>
-                    <q-td key="age" style="font-size: 11px" align="left">
-                      {{ props.row.age }}
-                    </q-td>
-                    <q-td key="gender" style="font-size: 11px" align="left">
-                      {{ props.row.gender }}
-                    </q-td>
-                    <q-td key="barangay" style="font-size: 11px" align="left">
-                      {{ props.row.barangay }}
-                    </q-td>
-                    <q-td key="actions" style="font-size: 11px" align="center">
-                      <q-btn
-                        v-if="moduleAccess('MAIFP', 'add')"
-                        flat
-                        rounded
-                        color="primary"
-                        icon="save"
-                        @click="
-                          () => {
-                            const clicked_data = {
-                              ...props.row,
-                              origin: 'MAIFP',
-                              maifp_id: props.row.patient_id.toString(),
-                            }
-                            selectedMaifpCustomer = clicked_data
-                            console.log('clicked maifp customer => ', selectedMaifpCustomer)
-                              this.add_maifp_individual(selectedMaifpCustomer)
-                          }
-                        "
-                      >
-                        <q-tooltip> Save </q-tooltip>
-                      </q-btn>
-                      <q-btn
-                        v-if="moduleAccess('MAIFP', 'add')"
-                        flat
-                        rounded
-                        color="green"
-                        icon="done"
-                        @click="
-                          () => {
-                            this.status_done_maif(props.row.transaction_number.toString())
-                          }
-                        "
-                      >
-                        <q-tooltip> Done </q-tooltip>
-                      </q-btn>
-                    </q-td>
-                  </q-tr>
-                </template>
-              </q-table>
-            <!-- </q-tab-panel> -->
-            <!-- <q-tab-panel name="lab">
+                    <q-tooltip> Save </q-tooltip>
+                  </q-btn>
+                  <q-btn
+                    v-if="moduleAccess('MAIFP', 'add')"
+                    flat
+                    rounded
+                    color="green"
+                    icon="done"
+                    @click="
+                      () => {
+                        this.status_done_maif(props.row.transaction_number.toString())
+                      }
+                    "
+                  >
+                    <q-tooltip> Done </q-tooltip>
+                  </q-btn>
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
+          <!-- </q-tab-panel> -->
+          <!-- <q-tab-panel name="lab">
               <div class="text-h6 text-green">MAIFIP Laboratory Customer</div>
               <q-separator class="q-mb-md"></q-separator>
               <q-table
@@ -999,6 +1024,7 @@ export default {
       tabs: 'meds',
       Credentials: [],
       maif_search: '',
+      isMaifpClient: false,
       user: {},
       selected_id_customer: 0,
       selectedMaifpCustomer: {},
@@ -1060,6 +1086,7 @@ export default {
   mounted() {
     this.GetAuthenticatedUser()
     this.get_clients()
+    this.isMaifpClient = false
   },
   methods: {
     moduleAccess(label, type) {
@@ -1250,21 +1277,39 @@ export default {
 
       this.availableMedsRow = this.itemStore.items
     },
+
     async get_client(id) {
       this.selectedClient_id = id
       // console.log('selected client_ID =>', id)
       await this.customerStore.getCustomer(id)
       this.costumer = this.customerStore.customer
+        console.log(this.costumer)
       this.searchTerm = ''
 
-      if (this.selectedMaifpCustomer.origin === 'MAIFP') {
-        await this.get_maif_latest_transaction({ patient_id: this.selectedMaifpCustomer.maifp_id })
+      if (this.costumer.origin === 'MAIFP') {
+        this.isMaifpClient= true
+        await this.get_maif_latest_transaction({ patient_id: this.costumer.maifp_id })
         // console.log('get client transaction id => ', this.maif_latest_transaction)
         this.transaction_id = this.maif_latest_transaction
         // console.log(this.transaction_id)
       } else {
+         this.isMaifpClient= false
         this.getNewTransactionID(id)
       }
+    },
+
+    async remove_maifip_charging(id){
+
+      this.selectedClient_id = id
+      // console.log('selected client_ID =>', id)
+       this.transaction_id=''
+
+      this.getNewTransactionID(id)
+    },
+    async add_maif_transaction(id){
+       this.transaction_id=''
+       await this.get_maif_latest_transaction({ patient_id: id })
+        this.transaction_id = this.maif_latest_transaction
     },
 
     async get_clients() {
@@ -1335,6 +1380,7 @@ export default {
         await this.customerStore.latest_Maifp_trx(payload)
 
         this.maif_latest_transaction = this.customerStore.customer_maifp_latest_trx
+
         // console.log('get maifp latest transaction => ', this.maif_latest_transaction)
       } catch (error) {
         // console.error('Error fetching MAIFP latest transaction:', error)
@@ -1342,16 +1388,17 @@ export default {
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
-          timeout: 5000,
+          timeout: 2500,
         })
+        this.isMaifpClient = false
       }
     },
 
     async get_MaifpCustomers() {
       try {
         await this.customerStore.ShowMaifpCustomers_medication()
-      this.maifpDataRows_medication = this.customerStore.customer_maifp_medication
-      //  if (value == 'laboratory') this.maifpDataRows_laboratory = this.customerStore.customer_maifp_laboratory
+        this.maifpDataRows_medication = this.customerStore.customer_maifp_medication
+        //  if (value == 'laboratory') this.maifpDataRows_laboratory = this.customerStore.customer_maifp_laboratory
         // console.log('sent to table => ', this.maifpDataRows)
       } catch (error) {
         Notify.create({
@@ -1400,6 +1447,16 @@ export default {
   },
 
   watch: {
+
+    'isMaifpClient'(value) {
+      if (!value) {
+        this.remove_maifip_charging(this.selectedClient_id)
+      }
+      else
+      {
+       this.add_maif_transaction(this.costumer.maifp_id)
+      }
+    },
     // 'customerStore.customer_id'(value) {
     //   this.get_client(value)
     // },

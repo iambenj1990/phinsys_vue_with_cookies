@@ -1,6 +1,6 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { api } from 'src/boot/axios'
-import { Notify } from 'quasar'
+import {  Notify } from 'quasar'
 
 export const useCustomerStore = defineStore('customers', {
   state: () => ({
@@ -24,6 +24,7 @@ export const useCustomerStore = defineStore('customers', {
     customer_maifp_latest_trx: '',
 
     cust_response: {},
+
   }),
 
   actions: {
@@ -34,13 +35,18 @@ export const useCustomerStore = defineStore('customers', {
         this.customer_maifp_latest_trx = response.data.trx_num
         // console.log(response.data.trx_num)
       } catch (error) {
-        // console.log(error)
-        Notify.create({
-          type: 'negative',
-          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
-          position: 'center',
-          timeout: 5000,
-        })
+
+        if (error.response?.status === 422 || error.response?.status === 404) {
+          Notify.create({
+            type: 'warning',
+            message: 'MAIFIP transactions not found for this patient today.',
+            position: 'center',
+            timeout: 1300,
+          })
+           this.customer_maifp_latest_trx=''
+
+        }
+
       }
     },
 
