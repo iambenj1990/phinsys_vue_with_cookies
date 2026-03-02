@@ -35,11 +35,12 @@ export const useTransactionStore = defineStore('transactions', {
 
     async throw_maif_medication_to_db(transaction){
 
+      console.log('transaction to be received in store => ', transaction)
+
       try {
         const response = await api.post('/api/maif/medication/new', transaction)
         this.maifp_transactions = response.data
-        // console.log(response.data)
-
+         console.log(response.data)
 
       } catch (error) {
         // console.log(error)

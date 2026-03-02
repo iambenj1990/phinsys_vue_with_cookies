@@ -446,9 +446,9 @@
                               origin: 'MAIFP',
                               maifp_id: props.row.patient_id.toString(),
                             }
-                            selectedMaifpCustomer = clicked_data
-                            // console.log('clicked maifp customer => ', selectedMaifpCustomer)
-                            this.add_maifp_individual(selectedMaifpCustomer)
+                            costumer = clicked_data
+                            // console.log('clicked maifp customer => ', costumer)
+                            this.add_maifp_individual(costumer)
                           }
                         "
                       >
@@ -564,9 +564,9 @@
                               origin: 'MAIFP',
                               maifp_id: props.row.patient_id.toString(),
                             }
-                            selectedMaifpCustomer = clicked_data
-                            // console.log('clicked maifp customer => ', selectedMaifpCustomer)
-                            this.add_maifp_indiexvidual(selectedMaifpCustomer)
+                            costumer = clicked_data
+                            // console.log('clicked maifp customer => ', costumer)
+                            this.add_maifp_indiexvidual(costumer)
                           }
                         "
                       >
@@ -1053,7 +1053,7 @@ export default {
     },
 
     clearData() {
-      if (this.selectedMaifpCustomer.origin === 'MAIFP') {
+      if (this.costumer.origin === 'MAIFP') {
         this.status_done_maif(this.transaction_id)
       }
 
@@ -1087,7 +1087,7 @@ export default {
       console.log('removing order => ', payload)
 
       await this.transactionStore.remove_order({ id: payload.table_id_transactions })
-      if (this.selectedMaifpCustomer.origin === 'MAIFP') {
+      if (this.costumer.origin === 'MAIFP') {
         await this.transactionStore.remove_maifp_order({
           transaction_id: this.transaction_id,
           item_id: payload.item_id,
@@ -1114,8 +1114,8 @@ export default {
       this.transactionDetails.item_id = payload.item_id
       this.transactionDetails.unit = payload.dosage_form
       this.transactionDetails.user_id = this.user.id
-      this.transactionDetails.origin = this.selectedMaifpCustomer.origin
-      this.transactionDetails.maifp_id = this.selectedMaifpCustomer.maifp_id
+      this.transactionDetails.origin = this.costumer.origin
+      this.transactionDetails.maifp_id = this.costumer.maifp_id
       this.showQuantity = true
     },
 
@@ -1143,14 +1143,14 @@ export default {
       // console.log('order payload => ', payload)
       await this.transactionStore.newTransaction(payload)
 
-      if (this.selectedMaifpCustomer.origin === 'MAIFP') {
+      if (this.costumer.origin === 'MAIFP') {
         // console.log('selected item id: ', payload.item_id)
         // console.log('selected medicine: => ', this.selectedMedicine)
         await this.show_stock_name_amount({ id: payload.item_id })
 
         const medication_details = {
           item_description: this.itemsData.item_name,
-          patient_id: this.selectedMaifpCustomer.maifp_id,
+          patient_id: this.costumer.maifp_id,
           quantity: payload.quantity,
           unit: 'pcs',
           transaction_date: payload.transaction_date,

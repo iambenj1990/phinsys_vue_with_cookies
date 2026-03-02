@@ -159,8 +159,8 @@
           </div>
         </q-card-section>
 
-        <q-card-section>
-          <div class="q-pa-sm flex">
+        <q-card-section >
+          <div class="q-pa-sm flex" v-if="costumer.lastname">
             <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
               <div  class="text-h6 text-green text-weight-bolder">
                 <q-checkbox
@@ -439,16 +439,16 @@
     </q-dialog>
 
     <!-- SHOW ADD NEW MAIFP CUSTOMER -->
-    <q-dialog v-model="show_maifp" style="height: 600px" persistent>
-      <q-card style="max-width: 900px; width: 100%; overflow: hidden">
-        <q-card-section>
+    <!-- <q-dialog v-model="show_maifp" style="height: 600px" persistent> -->
+      <!-- <q-card style="max-width: 900px; width: 100%; overflow: hidden"> -->
+        <!-- <q-card-section> -->
           <!-- <q-tabs v-model="tabs" in active-color="primary" indicator-color="red" align="justify"> -->
           <!-- <q-tab name="meds" label="Medication" icon="people" /> -->
           <!-- <q-tab name="lab" label="Laboratory" icon="people" /> -->
           <!-- </q-tabs>
           <q-tab-panels v-model="tabs" animated>
             <q-tab-panel name="meds"> -->
-          <div class="text-h6 text-green">MAIFP Clients Customer</div>
+          <!-- <div class="text-h6 text-green">MAIFP Clients Customer</div>
           <q-separator class="q-mb-md"></q-separator>
           <q-table
             :filter="maif_search"
@@ -563,7 +563,7 @@
                 </q-td>
               </q-tr>
             </template>
-          </q-table>
+          </q-table> -->
           <!-- </q-tab-panel> -->
           <!-- <q-tab-panel name="lab">
               <div class="text-h6 text-green">MAIFIP Laboratory Customer</div>
@@ -684,12 +684,12 @@
               </q-table>
             </q-tab-panel> -->
           <!-- </q-tab-panels> -->
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn class="q-mx-md" @click="show_maifp = false" label="Close" color="negative" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+        <!-- </q-card-section> -->
+        <!-- <q-card-actions align="right"> -->
+          <!-- <q-btn class="q-mx-md" @click="show_maifp = false" label="Close" color="negative" /> -->
+        <!-- </q-card-actions> -->
+      <!-- </q-card> -->
+    <!-- </q-dialog> -->
   </q-page>
 </template>
 
@@ -1087,6 +1087,7 @@ export default {
     this.GetAuthenticatedUser()
     this.get_clients()
     this.isMaifpClient = false
+
   },
   methods: {
     moduleAccess(label, type) {
@@ -1139,7 +1140,7 @@ export default {
     },
 
     clearData() {
-      if (this.selectedMaifpCustomer.origin === 'MAIFP') {
+      if (this.costumer.origin === 'MAIFP') {
         this.status_done_maif(this.transaction_id)
       }
 
@@ -1173,7 +1174,7 @@ export default {
       console.log('removing order => ', payload)
 
       await this.transactionStore.remove_order({ id: payload.table_id_transactions })
-      if (this.selectedMaifpCustomer.origin === 'MAIFP') {
+      if (this.costumer.origin === 'MAIFP') {
         await this.transactionStore.remove_maifp_order({
           transaction_id: this.transaction_id,
           item_id: payload.item_id,
@@ -1207,8 +1208,8 @@ export default {
       this.transactionDetails.item_id = payload.item_id
       this.transactionDetails.unit = payload.dosage_form
       this.transactionDetails.user_id = this.user.id
-      this.transactionDetails.origin = this.selectedMaifpCustomer.origin
-      this.transactionDetails.maifp_id = this.selectedMaifpCustomer.maifp_id
+      this.transactionDetails.origin = this.costumer.origin
+      this.transactionDetails.maifp_id = this.costumer.maifp_id
       this.showQuantity = true
     },
 
@@ -1232,17 +1233,18 @@ export default {
         this.$refs.searchInput?.focus()
         return
       }
-      // console.log('order payload => ', payload)
+       console.log('order payload => ', payload)
       await this.transactionStore.newTransaction(payload)
 
-      if (this.selectedMaifpCustomer.origin === 'MAIFP') {
+      if (this.costumer.origin === 'MAIFP') {
         // console.log('selected item id: ', payload.item_id)
         // console.log('selected medicine: => ', this.selectedMedicine)
         await this.show_stock_name_amount({ id: payload.item_id })
 
         const medication_details = {
+
           item_description: this.itemsData.item_name,
-          patient_id: this.selectedMaifpCustomer.maifp_id,
+          patient_id: this.costumer.maifp_id,
           quantity: payload.quantity,
           unit: 'pcs',
           transaction_date: payload.transaction_date,
@@ -1250,7 +1252,7 @@ export default {
           transaction_id: this.transaction_id,
           item_id: payload.item_id,
         }
-        // console.log('medication details to be sent to maifp db => ', medication_details)
+        console.log('medication details to be sent to maifp db => ', medication_details)
         await this.transactionStore.throw_maif_medication_to_db(medication_details)
       }
       this.getAvailableMedList()
@@ -1281,6 +1283,7 @@ export default {
     async get_client(id) {
       this.selectedClient_id = id
       // console.log('selected client_ID =>', id)
+      this.costumer = {}
       await this.customerStore.getCustomer(id)
       this.costumer = this.customerStore.customer
         console.log(this.costumer)
