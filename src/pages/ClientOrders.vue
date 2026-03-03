@@ -1301,14 +1301,13 @@ export default {
       }
     },
 
+    // Method to remove maifp charging when client chooses to not be charged to maifp
     async remove_maifip_charging(id){
-
       this.selectedClient_id = id
-      // console.log('selected client_ID =>', id)
-       this.transaction_id=''
-
+      this.transaction_id=''
       this.getNewTransactionID(id)
     },
+
     async add_maif_transaction(id){
        this.transaction_id=''
        await this.get_maif_latest_transaction({ patient_id: id })
@@ -1381,6 +1380,9 @@ export default {
     async get_maif_latest_transaction(payload) {
       try {
         await this.customerStore.latest_Maifp_trx(payload)
+          if(this.customerStore.hasMaifpTransactions==false){
+          this.show_maifp = false
+        }
 
         this.maif_latest_transaction = this.customerStore.customer_maifp_latest_trx
 
