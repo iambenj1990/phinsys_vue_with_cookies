@@ -1258,8 +1258,10 @@ export default {
     async get_maif_latest_transaction(payload) {
       try {
         await this.customerStore.latest_Maifp_trx(payload)
-
-        this.maif_latest_transaction = this.customerStore.customer_maifp_latest_trx
+        if(this.customerStore.hasMaifpTransactions==false){
+          this.show_maifp = false
+        }
+         this.maif_latest_transaction = this.customerStore.customer_maifp_latest_trx
         // console.log('get maifp latest transaction => ', this.maif_latest_transaction)
       } catch (error) {
         // console.error('Error fetching MAIFP latest transaction:', error)

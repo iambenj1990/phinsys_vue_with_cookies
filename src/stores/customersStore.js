@@ -24,6 +24,7 @@ export const useCustomerStore = defineStore('customers', {
     customer_maifp_latest_trx: '',
 
     cust_response: {},
+    hasMaifpTransactions: false,
 
   }),
 
@@ -33,6 +34,7 @@ export const useCustomerStore = defineStore('customers', {
         // console.log(payload)
         const response = await api.post('/api/maif/transactions/latest', payload)
         this.customer_maifp_latest_trx = response.data.trx_num
+        this.hasMaifpTransactions = response.data.status
         // console.log(response.data.trx_num)
       } catch (error) {
 
@@ -44,7 +46,7 @@ export const useCustomerStore = defineStore('customers', {
             timeout: 1300,
           })
            this.customer_maifp_latest_trx=''
-
+          this.hasMaifpTransactions = false
         }
 
       }
