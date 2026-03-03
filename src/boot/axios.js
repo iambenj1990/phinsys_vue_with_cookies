@@ -1,9 +1,15 @@
 import { defineBoot } from '#q-app/wrappers'
+
 import axios from 'axios'
 
+// Production URL SERVER
+const myBaseURL = import.meta.env.BASE_URL
 
-const host = import.meta.env.VITE_API_HOST
-const port = import.meta.env.VITE_API_PORT
+// STAGING URL SERVER
+// const myBaseURL = import.meta.env.Staging_baseURL
+
+
+
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
@@ -12,19 +18,15 @@ const port = import.meta.env.VITE_API_PORT
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({
-              // baseURL:`https://${host}:${port}`,
-              // baseURL: 'http://192.168.8.11:8000',
-              // baseURL: 'http://10.0.1.23:89/api',
-              // baseURL: process.env.API_URL, //office
-              // baseURL: 'http://192.168.50.98:8000', //Home
-              baseURL: 'https://tagumcity.gov.ph/phinsys_backend/public', //Production
+
+              baseURL:myBaseURL, //Production
               withCredentials: true,
               withXSRFToken: true,
               xsrfCookieName: 'XSRF-TOKEN',
               xsrfHeaderName: 'X-XSRF-TOKEN',
             })
 
-console.log(host,":",port, "testing")
+
     // const token = localStorage.getItem('auth_token')
     //   // If token exists, set it in the default headers
     //   if (token) {
