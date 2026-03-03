@@ -17,7 +17,7 @@ const api = axios.create({
               // baseURL: 'http://10.0.1.23:89/api',
               // baseURL: process.env.API_URL, //office
               // baseURL: 'http://192.168.50.98:8000', //Home
-              baseURL: 'https://tagumcity.gov.ph/public/api', //Production
+              baseURL: 'https://tagumcity.gov.ph/phinsys_backend/public', //Production
               withCredentials: true,
               withXSRFToken: true,
               xsrfCookieName: 'XSRF-TOKEN',
