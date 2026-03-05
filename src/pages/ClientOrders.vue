@@ -3,26 +3,6 @@
     <div class="q-pa-md flex justify-center">
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
         <div align="right">
-          <!-- <q-btn
-            class="q-ma-sm q-pa-sm"
-            style="
-              background-color: lightskyblue;
-              font-size: x-small;
-              font-weight: bold;
-              width: 130px;
-            "
-            label="Maifp Client"
-            icon="add"
-            @click="
-              () => {
-                show_maifp = true
-                get_MaifpCustomers()
-                //  get_MaifpCustomers('laboratory')
-              }
-            "
-            v-if="moduleAccess('MAIFP', 'view')"
-          /> -->
-
           <q-btn
             class="q-my-sm q-pa-sm"
             style="
@@ -1237,7 +1217,7 @@ export default {
        console.log('order payload => ', payload)
       await this.transactionStore.newTransaction(payload)
 
-      if (this.costumer.origin === 'MAIFP') {
+      if (this.costumer.origin === 'MAIFP' && this.isMaifpClient) {
         // console.log('selected item id: ', payload.item_id)
         // console.log('selected medicine: => ', this.selectedMedicine)
         await this.show_stock_name_amount({ id: payload.item_id })
