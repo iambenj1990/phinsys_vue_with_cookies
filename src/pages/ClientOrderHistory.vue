@@ -1,6 +1,7 @@
 <template>
   <q-page>
-    <div class="q-pa-md flex justify-center">
+
+    <div class="q-pa-md flex justify-center" >
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
         <q-card-section>
           <q-input filled v-model="search" label="Search Clients" class="text-h11">
@@ -10,22 +11,10 @@
           </q-input>
         </q-card-section>
 
-        <q-card-section>
+        <q-card-section >
           <div class="text-h6 text-primary q-my-sm">Daily Customers</div>
           <div class="q-pa-sm row items-center justify-between">
             <div class="flex justify-start">
-              <!-- <q-input
-              dense
-              flat
-              type="date"
-              filled
-              v-model="Trans_Date"
-              label="Transaction Date"
-              class="text-h11"
-              style="width: 150px;"
-              @update:model-value="get_clients(this.Trans_Date)"
-            /> -->
-
               <q-input
                 v-model="rangeText"
                 label="Select Date Range"
@@ -56,77 +45,84 @@
               />
             </div>
           </div>
-          <q-table
-            flat
-            bordered
-            :filter="search"
-            :rows="rows"
-            :columns="columns"
-            row-key="id"
-            binary-state-sort
-            no-data-label="No data available"
-            :rows-per-page-options="[10, 20, 50, 100, 200]"
-            class="my-sticky-header-table"
-            table-header-class="text-white"
-          >
-            <template v-slot:top-right>
-              <q-btn
-                style="font-size: 12px"
-                color="green"
-                label="Export"
-                icon="import_export"
-                v-if="moduleAccess('Releasing', 'export')"
-              />
-            </template>
 
-            <template #body="props">
-              <q-tr :v-bind="props">
-                <q-td key="lastname" style="font-size: 11px" align="left" class="text-uppercase">
-                  {{ props.row.lastname }}
-                </q-td>
-                <q-td key="firstname" style="font-size: 11px" align="left" class="text-uppercase">
-                  {{ props.row.firstname }}
-                </q-td>
-                <q-td key="middle_name" style="font-size: 11px" align="left" class="text-uppercase">
-                  {{ props.row.middlename }}
-                </q-td>
-                <q-td key="ext" style="font-size: 11px" align="left" class="text-uppercase">
-                  {{ props.row.ext }}
-                </q-td>
-                <q-td key="birthdate" style="font-size: 11px" align="left">
-                  {{ props.row.birthdate }}
-                </q-td>
-                <q-td key="age" style="font-size: 11px" align="left">
-                  {{ props.row.age }}
-                </q-td>
-                <q-td key="contact_number" style="font-size: 11px" align="left">
-                  {{ props.row.contact_number }}
-                </q-td>
-                <q-td key="barangay" style="font-size: 11px" align="left" class="text-uppercase">
-                  {{ props.row.barangay }}
-                </q-td>
+            <q-table
 
-                <q-td key="actions" style="font-size: 11px" align="center">
-                  <q-btn
-                    flat
-                    color="primary"
-                    @click="showClient(props.row.id)"
-                    icon="description"
-                    to="/customers/profile/current"
-                    v-if="moduleAccess('Releasing', 'view')"
+              flat
+              bordered
+              :filter="search"
+              :rows="rows"
+              :columns="columns"
+              row-key="id"
+              binary-state-sort
+              no-data-label="No data available"
+              :rows-per-page-options="[10, 20, 50, 100, 200]"
+              class="my-sticky-header-table"
+              table-header-class="text-white"
+            >
+              <template v-slot:top-right>
+                <q-btn
+                  style="font-size: 12px"
+                  color="green"
+                  label="Export"
+                  icon="import_export"
+                  v-if="moduleAccess('Releasing', 'export')"
+                />
+              </template>
+              <template #body="props">
+                <q-tr :v-bind="props">
+                  <q-td key="lastname" style="font-size: 11px" align="left" class="text-uppercase">
+                    {{ props.row.lastname }}
+                  </q-td>
+                  <q-td key="firstname" style="font-size: 11px" align="left" class="text-uppercase">
+                    {{ props.row.firstname }}
+                  </q-td>
+                  <q-td
+                    key="middle_name"
+                    style="font-size: 11px"
+                    align="left"
+                    class="text-uppercase"
                   >
-                    <q-tooltip> Profile and History </q-tooltip>
-                  </q-btn>
-                  <!-- <q-btn
+                    {{ props.row.middlename }}
+                  </q-td>
+                  <q-td key="ext" style="font-size: 11px" align="left" class="text-uppercase">
+                    {{ props.row.ext }}
+                  </q-td>
+                  <q-td key="birthdate" style="font-size: 11px" align="left">
+                    {{ props.row.birthdate }}
+                  </q-td>
+                  <q-td key="age" style="font-size: 11px" align="left">
+                    {{ props.row.age }}
+                  </q-td>
+                  <q-td key="contact_number" style="font-size: 11px" align="left">
+                    {{ props.row.contact_number }}
+                  </q-td>
+                  <q-td key="barangay" style="font-size: 11px" align="left" class="text-uppercase">
+                    {{ props.row.barangay }}
+                  </q-td>
+
+                  <q-td key="actions" style="font-size: 11px" align="center">
+                    <q-btn
+                      flat
+                      color="primary"
+                      @click="showClient(props.row.id)"
+                      icon="description"
+                      to="/customers/profile/current"
+                      v-if="moduleAccess('Releasing', 'view')"
+                    >
+                      <q-tooltip> Profile and History </q-tooltip>
+                    </q-btn>
+                    <!-- <q-btn
                     flat
                     color="negative"
                     @click="showDeletepage(props.row.id)"
                     icon="delete"
                   /> -->
-                </q-td>
-              </q-tr>
-            </template>
-          </q-table>
+                  </q-td>
+                </q-tr>
+              </template>
+            </q-table>
+
         </q-card-section>
       </q-card>
     </div>
@@ -145,6 +141,14 @@
     </q-dialog>
     <!--
     <pre>{{ this.Trans_Date }}</pre> -->
+    <q-dialog v-model="loading" persistent>
+      <q-card class="q-pa-md" style="width: 300px">
+        <q-card-section class="row items-center">
+          <q-spinner color="primary" size="90px" />
+          <span class="text-h6 q-ml-md">Loading data.... please wait...</span>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 <script>
@@ -264,6 +268,7 @@ export default {
 
   data() {
     return {
+      loading: false,
       Credentials: [],
       rangeText: '',
       selectedDates: {
@@ -324,13 +329,15 @@ export default {
 
     async get_clients(payload) {
       try {
+        this.loading = true
         // await this.Customers.getCustomerOftheDay(payload)
         await this.Customers.getCustomersByDate(payload)
         this.rows = this.Customers.customers //fetch all clients from array
+        this.loading = false
         //console.log(this.rows)
       } catch (error) {
         // console.log(error)
-         Notify.create({
+        Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
@@ -342,7 +349,7 @@ export default {
     async remove_client() {
       try {
         // await this.ClientStore.removeClient(this.Selected_ID)
-        await this.Customers.removeCustomer({id:this.Customers.customer_id})
+        await this.Customers.removeCustomer({ id: this.Customers.customer_id })
         this.$q.notify({
           type: 'positive',
           message: 'Deleting record successful!',
@@ -373,7 +380,7 @@ export default {
           })
       } catch (error) {
         // console.log(error)
-         Notify.create({
+        Notify.create({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',

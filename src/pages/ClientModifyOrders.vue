@@ -96,7 +96,7 @@
             <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
               <div class="text-h6 text-blue text-weight-bolder">Order Requests</div>
               <div class="text-caption text-weight-regular" style="color: grey">
-                <q-input dense v-model="transaction_id" label="Transaction ID" />
+                <q-input dense v-model="transaction_id" disable label="Transaction ID" />
                 <!-- Transaction ID: {{ this.transaction_id }} -->
               </div>
               <q-separator />
@@ -1092,7 +1092,9 @@ export default {
           transaction_id: this.transaction_id,
           item_id: payload.item_id,
         })
+
       }
+      await this.getOrders(this.transaction_id)
     },
 
     showData(payload) {

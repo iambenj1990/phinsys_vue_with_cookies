@@ -135,6 +135,16 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <q-dialog v-model="loading" persistent>
+      <q-card class="q-pa-md" >
+        <q-card-section class="row items-center">
+          <div class="flex flex-center">
+             <q-spinner color="primary" size="90px" />
+          </div>
+          <div class="text-h6 text-primary q-ml-md">Loading data.... please wait...</div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 <script>
@@ -200,6 +210,7 @@ export default {
 
   data() {
     return {
+      loading: false,
       Credentials: [],
       show_date: false,
       selectedDates: {
@@ -238,8 +249,10 @@ export default {
     },
 
     async get_RIS_List() {
+      this.loading = true
       await this.risStore.allRIS()
       this.rows = this.risStore.ris_list
+      this.loading = false
     },
 
     showRIS(ris_no) {
@@ -298,7 +311,7 @@ export default {
   },
   mounted() {
     this.GetAuthenticatedUser()
-    this.get_RIS_List()
+    // this.get_RIS_List()
 
     this.selectedDates = {
       from: this.start.toISOString().split('T')[0],

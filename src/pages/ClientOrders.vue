@@ -1180,13 +1180,14 @@ export default {
           item_id: payload.item_id,
         })
       }
-      this.getOrders(this.transaction_id)
+
       this.$q.notify({
         type: 'positive',
         message: 'order removed successful!',
         position: 'center',
         timeout: 1000,
       })
+      this.getOrders(this.transaction_id)
     },
 
     showData(payload) {
@@ -1267,6 +1268,7 @@ export default {
     async getNewTransactionID(id) {
       await this.transactionStore.newTransactionID(id)
       this.transaction_id = this.transactionStore.newCustomerTransactionID
+      await this.getOrders(this.transaction_id)
     },
 
     async getAvailableMedList() {
@@ -1312,6 +1314,7 @@ export default {
        this.transaction_id=''
        await this.get_maif_latest_transaction({ patient_id: id })
         this.transaction_id = this.maif_latest_transaction
+        await this.getOrders(this.transaction_id)
     },
 
     async get_clients() {

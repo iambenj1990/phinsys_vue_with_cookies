@@ -435,9 +435,12 @@ export default {
 
     async showStocks(date) {
       try {
+        this.loading = true
         await this.itemStore.getStocksListbyDate(date)
         this.rows = this.itemStore.items
+        this.loading = false
       } catch (error) {
+          this.loading = false
         // console.log(error)
          Notify.create({
           type: 'negative',

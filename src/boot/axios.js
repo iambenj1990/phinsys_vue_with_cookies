@@ -3,10 +3,10 @@ import { defineBoot } from '#q-app/wrappers'
 import axios from 'axios'
 
 // Production URL SERVER
-const myBaseURL = import.meta.env.BASE_URL
+// const myBaseURL = import.meta.env.BASE_URL
 
 // STAGING URL SERVER
-// const myBaseURL = import.meta.env.Staging_baseURL
+//  const myBaseURL = import.meta.env.Staging_baseURL
 
 
 
@@ -18,8 +18,7 @@ const myBaseURL = import.meta.env.BASE_URL
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({
-
-              baseURL:myBaseURL, //Production
+              baseURL: 'http://192.168.8.11:8000',
               withCredentials: true,
               withXSRFToken: true,
               xsrfCookieName: 'XSRF-TOKEN',
