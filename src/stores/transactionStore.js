@@ -101,7 +101,7 @@ export const useTransactionStore = defineStore('transactions', {
       try {
         const response = await api.get('/api/orders/transaction/' + transaction_id)
         this.customerTransactions = response.data.transactions
-        // console.log(this.customerTransactions)
+        console.log(this.customerTransactions)
       } catch (error) {
         Notify.create({
           type: 'negative',

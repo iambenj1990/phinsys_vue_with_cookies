@@ -537,11 +537,25 @@ export default {
     },
 
     async remove_order(id) {
-      await this.TransactionStore.remove_order(id)
-      this.getOrders(this.ris_no)
-      this.showRemoveItem = false
+      try {
+        await this.TransactionStore.remove_order({ id: id })
+        await this.getOrders(this.ris_no)
+        this.showRemoveItem = false
 
-      this.$q.notify({ type: 'positive', message: 'order removed successful!' })
+        this.$q.notify({
+          type: 'positive',
+          message: 'Order removed successfully!',
+        })
+      } catch (error) {
+        console.error('Failed to remove order:', error)
+
+        this.$q.notify({
+          type: 'negative',
+          message: 'Failed to remove order. Please try again.',
+        })
+
+        this.showRemoveItem = false
+      }
     },
 
     getStockStatus(row) {

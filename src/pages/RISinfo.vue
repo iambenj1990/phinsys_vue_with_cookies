@@ -490,7 +490,7 @@ export default {
           return
         }
       } catch (error) {
-           this.$q.notify({
+        this.$q.notify({
           type: 'negative',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
           position: 'center',
@@ -516,9 +516,22 @@ export default {
     },
 
     async remove_order(id) {
-      await this.TransactionStore.remove_order(id)
-      this.getOrders(this.transaction_id)
-      this.$q.notify({ type: 'positive', message: 'order removed successful!' })
+      try {
+        await this.TransactionStore.remove_order({ id: id })
+        await this.getOrders(this.ris_no)
+
+        this.$q.notify({
+          type: 'positive',
+          message: 'Order removed successfully!',
+        })
+      } catch (error) {
+        console.error('Failed to remove order:', error)
+
+        this.$q.notify({
+          type: 'negative',
+          message: 'Failed to remove order. Please try again.',
+        })
+      }
     },
 
     getStockStatus(row) {

@@ -19,6 +19,7 @@ import axios from 'axios'
 // for each client)
 const api = axios.create({
               baseURL: 'http://192.168.8.11:8000',
+              
               withCredentials: true,
               withXSRFToken: true,
               xsrfCookieName: 'XSRF-TOKEN',
