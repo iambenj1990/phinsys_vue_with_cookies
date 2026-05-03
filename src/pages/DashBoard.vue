@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-md">
     <q-card class="q-pa-md">
-      <div class="text-h4 text-grey q-pa-md">Dashboard</div>
+      <div class="text-h6 text-grey ">Dashboard</div>
       <q-separator />
       <div class="q-my-sm flex flex-wrap q-px-md justify-end">
         <q-input v-model="rangeText" label="Select Date Range" dense readonly style="width: 250px">
@@ -16,160 +16,181 @@
       </div>
 
       <div class="row q-col-gutter-md q-mb-md">
-        <div class="col-12 col-md-6">
+        <!-- MEDICINES HEADER -->
+        <div class="col-12">
           <div class="text-h6 q-ma-xs text-green">
             Medicines
             <q-separator spaced />
           </div>
-          <div class="flex flex-wrap q-px-md q-mb-lg">
-            <q-card
-              class="q-ma-xs q-pa-md"
-              style="width: 220px; height: 110px"
-              @click="
-                () => {
-                  this.$router.push({ path: '/items/reports', query: { tab: 'Inventory' } })
-                }
-              "
-            >
-              <q-card-section>
-                <div class="text-subtitle2 text-weight-medium">
-                  <q-icon name="inventory_2" color="green" size="30px" class="q-mr-sm" />
-                  In Stock
-                </div>
-                <div class="text-h4" align="right">{{ instock.instock }}</div>
-              </q-card-section>
-            </q-card>
+        </div>
 
-            <q-card
-              class="q-ma-xs q-pa-md"
-              style="width: 220px; height: 110px"
-              @click="
-                () => {
-                  this.$router.push({ path: '/items/reports', query: { tab: 'Expired' } })
-                }
-              "
-            >
-              <q-card-section>
-                <div class="text-subtitle2 text-weight-medium">
-                  <q-icon name="event_busy" color="green" size="30px" class="q-mr-sm" />
-                  Expired
-                </div>
-                <div class="text-h4" align="right">{{ expiredData.expired }}</div>
-              </q-card-section>
-            </q-card>
+        <!-- In Stock -->
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+          <q-card
+            flat
+            bordered
+            class="cursor-pointer full-height"
+            @click="$router.push({ path: '/items/reports', query: { tab: 'Inventory' } })"
+          >
+            <q-card-section>
+              <div class="row items-center justify-between">
+                <span class="text-caption text-grey">In Stock</span>
+                <q-icon name="inventory_2" color="green" size="24px" />
+              </div>
+              <div class="text-h4 text-weight-medium q-mt-sm">{{ instock.instock }}</div>
+              <div class="text-caption text-grey q-mt-xs">
+                <q-badge color="green">Available</q-badge>
+                Total medicines in stock
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
 
-            <q-card
-              class="q-ma-xs q-pa-md"
-              style="width: 220px; height: 110px"
-              @click="
-                () => {
-                  this.$router.push({ path: '/items/reports', query: { tab: 'Empty' } })
-                }
-              "
-            >
-              <q-card-section>
-                <div class="text-subtitle2 text-weight-medium">
-                  <q-icon
-                    name="production_quantity_limits"
-                    color="green"
-                    size="30px"
-                    class="q-mr-sm"
-                  />
-                  Out of Stock
-                </div>
-                <div class="text-h4" align="right">{{ nostock }}</div>
-              </q-card-section>
-            </q-card>
+        <!-- Expiring -->
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+          <q-card
+            flat
+            bordered
+            class="cursor-pointer full-height"
+            @click="$router.push({ path: '/items/reports', query: { tab: 'Expired' } })"
+          >
+            <q-card-section>
+              <div class="row items-center justify-between">
+                <span class="text-caption text-grey">Expiring</span>
+                <q-icon name="event_busy" color="orange" size="24px" />
+              </div>
+              <div class="text-h4 text-weight-medium q-mt-sm">{{ expiredData.expiring }}</div>
+              <div class="text-caption text-grey q-mt-xs">
+                <q-badge color="orange">Warning</q-badge>
+                Near expiry in 30 days
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
 
-            <q-card
-              class="q-ma-xs q-pa-md"
-              style="width: 220px; height: 110px"
-              @click="
-                () => {
-                  this.$router.push({ path: '/items/reports', query: { tab: 'Low' } })
-                }
-              "
-            >
-              <q-card-section>
-                <div class="text-subtitle2 text-weight-medium">
-                  <q-icon name="running_with_errors" color="green" size="30px" class="q-mr-sm" />
-                  Low Stocks
-                </div>
-                <div class="text-h4" align="right">{{ lowstock }}</div>
-              </q-card-section>
-            </q-card>
+        <!-- Out of Stock -->
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+          <q-card
+            flat
+            bordered
+            class="cursor-pointer full-height"
+            @click="$router.push({ path: '/items/reports', query: { tab: 'Empty' } })"
+          >
+            <q-card-section>
+              <div class="row items-center justify-between">
+                <span class="text-caption text-grey">Out of Stock</span>
+                <q-icon name="production_quantity_limits" color="red" size="24px" />
+              </div>
+              <div class="text-h4 text-weight-medium q-mt-sm">{{ nostock }}</div>
+              <div class="text-caption text-grey q-mt-xs">
+                <!-- <q-badge color="red">Critical</q-badge> -->
+                <!-- Needs restocking -->
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
 
-            <q-card
-              class="q-ma-xs q-pa-md"
-              style="width: 220px; height: 110px"
-              @click="
-                () => {
-                  this.$router.push({ path: '/items/temporary-po' })
-                }
-              "
-            >
-              <q-card-section>
-                <div class="text-subtitle2 text-weight-medium">
-                  <q-icon name="description" color="green" size="30px" class="q-mr-sm" />
-                  Temporary PO #
-                </div>
-                <div class="text-h4" align="right">{{ countTemporaryPO }}</div>
-              </q-card-section>
-            </q-card>
+        <!-- Low Stocks -->
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+          <q-card
+            flat
+            bordered
+            class="cursor-pointer full-height"
+            @click="$router.push({ path: '/items/reports', query: { tab: 'Low' } })"
+          >
+            <q-card-section>
+              <div class="row items-center justify-between">
+                <span class="text-caption text-grey">Low Stocks</span>
+                <q-icon name="running_with_errors" color="amber" size="24px" />
+              </div>
+              <div class="text-h4 text-weight-medium q-mt-sm">{{ lowstock }}</div>
+              <div class="text-caption text-grey q-mt-xs">
+                <q-badge color="amber">Low</q-badge>
+                Running below threshold
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+
+        <!-- Temporary PO -->
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+          <q-card
+            flat
+            bordered
+            class="cursor-pointer full-height"
+            @click="$router.push({ path: '/items/temporary-po' })"
+          >
+            <q-card-section>
+              <div class="row items-center justify-between">
+                <span class="text-caption text-grey">Temporary PO #</span>
+                <q-icon name="description" color="blue" size="24px" />
+              </div>
+              <div class="text-h4 text-weight-medium q-mt-sm">{{ countTemporaryPO }}</div>
+              <div class="text-caption text-grey q-mt-xs">
+                <q-badge color="blue">Pending</q-badge>
+                Update P.O. #
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+
+        <!-- PATIENTS HEADER -->
+        <div class="col-12">
+          <div class="text-h6 q-ma-xs text-green">
+            Patients
+            <q-separator spaced />
           </div>
         </div>
 
-        <!-- CUSTOMER SIDE -->
+        <!-- Registered -->
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+          <q-card
+            flat
+            bordered
+            class="cursor-pointer full-height"
+            @click="$router.push({ path: '/customers' })"
+          >
+            <q-card-section>
+              <div class="row items-center justify-between">
+                <span class="text-caption text-grey">Registered</span>
+                <q-icon name="people" color="green" size="24px" />
+              </div>
+              <div class="text-h4 text-weight-medium q-mt-sm">{{ registered_customer }}</div>
+              <div class="text-caption text-grey q-mt-xs">
+                <q-badge color="green">Active</q-badge>
+                Total registered patients
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
 
-        <div class="col col-lg-5">
-          <div class="text-h6 q-ma-xs q-p-md text-green">
-            Patients
-            <q-separator spaced label="Section Title" />
-          </div>
-          <div class="flex flex-wrap q-px-md q-mb-lg">
-            <q-card
-              class="q-ma-xs q-pa-md"
-              style="width: 220px; height: 110px"
-              @click="
-                () => {
-                  this.$router.push({ path: '/customers' })
-                }
-              "
-            >
-              <q-card-section>
-                <div class="text-subtitle2 text-weight-medium">
-                  <q-icon name="people" color="green" size="30px" class="q-mr-sm" />
-                  Registered
-                </div>
-                <div class="text-h4" align="right">{{ registered_customer }}</div>
-              </q-card-section>
-            </q-card>
-
-            <q-card
-              class="q-ma-xs q-pa-md"
-              style="width: 220px; height: 110px"
-              @click="
-                () => {
-                  this.$router.push({ path: '/customer/orders' })
-                }
-              "
-            >
-              <q-card-section>
-                <div class="text-subtitle2 text-weight-medium">
-                  <q-icon name="medical_services" color="green" size="30px" class="q-mr-sm" />
-                  Served
-                </div>
-                <div class="text-h4" align="right">{{ served_customer }}</div>
-              </q-card-section>
-            </q-card>
-          </div>
+        <!-- Served -->
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+          <q-card
+            flat
+            bordered
+            class="cursor-pointer full-height"
+            @click="$router.push({ path: '/customer/orders' })"
+          >
+            <q-card-section>
+              <div class="row items-center justify-between">
+                <span class="text-caption text-grey">Served</span>
+                <q-icon name="medical_services" color="blue" size="24px" />
+              </div>
+              <div class="text-h4 text-weight-medium q-mt-sm">{{ served_customer }}</div>
+              <div class="text-caption text-grey q-mt-xs">
+                <q-badge color="blue">Completed</q-badge>
+                Total patients served
+              </div>
+            </q-card-section>
+          </q-card>
         </div>
       </div>
 
       <div class="row q-pb-lg">
         <div class="col col-lg-12">
           <div class="text-h6 q-ma-xs text-green">
-           <q-icon name="trending_up" size="24" /> Top 10 Most Released Medicines
+            <q-icon name="trending_up" size="24" /> Top 10 Most Released Medicines
             <q-separator spaced label="Section Title" />
           </div>
           <q-table
