@@ -113,7 +113,7 @@
     </q-dialog>
 
     <q-dialog v-model="show_list" persistent>
-      <q-card style="width: 400px">
+      <q-card style="width: 600px">
         <q-card-section class="text-h6">
           <div class="text-h6 q-pa-md text-green">Item Details</div>
           <q-table

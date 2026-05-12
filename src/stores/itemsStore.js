@@ -162,7 +162,7 @@ export const useItemStore = defineStore('items', {
     async UpdateTempPO(id, request) {
       try {
         // console.log('temp => ', id, 'new po => ', request)
-        const response = await api.put('/api/items/temp/po/' + id, { po_no: request })
+        const response = await api.post('/api/items/temp/po/' + id, { po_no: request })
         Notify.create({
           type: 'positive',
           message: response.data.message,
@@ -295,8 +295,24 @@ export const useItemStore = defineStore('items', {
     async getExpiringItems() {
       try {
         const response = await api.get('/api/items/expire/list')
-        this.expiring = response.data.items
-        //console.log(response.data.success, ' --- ', response.data.message)
+        this.expiring = response.data.expiring_soon.items
+        console.log(response.data.success, ' --- ', response.data.message)
+      } catch (error) {
+        // console.log(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 5000,
+        })
+      }
+    },
+
+       async getExpiredItems() {
+      try {
+        const response = await api.get('/api/items/expire/list')
+        this.expired = response.data.expired.items
+        console.log(response.data.success, ' --- ', response.data.message)
       } catch (error) {
         // console.log(error)
         Notify.create({

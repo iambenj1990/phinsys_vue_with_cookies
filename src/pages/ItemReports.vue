@@ -17,7 +17,7 @@
             narrow-indicator
           >
             <q-tab name="Inventory" label="Inventory" />
-            <q-tab name="Expired" label="Expired Stocks" />
+            <q-tab name="Expired" label="Expiring Stocks" />
             <q-tab name="Low" label="Low Stocks" />
             <q-tab name="Empty" label="Zero Stocks" />
             <q-tab name="Dispense" label="Dispense" />

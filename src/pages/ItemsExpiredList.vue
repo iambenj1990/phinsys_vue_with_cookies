@@ -2,12 +2,6 @@
   <q-page>
     <div class="flex flex-center q-ma-sm">
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
-        <!-- <div class="row q-gutter-md">
-          <div class="col-12">
-            <div align="left" class="text-h6 text-primary q-pa-md">Out of Stock Medicines</div>
-          </div>
-        </div>
-        <q-separator /> -->
         <div v-if="loading" class="flex flex-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
           <span class="q-ml-sm">Loading...</span>
@@ -26,6 +20,24 @@
               v-model:pagination="pagination"
             >
               <template v-slot:top-left>
+                  <span class="text-subtitle text-body1 text-grey q-mr-sm">Filter :</span>
+                <q-btn-toggle
+                  v-model="statusFilter"
+                  :options="[
+                    { label: 'Expiring Soon', value: 'expiring'  },
+                    { label: 'Expired', value: 'expired' },
+                  ]"
+                  color="white"
+                  text-color="grey-7"
+                  toggle-color="green"
+                  unelevated
+                  
+                >
+                <template>
+                
+                </template>
+              </q-btn-toggle>
+
                 <q-input
                   borderless
                   dense
@@ -82,39 +94,9 @@
                   <q-td key="dosage_form" style="font-size: 11px" align="left">
                     {{ props.row.dosage_form }}
                   </q-td>
-                  <!-- <q-td key="Openning_quantity" style="font-size: 11px" align="left">
-                    {{
-                      !props.row.Openning_quantity ? 'Stock Closed' : props.row.Openning_quantity
-                    }}
-                  </q-td> -->
-                  <!-- <q-td key="unit" style="font-size: 11px" align="left">
-                    {{ props.row.unit }}
-
-                  </q-td> -->
-
                   <q-td key="expiration_date" style="font-size: 11px" align="left">
                     {{ props.row.expiration_date }}
                   </q-td>
-
-                  <!-- <q-td key="Closing_quantity" style="font-size: 11px" align="left">
-                    <q-badge
-                      style="width: auto"
-                      :color="
-                        getStockColor(props.row.Closing_quantity, props.row.Openning_quantity)
-                      "
-                      text-color="black"
-                      class="flex flex-center q-pa-sm "
-                    >
-                      {{
-                        !props.row.Closing_quantity
-                          ? 'No Stocks Available'
-                          : props.row.Closing_quantity
-                      }}
-
-
-                    </q-badge>
-                  </q-td> -->
-
                   <q-td key="daysTillExpire" style="font-size: 11px" align="left">
                     {{ calculateDaysUntilExpiration(props.row.expiration_date) }}
                   </q-td>
@@ -238,6 +220,7 @@ export default {
   },
   data() {
     return {
+      statusFilter: null,
       color: '',
       rows: [],
       filter: '',
@@ -305,6 +288,15 @@ export default {
       return differenceInDays
     },
 
+    getRowClass(row) {
+      const days = this.calculateDaysUntilExpiration(row.expiration_date)
+      if (days === null) return ''
+      if (days < 0) return 'row-expired'
+      if (days <= 30) return 'row-critical'
+      if (days <= 90) return 'row-warning'
+      return 'row-ok'
+    },
+
     // editItem(id) {
     //   // console.log(id)
     // },
@@ -324,6 +316,24 @@ export default {
         this.loading = false
       }
     },
+
+     async fetchExpiredStocks() {
+      try {
+        this.loading = true
+        await this.itemStore.getExpiredItems()
+        this.rows = this.itemStore.expired
+      } catch (error) {
+        Notify.create({
+          type: 'negative',
+          message: error.response.data.message || 'An error occurred.',
+          position: 'center',
+          timeout: 5000,
+        })
+      } finally {
+        this.loading = false
+      }
+    },
+
 
     getStockPercentage(remaining, total) {
       if (total === 0) return 0 // Prevent division by zero
@@ -345,9 +355,18 @@ export default {
   mounted() {
     this.fetchAllStocks()
   },
-  watch() {},
+  watch: {
+    statusFilter(newval){
+      if(newval === 'expiring'){
+        this.fetchAllStocks()
+      } else if(newval === 'expired'){
+        this.fetchExpiredStocks()
+      }
+    },
+  },
 }
 </script>
+
 <style lang="sass">
 .my-sticky-header-table
   /* height or max-height is important */
@@ -373,4 +392,31 @@ export default {
   tbody
     /* height of all previous header rows */
     scroll-margin-top: 50px
+</style>
+
+<style scoped>
+/* ── Responsive: hide columns at small screens ────── */
+@media (max-width: 599px) {
+  .card-header {
+    padding: 12px 14px;
+  }
+  .summary-row {
+    padding: 8px 14px;
+  }
+  .header-title {
+    font-size: 13px;
+  }
+  .search-input {
+    width: 100% !important;
+  }
+  .table-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+@media (max-width: 767px) {
+  .page-wrapper {
+    padding: 8px;
+  }
+}
 </style>
