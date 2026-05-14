@@ -18,6 +18,7 @@ export const useItemStore = defineStore('items', {
     stockMiniInfo: [],
     stockCard: [],
     stockCardbyItem: [],
+    available_medicine: [],
     temp_id: '',
     hasOpening: false,
     dosageForm: [],
@@ -296,7 +297,7 @@ export const useItemStore = defineStore('items', {
       try {
         const response = await api.get('/api/items/expire/list')
         this.expiring = response.data.expiring_soon.items
-        console.log(response.data.success, ' --- ', response.data.message)
+        // console.log(response.data.success, ' --- ', response.data.message)
       } catch (error) {
         // console.log(error)
         Notify.create({
@@ -312,7 +313,7 @@ export const useItemStore = defineStore('items', {
       try {
         const response = await api.get('/api/items/expire/list')
         this.expired = response.data.expired.items
-        console.log(response.data.success, ' --- ', response.data.message)
+        // console.log(response.data.success, ' --- ', response.data.message)
       } catch (error) {
         // console.log(error)
         Notify.create({
@@ -551,6 +552,23 @@ export const useItemStore = defineStore('items', {
         })
       }
     },
+
+     async availableMedicine(){
+      try{
+        const response = await api.get('/api/items/available/medicine')
+        // console.log('available list:', response.data)
+        this.available_medicine = response.data.available_stocks
+        // console.log(this.available_medicine)
+      }catch(error){
+        console.error(error)
+        Notify.create({
+          type: 'negative',
+          message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+          position: 'center',
+          timeout: 3000,
+        })
+      }
+    }
 
 
   },

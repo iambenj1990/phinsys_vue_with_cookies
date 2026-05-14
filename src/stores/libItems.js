@@ -6,6 +6,7 @@ export const useCatalogStore = defineStore('catalog', {
   state: () => ({
     upload_list: [],
     catalog_list: [],
+    
   }),
 
   actions: {
@@ -55,6 +56,9 @@ export const useCatalogStore = defineStore('catalog', {
         })
       }
     },
+
+
+   
   },
 })
 

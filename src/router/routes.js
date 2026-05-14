@@ -118,6 +118,7 @@ const routes = [
         component: () => import('src/pages/ItemsEmptyStocksList.vue'),
         meta: { requiresAuth: true },
       },
+  
       {
         path: 'items/movement',
         component: () => import('pages/ItemsMovementList.vue'),
@@ -217,6 +218,11 @@ const routes = [
       {
         path: 'libraries/catalog',
         component: () => import('src/pages/library/libItemsList.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'items/available',
+        component: () => import('src/pages/ItemsShowAvailableMedicine.vue'),
         meta: { requiresAuth: true },
       },
     ],
