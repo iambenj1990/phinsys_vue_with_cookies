@@ -53,6 +53,11 @@
             <p class="text-sm">Dashboard</p>
           </q-item>
           <q-separator />
+          <q-item clickable v-ripple to="/available" v-if="moduleAccess('Dashboard')">
+            <q-icon name="healing" size="24px" class="q-mr-md" />
+            <p class="text-sm">Available Medicine</p>
+          </q-item>
+          <q-separator />
           <q-expansion-item
             v-model="expanded"
             label="Client Management"
@@ -187,7 +192,9 @@
             </q-item> -->
           </q-expansion-item>
         </q-list>
+
       </q-scroll-area>
+
     </q-drawer>
 
     <q-page-container>

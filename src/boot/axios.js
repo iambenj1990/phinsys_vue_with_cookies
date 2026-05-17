@@ -8,9 +8,6 @@ import axios from 'axios'
 // STAGING URL SERVER
 //  const myBaseURL = import.meta.env.Staging_baseURL
 
-
-
-
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
 // If any client changes this (global) instance, it might be a
@@ -18,29 +15,31 @@ import axios from 'axios'
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({
-               baseURL: 'http://192.168.8.11:8000',
-             // baseURL: 'https://tagumcity.gov.ph/phinsys_backend/public',
-              
+  //  baseURL: 'http://192.168.8.11:8000',
+  // baseURL: 'https://tagumcity.gov.ph/phinsys_backend/public',
+  baseURL: import.meta.env.VITE_HOST_STAGING,
 
-              withCredentials: true,
-              withXSRFToken: true,
-              xsrfCookieName: 'XSRF-TOKEN',
-              xsrfHeaderName: 'X-XSRF-TOKEN',
-            })
+  withCredentials: true,
+  withXSRFToken: true,
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN',
 
 
-    // const token = localStorage.getItem('auth_token')
-    //   // If token exists, set it in the default headers
-    //   if (token) {
-    //     const sanitized_object = token.replace('__q_strn|', '')
-    //    // console.log('Sanitized token:', sanitized_object)
-    //     api.defaults.headers.common['Authorization'] = `Bearer ${sanitized_object}`
-    //   }
+})
 
+console.log(api.baseURL)
+
+
+// const token = localStorage.getItem('auth_token')
+//   // If token exists, set it in the default headers
+//   if (token) {
+//     const sanitized_object = token.replace('__q_strn|', '')
+//    // console.log('Sanitized token:', sanitized_object)
+//     api.defaults.headers.common['Authorization'] = `Bearer ${sanitized_object}`
+//   }
 
 export default defineBoot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
-
 
   app.config.globalProperties.$axios = axios
   // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)

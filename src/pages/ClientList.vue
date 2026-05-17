@@ -32,6 +32,7 @@
               table-header-class="text-white"
               class="my-sticky-header-table"
               :loading="loading"
+              style="height: calc(100vh - 190px)"
             >
               <template v-slot:top-right>
                 <q-btn

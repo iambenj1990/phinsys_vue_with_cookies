@@ -2,7 +2,9 @@
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file
 
 import { defineConfig } from '#q-app/wrappers'
+import dotenv from 'dotenv'
 
+dotenv.config()
 export default defineConfig((/* ctx */) => {
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
@@ -75,14 +77,8 @@ export default defineConfig((/* ctx */) => {
     devServer: {
       // https: true,
       open: true, // opens browser window automatically
-      // host: '10.0.1.23'  ,
-      // port: 90,
-      // host: `${process.env.VITE_HOST}`  , // Your OFqFICE local IP
-      //host: '192.168.50.98', // Your HOME local IP
-      // port: `${process.env.VITE_PORT}`,
-
-       host: '192.168.8.11'  ,
-      port: 9000,
+       host: `${process.env.VITE_HOST}`,
+       port: `${process.env.VITE_PORT}`,
       https: false,
     },
 

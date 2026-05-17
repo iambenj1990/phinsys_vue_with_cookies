@@ -118,7 +118,7 @@ const routes = [
         component: () => import('src/pages/ItemsEmptyStocksList.vue'),
         meta: { requiresAuth: true },
       },
-  
+
       {
         path: 'items/movement',
         component: () => import('pages/ItemsMovementList.vue'),
@@ -221,7 +221,7 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
-        path: 'items/available',
+        path: '/available',
         component: () => import('src/pages/ItemsShowAvailableMedicine.vue'),
         meta: { requiresAuth: true },
       },

@@ -22,7 +22,7 @@
               flat
               bordered
               class="q-mr-md my-sticky-header-table"
-              style="height: 500px"
+               style="height: calc(100vh - 150px)"
               :rows-per-page-options="[0]"
               table-header-class="text-white"
             >
@@ -34,7 +34,7 @@
                   v-model="filter"
                   placeholder="Search"
                   class="full-width"
-                 
+
                 >
                   <template v-slot:append>
                     <q-icon name="search" />
@@ -42,21 +42,9 @@
                 </q-input>
               </template>
 
-              <!-- <template #top-right>
-                <q-btn
-                  flat
-                  type="button"
-                  label="Export"
-                  class="q-mr-md q-ml-md text-caption text-white"
-                  style="background-color: #26a65b"
-                  icon="import_export"
-                  @click="exportToExcel()"
-                />
-              </template> -->
-
               <template #body="props">
                 <q-tr :v-bind="props">
-                  
+
                   <q-td
                     key="GenericName"
                     style="
@@ -70,41 +58,18 @@
                   >
                     {{ props.row.GenericName }}
                   </q-td>
+                  <q-td key="Status" style="font-size: 11px" align="left">
+                    <q-chip :color="props.row.Quantity > 0 ? 'green' : 'red'" text-color="white" class="text-caption">
+                       {{ props.row.Quantity? 'AVAILABLE': 'NO STOCKS' }}
+                    </q-chip>
+                  </q-td>
                   <q-td key="Quantity" style="font-size: 11px" align="left">
                     {{ props.row.Quantity }}
                   </q-td>
                   <q-td key="ExpirationDate" style="font-size: 11px" align="left">
                     {{ props.row.ExpirationDate }}
                   </q-td>
-                  <!-- <q-td key="dosage_form" style="font-size: 11px" align="left">
-                    {{ props.row.dosage_form }}
-                  </q-td> -->
-                  <!-- <q-td key="Openning_quantity" style="font-size: 11px" align="left">
-                    {{
-                      !props.row.Openning_quantity ? 'Stock Closed' : props.row.Openning_quantity
-                    }}
-                  </q-td> -->
-                  <!-- <q-td key="unit" style="font-size: 11px" align="left">
-                    {{ props.row.unit }}
 
-                  </q-td> -->
-
-                  <!-- <q-td key="expiration_date" style="font-size: 11px" align="left">
-                    {{ props.row.expiration_date }}
-                  </q-td>
-
-                  <q-td key="Closing_quantity" style="font-size: 11px" align="left">
-                    {{ props.row.Closing_quantity }}
-                  </q-td>
-
-                  <q-td
-                    key="last_inventory_date"
-                    style="font-size: 11px"
-                    class="text-weight-bolder"
-                    align="left"
-                  >
-                    {{ props.row.last_inventory_date }}
-                  </q-td> -->
                 </q-tr>
               </template>
             </q-table>
@@ -145,6 +110,12 @@ export default {
           align: 'left',
           field: 'GenericName',
         },
+         {
+          name: 'Status',
+          required: true,
+          label: 'Status',
+          align: 'left',
+        },
 
         {
           name: 'Quantity',
@@ -161,7 +132,7 @@ export default {
           align: 'left',
           field: 'ExpirationDate',
         },
-       
+
       ],
     }
   },
@@ -222,7 +193,7 @@ export default {
       try {
         this.loading = true
         await this.itemStore.availableMedicine()
-      
+
         this.rows = this.itemStore.available_medicine
           // console.log('available medicine =>', this.rows)
       } catch (error) {

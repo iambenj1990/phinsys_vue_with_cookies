@@ -33,6 +33,7 @@
               class="q-mr-md my-sticky-header-table"
               table-header-class="text-white"
               :rows-per-page-options="[0]"
+              style="height: calc(100vh - 180px)"
             >
               <template v-slot:top-left>
                 <div class="q-pa-md q-mr-md">
