@@ -75,6 +75,7 @@ export default {
       credentials: {},
       modulePermissions: [
         { key: 'Dashboard', title: 'Dashboard', permissions:  ['view'] },
+        { key: 'Available', title: 'Available Medicines', permissions:  ['view'] },
         { key: 'Releasing', title: 'Releasing', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
         { key: 'CustomerHistory', title: 'Customer History', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },
         { key: 'Purchasing', title: 'Purchasing', permissions:  ['view', 'add', 'edit', 'delete', 'export'] },

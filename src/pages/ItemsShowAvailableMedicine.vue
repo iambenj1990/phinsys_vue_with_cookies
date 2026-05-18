@@ -2,12 +2,12 @@
   <q-page>
     <div class="flex flex-center q-ma-sm">
       <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
-        <!-- <div class="row q-gutter-md">
+        <div class="row q-gutter-md">
           <div class="col-12">
-            <div align="left" class="text-h6 text-primary q-pa-md">Out of Stock Medicines</div>
+            <div align="left" class="text-h6 text-primary q-pa-md">Available Medicines</div>
           </div>
         </div>
-        <q-separator /> -->
+        <q-separator />
         <div v-if="loading" class="flex flex-center">
           <q-circular-progress indeterminate size="90px" color="primary" />
           <span class="q-ml-sm">Loading...</span>
@@ -22,19 +22,18 @@
               flat
               bordered
               class="q-mr-md my-sticky-header-table"
-               style="height: calc(100vh - 150px)"
+              style="height: calc(100vh - 150px)"
               :rows-per-page-options="[0]"
               table-header-class="text-white"
             >
-              <template v-slot:top-left>
+              <template v-slot:top>
                 <q-input
                   borderless
                   dense
                   debounce="300"
                   v-model="filter"
                   placeholder="Search"
-                  class="full-width"
-
+                  style="width: 100%"
                 >
                   <template v-slot:append>
                     <q-icon name="search" />
@@ -44,7 +43,6 @@
 
               <template #body="props">
                 <q-tr :v-bind="props">
-
                   <q-td
                     key="GenericName"
                     style="
@@ -59,8 +57,12 @@
                     {{ props.row.GenericName }}
                   </q-td>
                   <q-td key="Status" style="font-size: 11px" align="left">
-                    <q-chip :color="props.row.Quantity > 0 ? 'green' : 'red'" text-color="white" class="text-caption">
-                       {{ props.row.Quantity? 'AVAILABLE': 'NO STOCKS' }}
+                    <q-chip
+                      :color="getQty(props.row.Quantity) > 0 ? 'green' : 'red'"
+                      text-color="white"
+                      class="text-caption"
+                    >
+                      {{ getQty(props.row.Quantity) > 0 ? 'AVAILABLE' : 'NO STOCKS' }}
                     </q-chip>
                   </q-td>
                   <q-td key="Quantity" style="font-size: 11px" align="left">
@@ -69,7 +71,6 @@
                   <q-td key="ExpirationDate" style="font-size: 11px" align="left">
                     {{ props.row.ExpirationDate }}
                   </q-td>
-
                 </q-tr>
               </template>
             </q-table>
@@ -110,7 +111,7 @@ export default {
           align: 'left',
           field: 'GenericName',
         },
-         {
+        {
           name: 'Status',
           required: true,
           label: 'Status',
@@ -132,7 +133,6 @@ export default {
           align: 'left',
           field: 'ExpirationDate',
         },
-
       ],
     }
   },
@@ -159,6 +159,9 @@ export default {
   },
 
   methods: {
+     getQty(value) {
+    return parseInt(String(value).replace(/,/g, '')) || 0;
+  },
     // async exportToExcel() {
     //   const workbook = new ExcelJS.Workbook()
     //   const worksheet = workbook.addWorksheet('Out of Stock Medicines')
@@ -195,7 +198,7 @@ export default {
         await this.itemStore.availableMedicine()
 
         this.rows = this.itemStore.available_medicine
-          // console.log('available medicine =>', this.rows)
+        // console.log('available medicine =>', this.rows)
       } catch (error) {
         Notify.create({
           type: 'negative',

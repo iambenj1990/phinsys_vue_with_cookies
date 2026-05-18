@@ -51,9 +51,10 @@
           <q-item clickable v-ripple to="/dashboard" v-if="moduleAccess('Dashboard')">
             <q-icon name="dashboard" size="24px" class="q-mr-md" />
             <p class="text-sm">Dashboard</p>
+            
           </q-item>
           <q-separator />
-          <q-item clickable v-ripple to="/available" v-if="moduleAccess('Dashboard')">
+          <q-item clickable v-ripple to="/available" v-if="moduleAccess('Available Medicines')" >
             <q-icon name="healing" size="24px" class="q-mr-md" />
             <p class="text-sm">Available Medicine</p>
           </q-item>

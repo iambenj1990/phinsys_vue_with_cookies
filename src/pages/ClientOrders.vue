@@ -52,7 +52,7 @@
 
         <q-card-section>
           <div class="q-pa-sm flex">
-            <q-card class="q-pa-sm" style="max-width: 1820px; width: 100%">
+            <q-card class="q-pa-sm" style="width: 100%">
               <div class="text-h6 text-blue text-weight-bolder">Customer Name</div>
               <q-separator></q-separator>
               <div class="row q-gutter-sm">
@@ -134,6 +134,84 @@
                     readonly
                   />
                 </div>
+              </div>
+            </q-card>
+          </div>
+
+      <div class="q-pa-sm flex justify-center">
+            <q-card class="q-pa-sm" style="max-width: 1000px; width: 100%">
+              <div class="text-h6 text-green text-weight-bolder">Patient Dispense History</div>
+              <!-- <div class="text-caption text-weight-regular" style="color:grey;">Transacation ID: {{ this.transaction_id }}</div> -->
+              <q-separator />
+              <q-table
+                bordered
+                dense
+                :rows="DispenseList"
+                :columns="previous_transaction_cols"
+                row-key="id"
+                no-data-label="No data available"
+                hide-bottom
+              >
+                <!-- Body slot -->
+                <template #body="props">
+                  <q-tr :v-bind="props">
+                    <q-td key="transaction_id" style="font-size: 11px" align="left">
+                      {{ props.row.transaction_id }}
+                    </q-td>
+                    <q-td key="transaction_date" style="font-size: 11px" align="left">
+                      {{ props.row.transaction_date }}
+                    </q-td>
+                    <q-td key="total" style="font-size: 11px" align="left">
+                      {{ props.row.total }}
+                    </q-td>
+                    <q-td key="actions" style="font-size: 11px" align="left">
+                      <q-btn
+                        icon="visibility"
+                        flat
+                        class="text-blue"
+                        @click="
+                          () => {
+                            get_transactions_exploded(
+                              props.row.customer_id,
+                              props.row.transaction_id,
+                            )
+                            dialog_open = true
+                          }
+                        "
+                      />
+                          <q-btn
+                        icon="edit"
+                        flat
+                        class="text-orange"
+                        @click="
+                          () => {
+                            // get_transactions_exploded(
+                            //   props.row.customer_id,
+                            //   props.row.transaction_id,
+                            // )
+                            // dialog_open = true
+                            $router.push({
+                              name: 'client-modify-orders',
+                              params: { id: props.row.customer_id, trx_id: props.row.transaction_id },
+                            })
+                          }
+                        "
+                      />
+                    </q-td>
+                  </q-tr>
+                </template>
+
+                <!-- Bottom row slot placed correctly -->
+                <template #bottom-row>
+                  <q-tr class="bg-grey-3 text-weight-bold">
+                    <q-td colspan="2" align="right">Total:</q-td>
+                    <q-td>{{ totalPrice.toFixed(2) }}</q-td>
+                    <q-td></q-td>
+                  </q-tr>
+                </template>
+              </q-table>
+              <div class="q-pa-sm flex justify-end">
+                <q-btn style="font-size: 13px" color="red" label="Close" @click="$router.go(-1)" />
               </div>
             </q-card>
           </div>
@@ -997,10 +1075,48 @@ export default {
           sortable: true,
         },
       ],
+
+      previous_transaction_cols: [
+        {
+          name: 'transaction_id',
+          label: 'Transaction ID',
+          field: 'transaction_id',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'transaction_date',
+          label: 'Transaction Date',
+          field: 'transaction_date',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'total',
+          label: 'Amount',
+          field: 'total',
+          sortable: true,
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+        {
+          name: 'actions',
+          label: 'Actions',
+          align: 'left',
+          headerClasses: 'bg-grey-7 text-white',
+          headerStyle: 'font-size: 1.2 em',
+        },
+      ],
     }
   },
   data() {
     return {
+      DispenseList: [],
       tabs: 'meds',
       Credentials: [],
       maif_search: '',
@@ -1070,6 +1186,19 @@ export default {
 
   },
   methods: {
+
+     totalPrice() {
+      return this.DispenseList.reduce((sum, row) => {
+        const clean = (row.total || '0').toString().replace(/,/g, '')
+        return sum + parseFloat(clean)
+      }, 0)
+    },
+
+     async get_transactions(id) {
+      await this.customerStore.get_transactions(id)
+      this.DispenseList = this.customerStore.customer_transactions_list
+    },
+
     moduleAccess(label, type) {
       const access = this.Credentials.find((module) => module.module === label)
       // console.log(access)
@@ -1267,6 +1396,7 @@ export default {
       // console.log('selected client_ID =>', id)
       this.costumer = {}
       await this.customerStore.getCustomer(id)
+      await this.get_transactions(id)
       this.costumer = this.customerStore.customer
         console.log(this.costumer)
       this.searchTerm = ''
