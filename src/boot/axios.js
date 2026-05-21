@@ -18,6 +18,7 @@ const api = axios.create({
   //  baseURL: 'http://192.168.8.11:8000',
   // baseURL: 'https://tagumcity.gov.ph/phinsys_backend/public',
   baseURL: import.meta.env.VITE_HOST_STAGING,
+  
 
   withCredentials: true,
   withXSRFToken: true,
@@ -26,8 +27,6 @@ const api = axios.create({
 
 
 })
-
-console.log(api.baseURL)
 
 
 // const token = localStorage.getItem('auth_token')

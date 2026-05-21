@@ -363,13 +363,14 @@ export default {
 <script>
 import packageJson from '../../package.json'
 import { useUserStore } from 'src/stores/userStore'
-import { useQuasar } from 'quasar'
+import { Notify } from 'quasar'
+
 
 export default {
   setup() {
     const loginStore = useUserStore()
-    const $q = useQuasar()
-    return { loginStore, $q }
+   
+    return { loginStore }
   },
   data() {
     return {
@@ -389,15 +390,22 @@ export default {
       try {
         const success = await this.loginStore.loginUser(this.userLogin)
         if (success) {
-          this.$q.notify({ type: 'positive', message: 'Login successful!' })
+         
           this.$router.push('/dashboard')
-        } else {
-          this.$q.notify({ type: 'negative', message: 'Invalid credentials' })
+        // } else {
+        //    Notify.create({
+        //   type: 'negative',
+        //   message:'Invalid credentials. Please try again.',
+        //   position: 'center',
+        //   timeout: 3000,
+        // })
         }
       } catch (error) {
-        this.$q.notify({
+        Notify.create({
           type: 'negative',
-          message: error?.response?.data?.message || 'Login failed.',
+          message: error?.response?.data?.message || error.message || 'Login failed.',
+          position: 'center',
+          timeout: 3000,
         })
       } finally {
         this.loading = false
