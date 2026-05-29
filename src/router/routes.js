@@ -225,6 +225,11 @@ const routes = [
         component: () => import('src/pages/ItemsShowAvailableMedicine.vue'),
         meta: { requiresAuth: true },
       },
+         {
+        path: 'users/assignments',
+        component: () => import('src/pages/ItemAssignment.vue'),
+        meta: { requiresAuth: true },
+      },
     ],
   },
 
