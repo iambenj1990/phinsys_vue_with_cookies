@@ -17,20 +17,23 @@
             <!-- USER DROPDOWN -->
             <q-select
               v-model="selectedUser"
-              :options="users"
-              option-label="first_name"
+              :options="userlist"
+              :option-label="
+                (opt) => [opt.first_name, opt.middle_name, opt.last_name].filter(Boolean).join(' ')
+              "
               option-value="id"
               emit-value
               map-options
               outlined
               dense
               label="Select User"
-              class="q-mb-md"
+              class="q-mb-md text-capitalize"
             >
               <template v-slot:prepend>
                 <q-icon name="person" />
               </template>
             </q-select>
+            <pre>{{ selectedUser }}</pre>
 
             <!-- SEARCH -->
             <q-input
@@ -54,7 +57,9 @@
                     {{ medicine.generic_name }}
                   </q-item-label>
 
-                  <q-item-label caption> Stock: {{ medicine.Closing_quantity }} | PO# {{ medicine.po_no }}</q-item-label>
+                  <q-item-label caption>
+                    Stock: {{ medicine.Closing_quantity }} | PO# {{ medicine.po_no }}</q-item-label
+                  >
                 </q-item-section>
 
                 <q-item-section side>
@@ -154,8 +159,8 @@ export default {
 
     return {
       itemStore,
-        userStore,
-         columns: [
+      userStore,
+      columns: [
         {
           name: 'po_no',
           label: 'PO #',
@@ -184,7 +189,6 @@ export default {
       users: [],
       medicines: [],
       assignedMedicines: [],
-     
     }
   },
 
@@ -195,40 +199,38 @@ export default {
       })
     },
 
-    userlist(){
-        return  this.userStore.users
-    }
+    userlist() {
+      return this.userStore.users
+    },
   },
   mounted() {
     this.getAvailableMedList()
     this.getUSers()
-    this.users = this.userlist
 
-    console.log('users => ', this.users)
+    console.log('users => ', this.userlist)
   },
 
   methods: {
-
-    async getUSers(){
-        await this.userStore.getUsers()
+    async getUSers() {
+      await this.userStore.getUsers()
     },
 
     async getAvailableMedList() {
-       //this.cartPrompt = true
-       //filtered mag una ug gawas ang sayo ma expire
-       //await this.itemStore.getJoinedTable_DailyInventor_Items_filtered()
+      //this.cartPrompt = true
+      //filtered mag una ug gawas ang sayo ma expire
+      //await this.itemStore.getJoinedTable_DailyInventor_Items_filtered()
 
       //not filtered, laras gawas tanan pilianan
       await this.itemStore.getJoinedTable_DailyInventor_Items()
 
-        this.medicines = this.itemStore.items
-        console.log('medicines => ', this.medicines) 
-    //   this.availableMedsRow = this.itemStore.items
+      this.medicines = this.itemStore.items
+      console.log('medicines => ', this.medicines)
+      //   this.availableMedsRow = this.itemStore.items
     },
 
     assignMedicine(medicine) {
       const exists = this.assignedMedicines.find((item) => item.item_id === medicine.item_id)
-        console.log(' this.assignedMedicines => ',  this.assignedMedicines)
+      console.log(' this.assignedMedicines => ', this.assignedMedicines)
       if (exists) {
         this.$q.notify({
           type: 'warning',
@@ -243,6 +245,7 @@ export default {
       this.$q.notify({
         type: 'positive',
         message: 'Medicine assigned successfully.',
+        timeout: 1500,
       })
     },
 
@@ -251,17 +254,11 @@ export default {
     },
 
     saveAssignment() {
-
-
-
-
-
-
-
       if (!this.selectedUser) {
         this.$q.notify({
           type: 'negative',
           message: 'Please select a user.',
+          timeout: 1500,
         })
 
         return
@@ -275,6 +272,7 @@ export default {
       this.$q.notify({
         type: 'positive',
         message: 'Assignments saved successfully.',
+        timeout: 1500,
       })
     },
   },
