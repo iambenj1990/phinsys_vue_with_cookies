@@ -263,17 +263,33 @@ export default {
 
         return
       }
+      try {
+        this.assignedMedicines.forEach((medicine) => {
+          console.log(`Attempting to Assign ${medicine.item_id} to user ID ${this.selectedUser}`)
+          this.userStore.assignItemsToUser(this.selectedUser, medicine.item_id)
+        })
 
-      console.log({
-        user_id: this.selectedUser,
-        medicines: this.assignedMedicines,
-      })
+        this.$q.notify({
+          type: 'positive',
+          message: 'Assignments saved successfully.',
+          timeout: 1500,
+        })
+      } catch (error) {
+        console.error('Error during assignment:', error)
+        this.$q.notify({
+          type: 'negative',
+          message: 'An error occurred while saving assignments.',
+          timeout: 1500,
+        })
+      } finally{
+      this.assignedMedicines = []
+      }
 
-      this.$q.notify({
-        type: 'positive',
-        message: 'Assignments saved successfully.',
-        timeout: 1500,
-      })
+      // console.log({
+      //   user_id: this.selectedUser,
+      //   medicines: this.assignedMedicines,
+      // })
+
     },
   },
 }

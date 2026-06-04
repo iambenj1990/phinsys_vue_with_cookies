@@ -14,6 +14,35 @@ export const useUserStore = defineStore('users', {
   }),
 
   actions: {
+
+    async assignItemsToUser(userId, item_id) {
+
+    try{
+
+      const response = await api.post('/api/system/user/items/assign',{user_id: userId, item_id: item_id})
+      
+      Notify.create({
+        type: 'positive',
+        message: response.data.message,
+        position: 'center',
+        timeout: 1000,
+      })
+
+    }catch(error){
+      Notify.create({
+        type: 'negative',
+        message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+        position: 'center',
+        timeout: 1000,
+      })
+    }
+  },
+
+
+
+
+
+
     async getUsers() {
       try {
         const response = await api.get('/api/system/users')
@@ -242,6 +271,10 @@ export const useUserStore = defineStore('users', {
       })
     }
   },
+
+
+
+  
   },
 
 
