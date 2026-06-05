@@ -249,6 +249,22 @@ export default {
       })
     },
 
+    async showAssignedMedicines(id){
+
+      try{
+        await this.userStore.ShowAssignItemsToUser(id)
+        this.assignedMedicines = this.userStore.assignedItems
+      }catch(error){
+        console.error('Error fetching assigned medicines:', error)
+        this.$q.notify({
+          type: 'negative',
+          message: 'An error occurred while fetching assigned medicines.',
+          timeout: 1500,
+        })
+      }
+
+    },
+
     removeMedicine(id) {
       this.assignedMedicines = this.assignedMedicines.filter((item) => item.item_id !== id)
     },
@@ -285,10 +301,7 @@ export default {
       this.assignedMedicines = []
       }
 
-      // console.log({
-      //   user_id: this.selectedUser,
-      //   medicines: this.assignedMedicines,
-      // })
+   
 
     },
   },

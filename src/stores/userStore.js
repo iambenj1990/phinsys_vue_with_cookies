@@ -10,7 +10,8 @@ export const useUserStore = defineStore('users', {
     authenticatedUser: 0,
     isAuthenticated: false,
     message: '',
-    credentials:[]
+    credentials:[],
+    assignedItems: [],
   }),
 
   actions: {
@@ -37,6 +38,31 @@ export const useUserStore = defineStore('users', {
       })
     }
   },
+
+   async ShowAssignItemsToUser(userId) {
+
+    try{
+
+      const response = await api.get('/api/systemuser/user/items/assignlist',{user_id: userId})
+      this.assignedItems = response.data.assigned_medicines
+      
+      Notify.create({
+        type: 'positive',
+        message: response.data.message,
+        position: 'center',
+        timeout: 1000,
+      })
+
+    }catch(error){
+      Notify.create({
+        type: 'negative',
+        message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+        position: 'center',
+        timeout: 1000,
+      })
+    }
+  },
+
 
 
 
