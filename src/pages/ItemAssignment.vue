@@ -117,7 +117,7 @@
                     dense
                     flat
                     round
-                    @click="removeMedicine(props.row.item_id)"
+                    @click="removeItem({user_id: selectedUser, item_id: props.row.item_id})"
                   />
                 </q-td>
               </template>
@@ -192,6 +192,18 @@ export default {
     }
   },
 
+  watch: {
+
+      selectedUser(newval){
+        this.showAssignedMedicines(newval)
+      }
+
+
+
+
+
+  },
+
   computed: {
     filteredMedicines() {
       return this.medicines.filter((medicine) => {
@@ -202,6 +214,8 @@ export default {
     userlist() {
       return this.userStore.users
     },
+
+
   },
   mounted() {
     this.getAvailableMedList()
@@ -265,7 +279,25 @@ export default {
 
     },
 
-    removeMedicine(id) {
+
+    async removeItem(payload){
+      try{
+
+        console.log('payload =>', payload)
+        await this.userStore.RemoveAssignItemsToUser(payload)
+         this.removeMedicine(payload.item_id)
+        // this.assignedMedicines = this.userStore.assignedItems
+      }catch(error){
+        console.error('Error fetching assigned medicines:', error)
+        this.$q.notify({
+          type: 'negative',
+          message: 'An error occurred while fetching assigned medicines.',
+          timeout: 1500,
+        })
+      }
+    },
+
+     removeMedicine(id) {
       this.assignedMedicines = this.assignedMedicines.filter((item) => item.item_id !== id)
     },
 
@@ -301,7 +333,7 @@ export default {
       this.assignedMedicines = []
       }
 
-   
+
 
     },
   },

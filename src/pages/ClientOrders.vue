@@ -53,7 +53,8 @@
         <q-card-section>
           <div class="q-pa-sm flex">
             <q-card class="q-pa-sm" style="width: 100%">
-              <div class="text-h6 text-blue text-weight-bolder">Customer Information
+              <div class="text-h6 text-blue text-weight-bolder">
+                Customer Information
                 <div class="text-caption text-green text-weight-bolder">
                   <q-checkbox
                     v-model="isMaifpClient"
@@ -63,7 +64,7 @@
                     size="lg"
                     :style="isMaifpClient ? 'color: green;' : 'color: red;'"
                   />
-                  </div>
+                </div>
               </div>
               <q-separator></q-separator>
               <div class="row q-gutter-sm">
@@ -169,13 +170,13 @@
                 </div>
               </q-card>
             </div> -->
-          </div>     
+          </div>
         </q-card-section>
 
         <q-card-section>
-           <div class="q-pa-sm flex justify-center">
+          <div class="q-pa-sm flex justify-center">
             <q-card class="q-pa-sm" style="width: 100%">
-              <div class="text-h6 text-weight-bolder  text-blue ">Dispense History</div>
+              <div class="text-h6 text-weight-bolder text-blue">Dispense History</div>
               <!-- <div class="text-caption text-weight-regular" style="color:grey;">Transacation ID: {{ this.transaction_id }}</div> -->
               <q-separator />
               <q-table
@@ -194,11 +195,11 @@
                       {{ props.row.transaction_id }}
                     </q-td>
                     <q-td key="transaction_date" style="font-size: 11px" align="left">
-                      {{ props.row.transaction_date }}
+                      {{dateFormater(props.row.transaction_date) }}
                     </q-td>
-                    <q-td key="total" style="font-size: 11px" align="left">
+                    <!-- <q-td key="total" style="font-size: 11px" align="left">
                       {{ props.row.total }}
-                    </q-td>
+                    </q-td> -->
                     <q-td key="actions" style="font-size: 11px" align="left">
                       <q-btn
                         icon="visibility"
@@ -811,15 +812,15 @@ export default {
           headerClasses: 'bg-grey-7 text-white',
           headerStyle: 'font-size: 1.2 em',
         },
-        {
-          name: 'total',
-          label: 'Amount',
-          field: 'total',
-          sortable: true,
-          align: 'left',
-          headerClasses: 'bg-grey-7 text-white',
-          headerStyle: 'font-size: 1.2 em',
-        },
+        // {
+        //   name: 'total',
+        //   label: 'Amount',
+        //   field: 'total',
+        //   sortable: true,
+        //   align: 'left',
+        //   headerClasses: 'bg-grey-7 text-white',
+        //   headerStyle: 'font-size: 1.2 em',
+        // },
         {
           name: 'actions',
           label: 'Actions',
@@ -941,6 +942,20 @@ export default {
     this.isMaifpClient = false
   },
   methods: {
+    dateFormater(Data_date) {
+      const date = new Date(Data_date)
+      const formattedDate = date
+        .toLocaleDateString('en-US', {
+          month: 'short',
+          day: '2-digit',
+          year: 'numeric',
+        })
+        .replace(',', '') // Optional: removes the comma to match "MMM DD YYYY"
+
+      // console.log(formattedDate) // "Oct 17 2012"
+      return formattedDate
+    },
+
     async get_transactions_exploded(id, transid) {
       await this.customerStore.get_transactions_exploded(id, transid)
       this.DispenseListExploded = this.customerStore.customer_transactions_list_exploded

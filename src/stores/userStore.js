@@ -21,7 +21,7 @@ export const useUserStore = defineStore('users', {
     try{
 
       const response = await api.post('/api/system/user/items/assign',{user_id: userId, item_id: item_id})
-      
+
       Notify.create({
         type: 'positive',
         message: response.data.message,
@@ -43,9 +43,40 @@ export const useUserStore = defineStore('users', {
 
     try{
 
-      const response = await api.get('/api/systemuser/user/items/assignlist',{user_id: userId})
+        console.log('uid =>', userId)
+
+      const response = await api.get('/api/system/user/assigned', {params: {user_id: userId}})
+
       this.assignedItems = response.data.assigned_medicines
-      
+
+      Notify.create({
+        type: 'positive',
+        message: response.data.message,
+        position: 'center',
+        timeout: 1000,
+      })
+
+    }catch(error){
+      Notify.create({
+        type: 'negative',
+        message: error.response?.data?.message || error.message || 'An unexpected error occurred',
+        position: 'center',
+        timeout: 1000,
+      })
+    }
+  },
+
+  async RemoveAssignItemsToUser(payload) {
+
+    try{
+
+        console.log('uid =>', payload)
+
+      const response = await api.post('/api/system/user/assign/remove', {user_id: payload.user_id, item_id: payload.item_id })
+      await this.ShowAssignItemsToUser(payload.user_id)
+
+      // this.assignedItems = response.data.assigned_medicines
+
       Notify.create({
         type: 'positive',
         message: response.data.message,
@@ -300,7 +331,7 @@ export const useUserStore = defineStore('users', {
 
 
 
-  
+
   },
 
 
