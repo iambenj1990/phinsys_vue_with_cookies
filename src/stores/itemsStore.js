@@ -238,7 +238,6 @@ export const useItemStore = defineStore('items', {
         var newPayload = { item_id: id, ...payload } // Merge id into payload
         console.log('Updated Payload:', newPayload)
          const response = await api.post('/api/items/update', newPayload)
-        // const response = await api.put('/api/items/' + id, payload)
          this.item = response.data.item[0]
       } catch (error) {
         // console.log(error)

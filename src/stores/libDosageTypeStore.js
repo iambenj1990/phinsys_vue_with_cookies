@@ -63,7 +63,7 @@ export const useDosageStore = defineStore('dosage', {
 
     async updateDosageType(id, payload) {
       try {
-        await api.put('/api/system/library/dosages/' + id, payload)
+        await api.post('/api/system/library/dosages/' + id, payload)
         this.getDosagesTypes()
         Notify.create({
           type: 'positive',

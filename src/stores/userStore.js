@@ -163,7 +163,7 @@ export const useUserStore = defineStore('users', {
         // Remove confirm_password from payload before sending to API
 
         // console.log('Payload sent to API:', payload)
-        const response = await api.put('/api/system/user/profile-update/' + id, {
+        const response = await api.post('/api/system/user/profile-update/' + id, {
           ...payload,
           password_confirmation: payload.confirm_password,
         })
@@ -211,7 +211,7 @@ export const useUserStore = defineStore('users', {
     },
     async deactivateUser(id) {
       try {
-        const response = await api.put('/api/system/user/profile-deactivate/' + id)
+        const response = await api.post('/api/system/user/profile-deactivate/' + id)
         // console.log(response.data.success)
         if (response.data.success) {
           Notify.create({
@@ -233,7 +233,7 @@ export const useUserStore = defineStore('users', {
 
     async activateUser(id) {
       try {
-        const response = await api.put('/api/system/user/profile-activate/' + id)
+        const response = await api.post('/api/system/user/profile-activate/' + id)
         // console.log(response.data.success)
         if (response.data.success) {
           Notify.create({

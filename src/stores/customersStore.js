@@ -227,7 +227,7 @@ export const useCustomerStore = defineStore('customers', {
 
     async updateCustomer(id, payload) {
       try {
-        const response = await api.put('/api/customers/' + id, payload)
+        const response = await api.post('/api/customers/' + id, payload)
         this.customer = response.data.customers
       } catch (error) {
         // console.log(error)
