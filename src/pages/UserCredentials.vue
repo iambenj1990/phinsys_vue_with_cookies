@@ -101,7 +101,7 @@ export default {
         { key: 'UserCredentials', title: 'User Credentials', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
         { key: 'Libraries', title: 'Libraries', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
         // { key: 'Units', title: 'Units', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
-        // { key: 'DosageType', title: 'Dosage Type', permissions: ['view', 'add', 'edit', 'delete', 'export'] },
+        { key: 'Assignment', title: 'Medicine Assignment', permissions: ['view', 'add', 'delete'] },
         { key: 'Configurations', title: 'Configurations', permissions: ['view', 'add', 'edit', 'delete', 'export'] }
       ]
     };

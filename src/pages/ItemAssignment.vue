@@ -28,6 +28,7 @@
               dense
               label="Select User"
               class="q-mb-md text-capitalize"
+              :disable="moduleAccess('Medicine Assignment', 'view')"
             >
               <template v-slot:prepend>
                 <q-icon name="person" />
@@ -117,7 +118,8 @@
                     dense
                     flat
                     round
-                    @click="removeItem({user_id: selectedUser, item_id: props.row.item_id})"
+                    :disable="moduleAccess('Medicine Assignment', 'delete')"
+                    @click="removeItem({ user_id: selectedUser, item_id: props.row.item_id })"
                   />
                 </q-td>
               </template>
@@ -138,7 +140,13 @@
           <q-card-actions align="right">
             <q-btn flat label="Clear" color="grey-7" @click="assignedMedicines = []" />
 
-            <q-btn color="primary" icon="save" label="Save Assignment" @click="saveAssignment" />
+            <q-btn
+              color="primary"
+              icon="save"
+              label="Save Assignment"
+              @click="saveAssignment"
+              :disable="moduleAccess('Medicine Assignment', 'add')"
+            />
           </q-card-actions>
         </q-card>
       </div>
@@ -189,19 +197,15 @@ export default {
       users: [],
       medicines: [],
       assignedMedicines: [],
+      user: null,
+      Credentials: [],
     }
   },
 
   watch: {
-
-      selectedUser(newval){
-        this.showAssignedMedicines(newval)
-      }
-
-
-
-
-
+    selectedUser(newval) {
+      this.showAssignedMedicines(newval)
+    },
   },
 
   computed: {
@@ -214,10 +218,9 @@ export default {
     userlist() {
       return this.userStore.users
     },
-
-
   },
   mounted() {
+    this.GetAuthenticatedUser()
     this.getAvailableMedList()
     this.getUSers()
 
@@ -227,6 +230,22 @@ export default {
   methods: {
     async getUSers() {
       await this.userStore.getUsers()
+    },
+
+    async GetAuthenticatedUser() {
+      await this.userStore.authenticatedUserCheck()
+      this.user = this.userStore.user
+      this.Credentials = this.userStore.credentials
+    },
+
+    moduleAccess(label, type) {
+      const access = this.Credentials.find((module) => module.module === label)
+      console.log('access =>', access)
+      if (type === 'view') return access ? access.view === 1 : false
+      if (type === 'add') return access ? access.add === 1 : false
+      if (type === 'edit') return access ? access.edit === 1 : false
+      if (type === 'delete') return access ? access.delete === 1 : false
+      if (type === 'export') return access ? access.export === 1 : false
     },
 
     async getAvailableMedList() {
@@ -263,12 +282,11 @@ export default {
       })
     },
 
-    async showAssignedMedicines(id){
-
-      try{
+    async showAssignedMedicines(id) {
+      try {
         await this.userStore.ShowAssignItemsToUser(id)
         this.assignedMedicines = this.userStore.assignedItems
-      }catch(error){
+      } catch (error) {
         console.error('Error fetching assigned medicines:', error)
         this.$q.notify({
           type: 'negative',
@@ -276,18 +294,15 @@ export default {
           timeout: 1500,
         })
       }
-
     },
 
-
-    async removeItem(payload){
-      try{
-
+    async removeItem(payload) {
+      try {
         console.log('payload =>', payload)
         await this.userStore.RemoveAssignItemsToUser(payload)
-         this.removeMedicine(payload.item_id)
+        this.removeMedicine(payload.item_id)
         // this.assignedMedicines = this.userStore.assignedItems
-      }catch(error){
+      } catch (error) {
         console.error('Error fetching assigned medicines:', error)
         this.$q.notify({
           type: 'negative',
@@ -297,7 +312,7 @@ export default {
       }
     },
 
-     removeMedicine(id) {
+    removeMedicine(id) {
       this.assignedMedicines = this.assignedMedicines.filter((item) => item.item_id !== id)
     },
 
@@ -329,12 +344,9 @@ export default {
           message: 'An error occurred while saving assignments.',
           timeout: 1500,
         })
-      } finally{
-      this.assignedMedicines = []
+      } finally {
+        this.assignedMedicines = []
       }
-
-
-
     },
   },
 }
