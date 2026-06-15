@@ -152,6 +152,7 @@ export default {
     async insertNewUser(payload) {
       try {
         await this.userStore.newUser(payload)
+        await this.userStore.getUsers()
       } catch (error) {
         // console.log(error)
            this.$q.notify({

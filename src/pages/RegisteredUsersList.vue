@@ -17,7 +17,7 @@
             @click="$router.push('/users/new')"
           />
         </div>
-        <q-table :rows="rows" :columns="columns" row-key="id" flat bordered v-model:filter="search">
+        <q-table :rows="items" :columns="columns" row-key="id" flat bordered v-model:filter="search">
           <template v-slot:top-right>
             <q-input
               filled
@@ -272,8 +272,14 @@ export default {
       dialogInactive: false,
       search: '',
       rows: [],
+    
     }
   },
+  computed: {
+    items(){
+      return this.userStore.users
+    }
+  }
 }
 </script>
 

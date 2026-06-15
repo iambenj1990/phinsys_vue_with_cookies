@@ -224,7 +224,7 @@ export default {
     this.getAvailableMedList()
     this.getUSers()
 
-    console.log('users => ', this.userlist)
+    // console.log('users => ', this.userlist)
   },
 
   methods: {
