@@ -52,7 +52,7 @@
 
             <!-- MEDICINE LIST -->
             <q-list bordered separator class="rounded-borders medicine-list">
-              <q-item v-for="medicine in filteredMedicines" :key="medicine.id" clickable v-ripple>
+              <q-item v-for="medicine in filteredMedicines" :key="medicine.id" clickable v-ripple :disable="moduleAccess('Medicine Assignment', 'add')">
                 <q-item-section>
                   <q-item-label class="text-weight-medium">
                     {{ medicine.generic_name }}
@@ -64,7 +64,7 @@
                 </q-item-section>
 
                 <q-item-section side>
-                  <q-btn color="primary" icon="add" round dense @click="assignMedicine(medicine)" />
+                  <q-btn color="primary" icon="add" round dense @click="assignMedicine(medicine)"  />
                 </q-item-section>
               </q-item>
             </q-list>
@@ -241,11 +241,14 @@ export default {
     moduleAccess(label, type) {
       const access = this.Credentials.find((module) => module.module === label)
       console.log('access =>', access)
-      if (type === 'view') return access ? access.view === 1 : false
-      if (type === 'add') return access ? access.add === 1 : false
-      if (type === 'edit') return access ? access.edit === 1 : false
-      if (type === 'delete') return access ? access.delete === 1 : false
-      if (type === 'export') return access ? access.export === 1 : false
+      if (!access) return true // no access record = disable the button
+      if (type === 'view') return access.view !== 1
+      if (type === 'add') return access.add !== 1
+      if (type === 'edit') return access.edit !== 1
+      if (type === 'delete') return access.delete !== 1
+      if (type === 'export') return access.export !== 1
+
+      return true // unknown type = disable
     },
 
     async getAvailableMedList() {

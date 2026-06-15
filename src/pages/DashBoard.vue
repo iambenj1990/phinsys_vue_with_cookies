@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-md">
     <q-card class="q-pa-md">
-      <div class="text-h6 text-grey ">Dashboard</div>
+      <div class="text-h6 text-grey">Dashboard</div>
       <q-separator />
       <div class="q-my-sm flex flex-wrap q-px-md justify-end">
         <q-input v-model="rangeText" label="Select Date Range" dense readonly style="width: 250px">
@@ -232,7 +232,7 @@
             </q-card-section>
           </q-card>
         </div>
-        <div class="row q-col-gutter-md q-mb-md">
+        <!-- <div class="row q-col-gutter-md q-mb-md">
           <div class="col-12 col-md-6">
             <q-card class="flex flex-center">
               <q-card-section class="text-h6 text-green">
@@ -265,6 +265,46 @@
                 >
                   Chart couldn't be loaded.
                 </Pie>
+              </q-card-section>
+            </q-card>
+          </div>
+        </div> -->
+        <div class="row q-col-gutter-md q-mb-md">
+          <!-- Age Chart -->
+          <div class="col-12 col-md-6">
+            <q-card class="full-height">
+              <q-card-section class="text-h6 text-green">
+                Patients per Age Classification
+              </q-card-section>
+
+              <q-card-section>
+                <div style="height: 360px; width: 100%">
+                  <Bar
+                    :data="barChartData"
+                    :options="chartOptions"
+                    :key="JSON.stringify(barChartData.datasets[0].data)"
+                  />
+                </div>
+              </q-card-section>
+            </q-card>
+          </div>
+
+          <!-- Gender Chart -->
+          <div class="col-12 col-md-6">
+            <q-card class="full-height">
+              <q-card-section class="text-h6 text-green">
+                Patients per Gender Classification
+              </q-card-section>
+
+              <q-card-section>
+                <div style="height: 360px; width: 100%">
+                  <Pie
+                    :data="pieChartData"
+                    :options="pieChartOptions"
+                    :key="JSON.stringify(pieChartData.datasets[0].data)"
+                    style="max-height: 320px; max-width: 320px"
+                  />
+                </div>
               </q-card-section>
             </q-card>
           </div>
@@ -434,6 +474,20 @@ export default {
           },
         ],
       },
+
+      pieChartOptions: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+          },
+        },
+        layout: {
+          padding: 20,
+        },
+      },
+
       chartOptions: {
         responsive: true,
         maintainAspectRatio: true,
