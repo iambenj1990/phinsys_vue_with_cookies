@@ -14,30 +14,30 @@
           <!-- Row 1: PO No. (half width) -->
           <div class="row q-pa-md q-gutter-md">
             <div class="col-12 col-sm-2">
-              <q-input class="text-caption full-width" filled label="PO No." dense />
+              <q-input v-model="MedicineData.po_no" class="text-caption full-width" filled label="PO No." dense />
             </div>
           </div>
 
           <!-- Row 2: 4 equal columns -->
           <div class="row q-pa-md q-gutter-md">
             <div class="col-12 col-md-4">
-              <q-input class="text-caption full-width" filled label="Brand Name" dense />
+              <q-input v-model="MedicineData.brand_name" class="text-caption full-width" filled label="Brand Name" dense />
             </div>
 
             <div class="col-12 col-md-6">
-              <q-input class="text-caption full-width" filled label="Generic Name" dense />
+              <q-input v-model="MedicineData.generic_name" class="text-caption full-width" filled label="Generic Name" dense />
             </div>
 
             <div class="col-12 col-md-2">
-              <q-input class="text-caption full-width" filled label="Expiration Date" dense />
+              <q-input v-model="MedicineData.expiration_date" class="text-caption full-width" filled label="Expiration Date" dense />
             </div>
 
             <div class="col-12 col-md-2">
-              <q-input class="text-caption full-width" filled label="Dosage" dense />
+              <q-input v-model="MedicineData.dosage" class="text-caption full-width" filled label="Dosage" dense />
             </div>
 
             <div class="col-12 col-md-2">
-              <q-input class="text-caption full-width" filled label="Current Quantity" dense />
+              <q-input v-model="MedicineCurrentQuantity" class="text-caption full-width" filled label="Current Quantity" dense />
             </div>
           </div>
           <q-separator />
@@ -81,11 +81,15 @@
   ></q-page>
 </template>
 <script>
+import { useItemAdjustmentStore } from '../stores/ItemAdjustmentStore'
 export default {
   name: 'ItemsAdjustmentForm',
 
+  
   setup() {
+    const itemAdjustmentStore = useItemAdjustmentStore()
     return {
+      itemAdjustmentStore,
       AdjustmentTypeSeletiion: [
         'Physical Count Adjustment',
         'Inventory Reconciliation',
@@ -95,9 +99,34 @@ export default {
   },
   data() {
     return {
+     
       MedicineData: {},
+      MedicineCurrentQuantity: 0,
       AdjustmentData: {},
     }
+  },
+
+  mounted() {
+    // Example payload, replace with actual data as needed
+    const payload = 662; // Replace with actual item ID
+    
+    this.fetchMedicineData(payload)
+    console.log('Medicine Data:', this.MedicineData) 
+    console.log('Current Quantity:', this.MedicineCurrentQuantity)
+
+  },
+
+  methods: {
+    async fetchMedicineData(payload) {
+      try {
+       await this.itemAdjustmentStore.getSelectedItemDescription(payload)
+        this.MedicineData = this.itemAdjustmentStore.selectedItemDescription
+        this.MedicineCurrentQuantity = this.itemAdjustmentStore.currentItemQuantity
+      } catch (error) {
+        console.error('Error fetching medicine data:', error)
+      }
+    },
+   
   },
 }
 </script>
