@@ -47,20 +47,24 @@
           <div class="row q-pa-md q-gutter-md">
             <div class="col-12 col-md-2">
               <q-select
+              v-model="selectedType"
                 class="text-caption full-width"
                 filled
                 label="Adjustment Type"
                 dense
-                :options="AdjustmentTypeSeletiion"
+                :options="AdjustmentTypeSelection"
               />
+              <!-- <pre>{{ selectedType }}</pre> -->
             </div>
             <div class="col-12 col-md-2">
-              <q-input class="text-caption full-width" filled label="Adjustment Quantity" dense />
+              <q-input v-model="AdjustedQuantity" class="text-caption full-width" filled label="Adjustment Quantity" dense />
             </div>
           </div>
           <div class="row q-pa-md q-gutter-md">
             <div class="col-12 col-md-12">
               <q-input
+                v-model="reasonForAdjustment"
+
                 class="text-caption full-width"
                 filled
                 label="Reason for Adjustment"
@@ -75,6 +79,7 @@
           <div class="q-pa-md q-gutter-md">
             <q-btn label="Cancel" color="grey" flat />
             <q-btn label="Submit" color="primary" />
+             <q-btn label="Approve" color="secondary" />
           </div>
         </q-card-actions>
       </q-card></div
@@ -90,33 +95,42 @@ export default {
     const itemAdjustmentStore = useItemAdjustmentStore()
     return {
       itemAdjustmentStore,
-      AdjustmentTypeSeletiion: [
-        'Physical Count Adjustment',
-        'Inventory Reconciliation',
-        'Encoding Error Correction',
-      ],
+      // AdjustmentTypeSeletiion: [
+      //   'Physical Count Adjustment',
+      //   'Inventory Reconciliation',
+      //   'Encoding Error Correction',
+      // ],
     }
   },
   data() {
     return {
-     
+     AdjustmentTypeSelection:[],
       MedicineData: {},
       MedicineCurrentQuantity: 0,
       AdjustmentData: {},
+      selectedType: null,
+      AdjustedQuantity: 0,
+      reasonForAdjustment: '',
+
     }
   },
 
   mounted() {
     // Example payload, replace with actual data as needed
     const payload = 662; // Replace with actual item ID
-    
+    this.fetchAdjustmentType()
     this.fetchMedicineData(payload)
+    console.log('Types => ', this.AdjustmentTypeSelection)
     console.log('Medicine Data:', this.MedicineData) 
     console.log('Current Quantity:', this.MedicineCurrentQuantity)
 
   },
 
   methods: {
+    async fetchAdjustmentType(){
+      await this.itemAdjustmentStore.getAdjustmentType()
+      this.AdjustmentTypeSelection = this.itemAdjustmentStore.adjustmentTypeList
+    },
     async fetchMedicineData(payload) {
       try {
        await this.itemAdjustmentStore.getSelectedItemDescription(payload)

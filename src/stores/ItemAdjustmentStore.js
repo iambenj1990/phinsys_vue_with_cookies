@@ -5,7 +5,7 @@ export const useItemAdjustmentStore = defineStore('itemAdjustment', {
   state: () => ({
     selectedItemDescription:'',
     currentItemQuantity:0,
-    
+    adjustmentTypeList:[],
     
   }),
 
@@ -29,6 +29,20 @@ export const useItemAdjustmentStore = defineStore('itemAdjustment', {
                 timeout: 3000,
               });  
         }
+    },
+
+    async getAdjustmentType(){
+      try {
+        const response = await api.get(`api/system/list/types`)
+        this.adjustmentTypeList = response.data.adjustmentType
+        
+      } catch (error) {
+         this.$q.notify({
+                type: 'negative',
+                message: 'Failed to fetch item details. ' + error.message, 
+                timeout: 3000,
+              });  
+      }
     }
   
   },
