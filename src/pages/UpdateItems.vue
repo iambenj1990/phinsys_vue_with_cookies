@@ -6,16 +6,10 @@
           <div align="left" class="text-h6 text-primary">Medicine Information</div>
         </q-card-section>
         <q-separator></q-separator>
-        <q-form @submit.prevent="handleSubmit" ref="formRef">
+        <!-- <q-form @submit.prevent="handleSubmit" ref="formRef">
           <q-card-section>
             <div>
-              <!-- <q-checkbox
-                v-model="useTemp"
-                size="xs"
-                label="Use Temporary ID"
-                @update:model-value="get_temp_id"
-                style="color: grey"
-              /> -->
+          
               <div class="col-12 col-md-2 q-pa-sm text-h5 text-weight-bold">
                 <q-input
                   readonly
@@ -232,7 +226,7 @@
               />
             </div>
           </q-card-section>
-        </q-form>
+        </q-form> -->
         <q-separator />
         <q-card-section>
           <div>
@@ -674,14 +668,16 @@ export default {
     },
 
     async fetchItem(id) {
-      // console.log(id)
-      await this.itemStore.getItem(id)
-      this.MedicineInfo = { ...this.itemStore.item }
-      this.computePrice()
-      this.toUpdate = true
-      this.selected_id = id
-      this.isProgrammaticEdit = true
-      // console.log(this.MedicineInfo)
+      this.$router.push({name:'ItemAdjustment',params:{id: id}})
+      
+      // // console.log(id)
+      // await this.itemStore.getItem(id)
+      // this.MedicineInfo = { ...this.itemStore.item }
+      // this.computePrice()
+      // this.toUpdate = true
+      // this.selected_id = id
+      // this.isProgrammaticEdit = true
+      // // console.log(this.MedicineInfo)
     },
 
     async updateItem(id, payload) {

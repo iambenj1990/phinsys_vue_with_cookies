@@ -57,6 +57,9 @@
               <!-- <pre>{{ selectedType }}</pre> -->
             </div>
             <div class="col-12 col-md-2">
+              <q-select v-model="AdjustMethod" :options="AdjustmentMethod" class="text-caption full-width" filled label="Method" dense />
+            </div>
+             <div class="col-12 col-md-2">
               <q-input v-model="AdjustedQuantity" class="text-caption full-width" filled label="Adjustment Quantity" dense />
             </div>
           </div>
@@ -91,9 +94,11 @@ export default {
   name: 'ItemsAdjustmentForm',
 
   
+  
   setup() {
     const itemAdjustmentStore = useItemAdjustmentStore()
     return {
+      AdjustmentMethod:['Increase', 'Decrease'],
       itemAdjustmentStore,
       // AdjustmentTypeSeletiion: [
       //   'Physical Count Adjustment',
@@ -111,15 +116,17 @@ export default {
       selectedType: null,
       AdjustedQuantity: 0,
       reasonForAdjustment: '',
+      AdjustMethod:'',
 
     }
   },
 
   mounted() {
     // Example payload, replace with actual data as needed
-    const payload = 662; // Replace with actual item ID
+    // const payload = 662; // Replace with actual item ID
+    const item_id = this.$route.params.id
     this.fetchAdjustmentType()
-    this.fetchMedicineData(payload)
+    this.fetchMedicineData(item_id)
     console.log('Types => ', this.AdjustmentTypeSelection)
     console.log('Medicine Data:', this.MedicineData) 
     console.log('Current Quantity:', this.MedicineCurrentQuantity)

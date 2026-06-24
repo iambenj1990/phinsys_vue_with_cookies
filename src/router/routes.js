@@ -231,7 +231,8 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
-        path: 'item/adjustment',
+        path: 'item/adjustment/:id',
+        name:'ItemAdjustment',
         component: () => import('src/pages/ItemsAdjustmentForm.vue'),
         meta: { requiresAuth: true },
       },
